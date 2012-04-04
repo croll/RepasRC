@@ -95,3 +95,7 @@ div.recipe_content {
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
+
+.dl-horizontal {
+	margin-bottom: 2px;
+}

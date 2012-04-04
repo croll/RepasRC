@@ -100,7 +100,7 @@ class Foodstuff {
 				$tmp['label'] = $row['label'];
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
-				$tmp['footprint'] = $row['footprint'];
+				$tmp['footprint'] = round($row['footprint'], 3);
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					$tmp['synonym'] = $row['synonym'];

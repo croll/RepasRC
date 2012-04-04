@@ -244,12 +244,13 @@ function loadRecipes(reset) {
 				container.set('html', html);
 			}
   }).post({typeId: typeId, componentId: componentId});
+}
 
 function buildRecipeThumb(re) {
-	html = '<li class="span5 result" style="width: 550px"><div class="thumbnail">';
+	html = '<li onclick="showRecipeDetail(\''+re.id+'\')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
-	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
-	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
+	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
+	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
 	html+= '<div><h3 class="name">'+re.label+'</h3></div>';
 	html+= '<span style="display:none" class="fsname">'+re.foodstuff.join('')+'</span>';
 	if (typeOf(re.families) == 'array') {
@@ -261,12 +262,16 @@ function buildRecipeThumb(re) {
 		});
 		html += '</div>';
 	}
-  html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
-	html += '<dl class="dl-horizontal"><dt style="width:235px">Empreinte écologique foncière:</dt><dd style="margin-left: 240px">'+Math.round(re.footprint,3)+'&nbsp;gha</dd></dl>';
-  html += '<dl class="dl-horizontal"><dt>Nombre de convives:</dt><dd>'+re.persons+'</dd></dl>';
+  html += '<dl class="dl-horizontal" style="height: 12px"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
+	html += '<dl class="dl-horizontal" style="height: 12px" style="margin:0px" style=""><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;gha</dd></dl>';
+  html += '<dl class="dl-horizontal" style="height: 12px"><dt>Nombre de convives:</dt><dd>'+re.persons+'</dd></dl>';
+  html += '<dl class="dl-horizontal" style="height: 12px"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuff.length+'</dd></dl>';
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
 	html += '</ul></div></li>';
 	return html;
 }
+
+function showRecipeDetail(id) {
+	alert('yo');
 }

@@ -92,7 +92,6 @@ class Recipe {
 			$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
 			$recipe['label'] = str_replace("''", "'", $recipe['label']);
 			$foodstuffList = self::getFoodstuffList($recipe['id']);
-			$numFs = sizeof($foodstuffList);
 			$recipe['footprint'] = 0;
 			foreach($foodstuffList as $fs) {
 				/* CHECK THAT */
@@ -114,6 +113,7 @@ class Recipe {
 				if (!in_array($fs_label, $recipe['foodstuff'])) {
 					$recipe['foodstuff'][] = $fs_label;  
 				}
+				$recipe['footprint'] = round($recipe['footprint'], 3);
 			}
 
 			$result[] = $recipe;

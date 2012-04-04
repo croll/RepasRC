@@ -10,6 +10,7 @@
 	{js file="/mod/cssjs/js/chmypaginate.js"}
 	{js file="/mod/repasrc/js/repasrc.js"}
 	{js file="/mod/page/js/page.js"}
+	{js file="/mod/repasrc/js/MilkChart.js"}
 	{css file="/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css"}
 	{css file="/mod/repasrc/css/bootstrap-responsive.css"}
 	{css file="/mod/cssjs/css/mypaginate.css"}
@@ -37,7 +38,6 @@
 								<ul class="dropdown-menu">
 									<li><a class="top-btn" href="/recette/liste"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Livre de recettes'}</a></li>
 									<li><a class="top-btn" href="/recette/edition/modules"><i class="icon-plus glyph-white"></i>  {t d='repasrc' m='Composer une recette'}</a></li>
-									<li><a class="top-btn" href="/recette/comparer"><i class="icon-retweet glyph-white"></i>  {t d='repasrc' m='Comparer des recettes'}</a></li>
 									<li><a class="top-btn" href="/recette/importer"><i class="icon-upload glyph-white"></i>  {t d='repasrc' m='Importer une recette'}</a></li>
 									<li><a class="top-btn" href="/recette/exporter"><i class="icon-download glyph-white"></i>  {t d='repasrc' m='Exporter une recette'}</a></li>
 								</ul>
