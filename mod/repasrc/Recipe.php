@@ -7,62 +7,126 @@ class Recipe {
 	function __construct() {
 	}
 
-	public static function search($rc_id='', $label='', $type='', $foodstuff='', $shared='', $owner='') {
-
-		if (empty($rc_id) && isset($_SESSION['login'])) $rc_id = \mod\repasrc\RC::getUserRC($_SESSION['login']);
+	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false) {
 
 		$params = array();
-		$q = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification FROM rrc_recipe AS re';
+		$q = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification ';
+		$q.= 'FROM rrc_recipe AS re ';
 		$w = ' WHERE 1=1';
 		if ($label) {
 			$params[] = $label;
 			$w.= " AND UPPER(rrc_re_label) LIKE UPPER(?)";	
 	}
-		if ($type) {
-			$params[] = $type;
+		if ($component) {
+			$params[] = $component;
 			$w.= ' AND rrc_re_component=?';	
 		}
 		if ($foodstuff) {
 			$params[] = $foodstuff;
-			$q.= ' LEFT JOIN rrc_recipe_foodstuff AS rf ON re.rrc_re_id=rf.rrc_rf_rrc_recipe_id LEFT JOIN rrc_foodstuff AS fs ON rf.rrc_rf_rrc_foodstuff_id=fs.rrc_fs_id';
-			$w.= " AND rrc_fs_label_caps LIKE UPPER(?)";	
+			$q.= 'LEFT JOIN rrc_recipe_foodstuff AS rf ON re.rrc_re_id=rf.rrc_rf_rrc_recipe_id LEFT JOIN rrc_foodstuff AS fs ON rf.rrc_rf_rrc_foodstuff_id=fs.rrc_fs_id ';
+			$w.= " AND rrc_fs_label_caps LIKE UPPER(?) ";	
 		}
-		if ($shared && !$owner) {
-			$w.= ' AND rrc_re_public=\'1\'';	
-		} else if (!$shared && !$owner) {
+		if ($shared && is_null($owner)) {
+			$w.= ' AND rrc_re_public=\'1\' ';	
+		} else if (is_null($shared) && is_null($owner)) {
 			$params[] = $rc_id;
-			$w.= ' AND rrc_re_rrc_rc_id=?';	
+			$w.= ' AND rrc_re_rrc_rc_id=? ';	
 		} else if ($owner) {
 			switch($owner) {
 				// Recipe flagged as admin
 				case "me":
 					$params[] = $rc_id;
-					$w.= ' AND rrc_re_rrc_rc_id=?';	
+					$w.= ' AND rrc_re_rrc_rc_id=? ';	
 				break;
 				// Recipe flagged as admin
 				case "admin":
-					$w.= ' AND rrc_re_byadmin=1';
+					$w.= ' AND rrc_re_byadmin=1 ';
 				break;
 				// Other recipes
 				case "other":
 					$params[] = $rc_id;
-					$w.= ' AND rrc_re_rrc_rc_id != ? AND rrc_re_byadmin!=1 AND rrc_re_public=1';
+					$w.= ' AND rrc_re_rrc_rc_id != ? AND rrc_re_byadmin!=1 AND rrc_re_public=\'1\' ';
 				break;
 			}
 		}
-		$o = " ORDER BY label";
+		$o = "ORDER BY label ";
 		$query = $q.$w.$o;
-		$recipes = array();	
-		$recipes['STARTER'] = array();
-		$recipes['MEAL'] = array();
-		$recipes['CHEESE/DESSERT'] = array();
-		$recipes['BREAD'] = array();
-		foreach(\core\Core::$db->fetchAll($query, $params) as $row) {
-			if (strstr($row['modification'], '0000')) $row['modification'] = '-';
-			$row['hasFoodstuff'] = (int)self::recipeHasFoodstuff($row['id']);
-			$recipes[$row['component']][] = $row;
+
+		return \core\Core::$db->fetchAll($query, $params);
+	}
+
+	public static function searchComputed($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL) {
+
+		$recipes = self::search($rc_id, $owner, $component, $label, $foodstuff, $shared, true);
+
+		$conservation['G1'] = 1;
+		$conservation['G2'] = 0.83333;
+		$conservation['G3'] = 0.83333;
+		$conservation['G4'] = 0.83333;
+		$conservation['G5'] = 0.83333;
+		$conservation['G6'] = 0.3;
+		$conservation['G7'] = 0.15;
+		$conservation['G8'] = 1;
+		$conservation['G9'] = 1;
+		$conservation['10'] = 1;
+		$conservation['11'] = 1;
+
+		$result = array();
+		
+		foreach ($recipes as $recipe) {
+			$recipe['families'] = $recipe['foodstuff'] = array();
+			switch($recipe['component']) {
+				case 'STARTER':
+					$recipe['component'] = 'Entrée';
+				break;	
+				case 'MEAL':
+					$recipe['component'] = 'Plat';
+				break;	
+				case 'CHEESE/DESSERT':
+					$recipe['component'] = 'Fromage ou dessert';
+				break;	
+				case 'BREAD':
+					$recipe['component'] = 'Pain';
+				break;	
+			}
+			$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
+			$recipe['label'] = str_replace("''", "'", $recipe['label']);
+			$foodstuffList = self::getFoodstuffList($recipe['id']);
+			$numFs = sizeof($foodstuffList);
+			$recipe['footprint'] = 0;
+			foreach($foodstuffList as $fs) {
+				/* CHECK THAT */
+				/* CHECK THAT */
+				/* CHECK THAT */
+				if (sizeof($fs['foodstuff']) == 0) {
+					continue;
+				}
+				$footprint = $fs['foodstuff'][0]['footprint']*$fs['quantity'];
+				if ($fs['conservation']) {
+					$footprint = $footprint*$conservation[$fs['conservation']];
+				}
+				$recipe['footprint'] += $footprint;
+				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
+				if (!in_array($fam, $recipe['families'])) {
+					$recipe['families'][] = $fam;  
+				}
+				$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
+				if (!in_array($fs_label, $recipe['foodstuff'])) {
+					$recipe['foodstuff'][] = $fs_label;  
+				}
+			}
+
+			$result[] = $recipe;
+		\core\Core::log($result);
+
 		}
-		return array_merge($recipes['STARTER'], $recipes['MEAL'], $recipes['CHEESE/DESSERT'], $recipes['BREAD']);
+		/*
+		$fp = fopen('/tmp/test.txt', 'w');
+		fputs($fp, json_encode($recipes));
+		fclose($fp);
+		 */
+
+		return $result;
 	}
 
 	public static function recipeHasFoodstuff($id) {

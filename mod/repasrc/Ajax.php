@@ -16,7 +16,12 @@ class Ajax {
 	public static function searchFoodstuff($params) {
 		$familyId = (!empty($params['familyId'])) ? $params['familyId'] : NULL;
 		$subFamilyId = (!empty($params['subFamilyId'])) ? $params['subFamilyId'] : NULL;
-		$foodstuffName = (!empty($params['foodstuffName'])) ? $params['foodstuffName'] : NULL;
-		return \mod\repasrc\Foodstuff::search($familyId, $subFamilyId, $foodstuffName);
+		return \mod\repasrc\Foodstuff::search($familyId, $subFamilyId);
+	}
+
+	public static function searchRecipe($params) {
+		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
+		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
+		return \mod\repasrc\Recipe::searchComputed(12, $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
 	}
 }

@@ -89,7 +89,10 @@ class Foodstuff {
 		// Do not store duplicate foostuff, for example because it's defined with multiple families
 		foreach(\core\Core::$db->fetchAll($query, $params) as $row) {
 			$s = array();
-			$currentId = $row['id'].'-'.$row['synonym_id'];
+			if (isset($row['synonym_id']))
+					$currentId = $row['id'].'-'.$row['synonym_id'];
+			else
+					$currentId = $row['id'];
 			if (!isset($fs[$currentId])) {
 				$num = 0;
 				$tmp = array();
@@ -98,7 +101,7 @@ class Foodstuff {
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
 				$tmp['footprint'] = $row['footprint'];
-				if (!is_null($row['synonym_id'])) {
+				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					$tmp['synonym'] = $row['synonym'];
 				}

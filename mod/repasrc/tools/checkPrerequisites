@@ -5,7 +5,7 @@
 $CAPTAINHOOK_PATH = getenv('CAPTAINHOOK_PATH');
 if ($CAPTAINHOOK_PATH === false) {
   if (is_file(getcwd().'/conf/general.conf')) $CAPTAINHOOK_PATH=getcwd();
-  else $CAPTAINHOOK_PATH = "/home/web/dev/captainhook_repasrc";
+  else $CAPTAINHOOK_PATH = "/home/web/rcresponsable/captainhook";
 }
 
 function _readline($prompt = '') {

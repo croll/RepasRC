@@ -42,7 +42,7 @@
 					{foreach $recipeFoodstuffList as $fs}
 						<li class="clearfix" style="cursor:pointer">
 							<a style="color: #000;font-size:12px">
-								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{$fs.foodstuff.0.infos.0.family_group_id}">&nbsp;</div>
+								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.0.infos))}{$fs.foodstuff.0.infos.0.family_group_id}{/if}">&nbsp;</div>
 								<span style="">
 									{$fs.quantity} {$fs.unit}
 									<strong>

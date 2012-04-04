@@ -17,13 +17,8 @@ class Main {
     \mod\user\Main::redirectIfNotLoggedIn();
 		$recipes = NULL;
 
-		if (isset($_POST['label'])) {
-			$recipes = \mod\repasrc\Recipe::search(7);
-		}
-
 		// Display
     $page = new \mod\webpage\Main();
-		$section = $params[1];
 		$page->smarty->assign('recipes', $recipes);
 		$page->setLayout('repasrc/recipe/list');
     $page->display();
