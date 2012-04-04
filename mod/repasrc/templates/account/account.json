@@ -1,0 +1,85 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/compte/saisie",
+	"class" : "form-horizontal",
+	"enctype" : "multipart/form-data",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "name",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "select",
+			"name" : "select_public",
+			"multiple" : "multiple",
+			"style" :  "height:90px",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "noum",
+					"label" : "Maternelles"
+				},
+				{ "type" : "option",
+					"value" : "SCHOLASTIC",
+					"label" : "Ecoliers"
+				},
+				{ "type" : "option",
+					"value" : "STUDENT",
+					"label" : "Etudiants"
+				},
+				{ "type" : "option",
+					"value" : "ADULT",
+					"label" : "Adultes"
+				},
+				{ "type" : "option",
+					"value" : "ELDERIES",
+					"label" : "Personnes agées"
+				}
+			]	
+		},
+		{	"type" : "select",
+			"name" : "select_administration",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "SELF_MANAGEMENT",
+					"label" : "Autogérée"
+				},
+				{ "type" : "option",
+					"value" : "CONCEDED",
+					"label" : "Concédée"
+				}
+			]	
+		},
+		{	"type" : "text",
+			"name" : "daysactive",
+			"value" : 100,
+			"validators" : 
+			[ 
+				"validate-integer"
+			]
+		},
+		{	"type" : "text",
+			"name" : "city",
+			"class" : "input-xlarge"
+		},
+		{	"type" : "text",
+			"name" : "city_selected",
+			"class" : "input-xlarge"
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Enregistrer les informations"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Ne rien modifier"
+		}
+	]
+}

@@ -1,0 +1,75 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/recette/edition/aliments",
+	"class" : "form-horizontal",
+	"enctype" : "multipart/form-data",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "name",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "select",
+			"name" : "select_component",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "STARTER",
+					"label" : "Entrée"
+				},
+				{ "type" : "option",
+					"value" : "MEAL",
+					"label" : "Plat"
+				},
+				{ "type" : "option",
+					"value" : "CHEESE/DESSERT",
+					"label" : "Fromage ou dessert"
+				},
+				{ "type" : "option",
+					"value" : "BREAD",
+					"label" : "Pain"
+				}
+			]	
+		},
+		{	"type" : "text",
+			"name" : "persons",
+			"value" : 100,
+			"validators" : 
+			[ 
+				"validate-integer"
+			]
+		},
+		{	"type" : "select",
+			"name" : "select_share",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "1",
+					"label" : "Partager"
+				},
+				{ "type" : "option",
+					"value" : "0",
+					"label" : "Ne pas partager"
+				}
+			]	
+		},
+		{	"type" : "textarea",
+			"name" : "comment",
+			"class" : "input-xlarge"
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Enregistrer les informations et passer à l'étape suivante"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Annuler la création de la recette"
+		}
+	]
+}

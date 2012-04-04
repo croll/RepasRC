@@ -1,0 +1,97 @@
+body {
+  position: relative;
+	padding-top: 60px;
+	padding-bottom: 40px;
+  background-color: #fff;
+  background-repeat: repeat-x;
+  background-position: 0 40px;
+}
+
+#content {
+	width: 1140px;
+	margin: 0 auto;
+}
+
+#repasrc_container {
+	margin: 0 auto;
+}
+
+div.recipe_content {
+	background: #fff;
+}
+
+.row.select {
+	margin: 10px;
+	display: block;
+	width: 100%;
+	padding: 0;
+	line-height: 1.8em;
+	cursor: pointer;
+}
+
+.row.select .title {
+	margin: 10px 0px 0px 40px;
+	width: 100%;
+	float: left;
+}
+
+.row.select .hint {
+	margin: 0px 0px 20px 40px;
+	width: 100%;
+	float: left;
+}
+
+.select.checked {
+	background: transparent url(../img/check.png) no-repeat center left;
+}
+
+.form-actions input.btn-primary.special {
+	margin-left: 140px;
+} 
+
+.fam6 {
+	background-color: #ed1c24;
+	font-size: 10px;
+}
+
+.fam5 {
+	background-color: #00adef;
+	font-size: 10px;
+}
+
+.fam2 {
+	background-color: #813a28;
+	font-size: 10px;
+}
+
+.fam3, .fam4 {
+	background-color: #00a650;
+	font-size: 10px;
+}
+
+.fam7 {
+	background-color: #fcc707;
+	font-size: 10px;
+}
+
+.fam1 {
+	background-color: #ffb1fa;
+	font-size: 10px;
+}
+
+.fam8 {
+	background-color: #d11fec;
+	font-size: 10px;
+}
+
+.fam9 {
+	background-color: #777;
+	font-size: 10px;
+}
+
+.foodstuff-list {
+	margin: 0px 20px 0px 0px;
+	height: 410px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
