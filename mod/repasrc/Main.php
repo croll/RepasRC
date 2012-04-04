@@ -7,7 +7,6 @@ class Main {
   public static function hook_mod_repasrc_index($hookname, $userdata) {
     $page = new \mod\webpage\Main();
 		$content = \mod\page\Main::getPageBySysname('accueil');
-		$page->smarty->assign('title', $title['title']);
 		$page->smarty->assign('content', $content['content']);
 		$page->setLayout('repasrc/repasrc');
     $page->display();
@@ -72,6 +71,17 @@ class Main {
 	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
 		$section = $params[1];
+	}
+
+	public static function hook_mod_repasrc_recipe_analyze($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+		if (isset($params[2]))
+			$id = $params[2];
+    $page = new \mod\webpage\Main();
+		$page->setLayout('repasrc/recipe/map');
+		$section = 'transport';
+		$page->smarty->assign(array('section' => $section, 'recipe_id' => $id));
+    $page->display();
 	}
 
 	public static function hook_mod_repasrc_menu($hookname, $userdata) {

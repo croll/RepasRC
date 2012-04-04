@@ -24,4 +24,16 @@ class Ajax {
 		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
 		return \mod\repasrc\Recipe::searchComputed(12, $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
 	}
+
+	public static function showRecipeDetail($params) {
+		$id = $params['id'];
+		$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
+		$recipe = \mod\repasrc\Recipe::getDetail($id);
+    $page = new \mod\webpage\Main();
+		$page->smarty->assign('recipe', $recipe);
+		$page->smarty->assign('foodstuffList', $foodstuffList);
+		\core\Core::log($detail);
+		\core\Core::log($foodstuffList);
+		return array('title' => $recipe['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
+	}
 }

@@ -13,6 +13,7 @@
 	{js file="/mod/repasrc/js/MilkChart.js"}
 	{css file="/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css"}
 	{css file="/mod/repasrc/css/bootstrap-responsive.css"}
+	{css file="/mod/cssjs/css/Modal.css"}
 	{css file="/mod/cssjs/css/mypaginate.css"}
 	{css file="/mod/page/css/page.css"}
 	{css file="/mod/repasrc/css/repasrc.css"}
@@ -36,7 +37,7 @@
 							<li class="dropdown" onclick="this.toggleClass('open');">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{t d='repasrc' m='Recettes'}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a class="top-btn" href="/recette/liste"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Livre de recettes'}</a></li>
+									<li><a class="top-btn" href="/recette/liste"><i class="icon-book glyph-white"></i>  {t d='repasrc' m='Livre de recettes'}</a></li>
 									<li><a class="top-btn" href="/recette/edition/modules"><i class="icon-plus glyph-white"></i>  {t d='repasrc' m='Composer une recette'}</a></li>
 									<li><a class="top-btn" href="/recette/importer"><i class="icon-upload glyph-white"></i>  {t d='repasrc' m='Importer une recette'}</a></li>
 									<li><a class="top-btn" href="/recette/exporter"><i class="icon-download glyph-white"></i>  {t d='repasrc' m='Exporter une recette'}</a></li>

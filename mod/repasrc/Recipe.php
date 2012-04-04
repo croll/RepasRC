@@ -117,7 +117,6 @@ class Recipe {
 			}
 
 			$result[] = $recipe;
-		\core\Core::log($result);
 
 		}
 		/*
@@ -160,6 +159,67 @@ class Recipe {
 			$fs[] = $tmp;
 		}
 		return $fs;
+	}
+
+	public static function getDetail($id) {
+		$params = array($id);
+
+		$conservation['G1'] = 1;
+		$conservation['G2'] = 0.83333;
+		$conservation['G3'] = 0.83333;
+		$conservation['G4'] = 0.83333;
+		$conservation['G5'] = 0.83333;
+		$conservation['G6'] = 0.3;
+		$conservation['G7'] = 0.15;
+		$conservation['G8'] = 1;
+		$conservation['G9'] = 1;
+		$conservation['10'] = 1;
+		$conservation['11'] = 1;
+		$q = "SELECT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id as owner, rrc_re_creation AS creation, rrc_re_modification AS modification FROM rrc_recipe WHERE rrc_re_id=?";
+		$recipe = \core\Core::$db->fetchRow($q, $params);
+		$recipe['families'] = $recipe['foodstuff'] = array();
+		switch($recipe['component']) {
+			case 'STARTER':
+				$recipe['component'] = 'Entrée';
+			break;	
+			case 'MEAL':
+				$recipe['component'] = 'Plat';
+		break;	
+			case 'CHEESE/DESSERT':
+				$recipe['component'] = 'Fromage ou dessert';
+			break;	
+			case 'BREAD':
+				$recipe['component'] = 'Pain';
+			break;	
+		}
+		$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
+		$recipe['label'] = str_replace("''", "'", $recipe['label']);
+		$foodstuffList = self::getFoodstuffList($recipe['id']);
+		$recipe['footprint'] = 0;
+		foreach($foodstuffList as $fs) {
+			/* CHECK THAT */
+			/* CHECK THAT */
+			/* CHECK THAT */
+			if (sizeof($fs['foodstuff']) == 0) {
+				continue;
+			}
+			$footprint = $fs['foodstuff'][0]['footprint']*$fs['quantity'];
+			if ($fs['conservation']) {
+			$footprint = $footprint*$conservation[$fs['conservation']];
+			}
+			$recipe['footprint'] += $footprint;
+				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
+				if (!in_array($fam, $recipe['families'])) {
+					$recipe['families'][] = $fam;  
+				}
+				$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
+				if (!in_array($fs_label, $recipe['foodstuff'])) {
+					$recipe['foodstuff'][] = $fs_label;  
+				}
+				$recipe['footprint'] = round($recipe['footprint'], 3);
+				\core\Core::log($recipe);
+			}
+		return $recipe;
 	}
 
 }

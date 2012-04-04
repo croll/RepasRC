@@ -81,7 +81,7 @@ window.addEvent('domready', function() {
 
 		document.id('component').addEvent('change', function() {
 			document.id('label').set('value', '');
-			document.id('fsname').set('value', 'fsname');
+			document.id('fsname').set('value', '');
 			var val = this.get('value');
 			if (val != '') {
 				loadRecipes();
@@ -264,7 +264,6 @@ function buildRecipeThumb(re) {
 	}
   html += '<dl class="dl-horizontal" style="height: 12px"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
 	html += '<dl class="dl-horizontal" style="height: 12px" style="margin:0px" style=""><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;gha</dd></dl>';
-  html += '<dl class="dl-horizontal" style="height: 12px"><dt>Nombre de convives:</dt><dd>'+re.persons+'</dd></dl>';
   html += '<dl class="dl-horizontal" style="height: 12px"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuff.length+'</dd></dl>';
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
@@ -273,5 +272,19 @@ function buildRecipeThumb(re) {
 }
 
 function showRecipeDetail(id) {
-	alert('yo');
+	modalWin = new Modal.Base(document.body, {
+		header: "Fiche site",
+		body: "Chargement..."
+	});
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/showRecipeDetail',
+			onRequest: function() {
+			},
+		onSuccess: function(res) {
+			modalWin.setTitle(res.title).setBody(res.content).show();
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id});
 }
