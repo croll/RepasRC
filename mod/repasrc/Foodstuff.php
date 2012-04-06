@@ -68,7 +68,7 @@ class Foodstuff {
 		if ($fsIds != NULL) {
 			foreach($fsIds as $aID) {
 				$tmp = '';
-				if (isset($aID['synonym_id'])) {
+				if (isset($aID['synonym_id']) && !is_null($aID['synonym_id'])) {
 					$tmp .= "(fs.rrc_fs_id = ? AND ss.rrc_ss_id = ?) OR ";
 					$params[] = $aID['id'];
 					$params[] = $aID['synonym_id'];
@@ -96,7 +96,7 @@ class Foodstuff {
 			if (!isset($fs[$currentId])) {
 				$num = 0;
 				$tmp = array();
-				$tmp['foodstuff_id'] = $row['id'];
+				$tmp['id'] = $row['id'];
 				$tmp['label'] = $row['label'];
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
@@ -132,11 +132,11 @@ class Foodstuff {
 	public static function getInfos($id, $synonym_id) {
 		$params = array($id);
 		if ($synonym_id) {
-			$query = "SELECT rrc_fs_id AS foodstuff_id, rrc_fs_label AS label, rrc_ss_id AS synonym_id, rrc_ss_label AS synonym FROM rrc_foodstuff AS fs LEFT JOIN rrc_foodstuff_synonym AS ss ON fs.rrc_fs_id=ss.rrc_ss_rrc_foodstuff_id WHERE rrc_fs_id=?";
+			$query = "SELECT rrc_fs_id AS id, rrc_fs_label AS label, rrc_ss_id AS synonym_id, rrc_ss_label AS synonym FROM rrc_foodstuff AS fs LEFT JOIN rrc_foodstuff_synonym AS ss ON fs.rrc_fs_id=ss.rrc_ss_rrc_foodstuff_id WHERE rrc_fs_id=?";
 			$params[] = $synonym_id;
 			$query.= " AND rrc_ss_id = ?";
 		} else {
-			$query = "SELECT rrc_fs_id AS foodstuff_id, rrc_fs_label AS label FROM rrc_foodstuff AS fs WHERE rrc_fs_id=?";
+			$query = "SELECT rrc_fs_id AS id, rrc_fs_label AS label FROM rrc_foodstuff AS fs WHERE rrc_fs_id=?";
 		}
 		return array_values(\core\Core::$db->fetchAll($query, $params));
 	}

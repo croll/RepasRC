@@ -65,7 +65,11 @@ class Main {
     $page->display();
 	}
 
-	public static function hook_mod_repasrc_recipe_submit($hookname, $userdata, $params) {
+	public static function hook_mod_repasrc_recipe_import($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+    $page = new \mod\webpage\Main();
+		$page->setLayout('repasrc/recipe/import');
+    $page->display();
 	}
 
 	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {

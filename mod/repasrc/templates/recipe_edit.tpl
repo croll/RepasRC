@@ -16,7 +16,7 @@
 					<li{if ($section == 'modules')} class="active"{/if}><a href="/recette/edition/modules/{$recipe_id}"><i class="icon-th"></i>{t d='repasrc' m='Choix des modules'}</a></li>
 					<li{if ($section == 'informations')} class="active"{/if}><a href="/recette/edition/informations/{$recipe_id}"><i class="icon-info-sign"></i>{t d='repasrc' m='Informations'}</a>
 					{if isset($recipe_id)}
-						<li{if ($section == 'aliments')} class="active"{/if}><a href="/recette/edition/aliments/{$recipe_id}"><i class="icon-shopping-cart"></i>{t d='repasrc' m='Aliments'}</a></li>
+						<li{if ($section == 'aliments')} class="active"{/if}><a href="/recette/edition/aliments/{$recipe_id}"><i class="icon-leaf"></i>{t d='repasrc' m='Aliments'}</a></li>
 						<li class="nav-header">{t d='repasrc' m='Analyse'}</li>
 						<li{if ($section == 'resultats')} class="active"{/if}><a href="/recette/analyse/resultats/{$recipe_id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résultats'}</a></li>
 						{if (isset($smarty.session.recipe.modules) && $smarty.session.recipe.modules.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/recette/analyse/saisonnalite/{$recipe_id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}

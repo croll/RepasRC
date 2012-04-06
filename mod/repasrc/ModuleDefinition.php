@@ -19,7 +19,7 @@ class ModuleDefinition extends \core\ModuleDefinition {
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/edition/?([a-z]*)/?([0-9]*)/?$#', 'mod_repasrc_recipe_edit');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/liste$#', 'mod_repasrc_recipe_list');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/comparer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_compare');
-		\mod\regroute\Main::registerRoute($this->id, '#^/recette/envoyer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_submit');
+		\mod\regroute\Main::registerRoute($this->id, '#^/recette/importer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_import');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/analyse/?([a-z]*)/?([0-9]*)$#', 'mod_repasrc_recipe_analyze');
 		\mod\user\Main::addRight("Import RepasRC datas", "User can import datas");			
 		\mod\user\Main::assignRight('View page', 'Anonymous');

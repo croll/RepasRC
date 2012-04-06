@@ -188,10 +188,11 @@ function buildFoodstuffThumb(fs) {
 		var imgId = 's'+fs.synonym_id;
 		var name = fs.synonym;
 	} else {
-		var imgId = fs.foodstuff_id;
+		fs.synonym_id = null;
+		var imgId = fs.id;
 		var name = fs.label;
 	}
-	html = '<li class="span5 result" style="width: 550px"><div class="thumbnail">';
+	html = '<li onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="width: 550px"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+imgId+'.jpg" alt /></li>';
 	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
@@ -247,7 +248,7 @@ function loadRecipes(reset) {
 }
 
 function buildRecipeThumb(re) {
-	html = '<li onclick="showRecipeDetail(\''+re.id+'\')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
+	html = '<li onclick="showRecipeDetail('+re.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
 	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
@@ -287,4 +288,34 @@ function showRecipeDetail(id) {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
+}
+
+function showFoodstuffDetail(id, sid) {
+	var tmp = top.document.location.href.split('/');
+	var len = tmp.length-1;
+	os = tmp[len];
+	if (os == '' || os == 'aliments') {
+		recipeId = null;
+	} else {
+		recipeId = os;
+	}
+	synonymId = sid || null;
+	modalWin = new Modal.Base(document.body, {
+		header: "Fiche site",
+		body: "Chargement..."
+	});
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/showFoodstuffDetail',
+			onRequest: function() {
+			},
+		onSuccess: function(res) {
+			modalWin.setTitle(res.title).setBody(res.content).show();
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id, synonymId: synonymId, recipeId: recipeId});
+}
+
+function addFoodstuffToRecipe(foodstuffId, recipeId) {
 }

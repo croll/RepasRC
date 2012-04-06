@@ -217,7 +217,6 @@ class Recipe {
 					$recipe['foodstuff'][] = $fs_label;  
 				}
 				$recipe['footprint'] = round($recipe['footprint'], 3);
-				\core\Core::log($recipe);
 			}
 		return $recipe;
 	}
