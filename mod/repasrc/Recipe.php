@@ -133,6 +133,11 @@ class Recipe {
 		return ($num > 0) ? true : false;
 	}
 
+	public static function getInfos($id) {
+		if (empty($id)) return null;
+		 return \core\Core::$db->fetchRow('SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared FROM rrc_recipe WHERE rrc_re_id=?', array($id));
+	}
+
 	public static function getFoodstuffList($id) {
 		$params = array($id);
 		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id, rrc_zv_label AS zone, rrc_zt_label as zone_type ";
@@ -219,6 +224,57 @@ class Recipe {
 				$recipe['footprint'] = round($recipe['footprint'], 3);
 			}
 		return $recipe;
+	}
+
+	public static function add($rc_id, $label, $shared, $component, $persons, $comment='') {
+		$params = array((int)$rc_id, $label, (int)$shared, $component, $persons, $comment);
+		$params[] = self::getBitsFromModulesList($_SESSION['recipe']['modules']);
+		return \core\Core::$db->exec_returning('INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_label, rrc_re_public, rrc_re_component, rrc_re_persons, rrc_re_comment, rrc_re_modules, rrc_re_creation) VALUES (?,?,?,?,?,?,?,now()) ', $params, 'rrc_re_id');
+	}
+
+	public static function update($re_id, $label, $shared, $component, $persons, $comment='') {
+		$params = array($label, (int)$shared, $component, $persons, $comment, (int)$re_id);
+		$q = 'UPDATE rrc_recipe SET rrc_re_label=?, rrc_re_public=?, rrc_re_component=?, rrc_re_persons=?, rrc_re_comment=?, rrc_re_modification=now() WHERE rrc_re_id=?';
+		$res = \core\Core::$db->exec($q, $params);
+	}
+
+	public static function updateModules($re_id, $modules) {
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_modules=? WHERE rrc_re_id=?', array(self::getBitsFromModulesList($modules), (int)$re_id));
+	}
+	
+	public static function delete($rid) {
+		$params = array($rid);
+		\core\Core::$db->exec('DELETE FROM rrc_recipe where rrc_re_id=?', $params);
+		// Delete recipe foodstuff
+		\core\Core::$db->exec('DELETE FROM rrc_recipe_foodstuff where rrc_rf_rrc_recipe_id=?', $params);
+		// Delete recipe assignation to menu
+		\core\Core::$db->exec('DELETE FROM rrc_menu_recipe where rrc_mr_rrc_recipe_id=?', $params);
+	}
+
+	public static function getBitsFromModulesList($modules) {
+		$num = 0;
+		$val = array('seasonality' => 1, 'production' => 2, 'transport' => 4, 'price' => 8);
+		foreach($val as $k=>$v) {
+			if ($modules[$k] == 1)
+				$num+=$v;
+		}
+		return $num;
+	}
+
+	public static function getModulesListFromBits($num) {
+		$modules = array();
+		$val = array(1 => 'seasonality', 2 => 'production', 4 => 'transport', 8 => 'price');
+		foreach($val as $k=>$v) {
+			if ($k & $num)
+				$modules[$v] = 1;
+		}
+		return $modules;
+	}
+
+	public static function getModulesList($recipeId) {
+		$num = \core\Core::$db->fetchOne('SELECT rrc_re_modules FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId));
+		$val = (is_null($num)) ? 15 : $num;
+		return self::getModulesListFromBits($val);
 	}
 
 }

@@ -23,29 +23,32 @@ Vous avez le choix de sélectionner ou non chacune de ces fonctionnalités du ca
 	</div> 
 	<div id="modules_container">
 		<ul class="nav nav-tabs nav-stacked">
-			<li id="seasonality" class="row select{if (isset($smarty.session.recipe.modules) && $smarty.session.recipe.modules.seasonality == 1)} checked{/if}">
+			<li id="seasonality" class="row select{if (isset($modulesList) && $modulesList.seasonality == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module saisonnalité'}</h3></div>
 				<div class="hint">Le module Saisonnalité offre une aide pour savoir si la période de consommation du produit est adapté. Diverses informations vous seront données pour vous aider dans vos choix.</div>
 			</li>
-			<li id="production"  class="row select{if (isset($smarty.session.recipe.modules) && $smarty.session.recipe.modules.production == 1)} checked{/if}">
+			<li id="production"  class="row select{if (isset($modulesList) && $modulesList.production == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module Production'}</h3></div>
 				<div class="hint">Ce module vous permet de définir les modes de conservation et de production des aliments.</div>
 			</li>
-			<li id="transport" class="row select{if (isset($smarty.session.recipe.modules) && $smarty.session.recipe.modules.transport == 1)} checked{/if}">
+			<li id="transport" class="row select{if (isset($modulesList) && $modulesList.transport == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module transport'}</h3></div>
 				<div class="hint">Si vous avez la possibilité d'indiquer la provenance des aliments pour pourrez bénéficier d'une analyse sur l'impact des transports.</div>
 			</li>
-			<li id="price" class="row select{if (isset($smarty.session.recipe.modules) && $smarty.session.recipe.modules.price == 1)} checked{/if}">
+			<li id="price" class="row select{if (isset($modulesList) && $modulesList.price == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module prix'}</h3></div>
 				<div class="hint">En indiquant le prix des aliments, un calcul du prix par recette, menu ou plan alimentaire vous sera proposé.</div>
 			</li>
 		</ul>
-			<form id="modules_form" name="modules_form"  action="/recette/edition/modules" method="post">
+			<form id="modules_form" name="modules_form"  action="/recette/edition/informations" method="post">
 				<div class="form-actions">
 					<input type="submit" class="btn btn-primary special" id="submit" value="Valider le choix de modules" />
 					<input type="button" class="btn" id="cancel" value="Annuler la création de la recette" />
 				</div>
-				<input type="hidden" name="modules" value="" />
+				<input type="hidden" id="modules" name="modules" value="" />
+				{if isset($recipeId)}
+					<input type="hidden" name="recipeId" value="{$recipeId}" />
+				{/if}
 			</form>
 	</div>
 {/block}

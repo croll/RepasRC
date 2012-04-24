@@ -7,14 +7,14 @@
 	"elements" : 
 	[
 		{	"type" : "text",
-			"name" : "name",
+			"name" : "label",
 			"validators" : 
 			[ 
 				"required"
 			]
 		},
 		{	"type" : "select",
-			"name" : "select_component",
+			"name" : "component",
 			"children" :
 			[
 				{ "type" : "option",
@@ -44,7 +44,7 @@
 			]
 		},
 		{	"type" : "select",
-			"name" : "select_share",
+			"name" : "shared",
 			"children" :
 			[
 				{ "type" : "option",

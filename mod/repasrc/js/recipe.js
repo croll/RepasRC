@@ -14,7 +14,7 @@ window.addEvent('domready', function() {
 				modules.push(el.get('id'));
 			});
 			if (modules.length > 0) {
-				document.id('modules_form').getElement('input[type=hidden]').set('value', modules.join(' '));
+				$('modules').set('value', modules.join(' '));
 				document.id('modules_form').submit();
 			} else {
 				top.document.location.href='/recette/edition/informations';

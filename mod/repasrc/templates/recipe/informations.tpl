@@ -11,18 +11,18 @@
 		<a class="close" data-dismiss="alert">×</a>
 		Veuillez remplir le formulaire suivant pour renseigner les informations essentielles pour qualifier votre recette.
 	</div> 
-		{form mod="repasrc" file="templates/recipe/informations.json"}
+		{form mod="repasrc" file="templates/recipe/informations.json" defaultValues=\mod\repasrc\Recipe::getInfos($recipeId)}
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Nom de la recette"}</label>
 					<div class="controls">
-						{$informations.name}
+						{$informations.label}
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Composante"}</label>
 					<div class="controls">
-						{$informations.select_component}
+						{$informations.component}
 						<p class="help-block">{t d='repasrc' m="Indique le type de recette: entrée, plat, dessert, pain."}</p>	
 					</div>
 				</div>
@@ -36,7 +36,7 @@
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m='Partager'}</label>
 					<div class="controls">
-						{$informations.select_share}
+						{$informations.shared}
 						<p class="help-block">{t d='repasrc' m="Une recette partagée sera visible par les autres utilisateurs du calculateur. Ils pourront comparer leur recette avec la votre et créer une recette en s'inspirant de cette dernière."}</p>	
 					</div>
 				</div>
@@ -51,6 +51,7 @@
 						{$informations.submit}
 						{$informations.cancel}
 				</div>
+				<input type="hidden" name="recipeId" value="{$recipeId}" />
 			</fieldset>
 		{/form}
 

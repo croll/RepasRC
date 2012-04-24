@@ -99,7 +99,7 @@ CREATE TABLE "rrc_foodstuff_family" (
 );
 CREATE INDEX rrc_foodstufffamily_fs_idx ON "rrc_foodstuff_family" ("rrc_ff_rrc_foodstuff_id");
 CREATE INDEX rrc_foodstufffamily_fa_idx ON "rrc_foodstuff_family" ("rrc_ff_rrc_family_id");
-ALTER SEQUENCE rrc_foodstuff_family_rrc_ff_id_seq RESTART WITH 500; 
+ALTER SEQUENCE rrc_foodstuff_family_rrc_ff_id_seq RESTART WITH 1000; 
 
 --
 -- Table structure for table "rrc_foodstuff_synonym"
@@ -175,7 +175,7 @@ CREATE TABLE "rrc_menu_recipe" (
 );
 CREATE INDEX rrc_menurecipe_re_idx ON "rrc_menu_recipe" ("rrc_mr_rrc_recipe_id");
 CREATE INDEX rrc_menurecipe_me_idx ON "rrc_menu_recipe" ("rrc_mr_rrc_menu_id");
-ALTER SEQUENCE rrc_menu_recipe_rrc_mr_id_seq RESTART WITH 500; 
+ALTER SEQUENCE rrc_menu_recipe_rrc_mr_id_seq RESTART WITH 1000; 
 
 --
 -- Table structure for table "rrc_origin"
@@ -191,7 +191,7 @@ CREATE TABLE "rrc_origin" (
 );
 CREATE INDEX rrc_origin_zo_idx ON "rrc_origin" ("rrc_or_rrc_geo_zonevalue_id");
 CREATE INDEX rrc_origin_fs_idx ON "rrc_origin" ("rrc_or_rrc_recipe_foodstuff_id");
-ALTER SEQUENCE rrc_origin_rrc_or_id_seq RESTART WITH 2000; 
+ALTER SEQUENCE rrc_origin_rrc_or_id_seq RESTART WITH 3000; 
 
 --
 -- Table structure for table "rrc_rc"
@@ -233,12 +233,13 @@ CREATE TABLE "rrc_recipe" (
   "rrc_re_persons" INTEGER DEFAULT NULL,
   "rrc_re_byadmin" INTEGER NOT NULL DEFAULT '0',
   "rrc_re_hash" TEXT,
-  "rrc_re_comment" TEXT,
   "rrc_re_creation" TIMESTAMP,
-  "rrc_re_modification" TIMESTAMP
+  "rrc_re_modification" TIMESTAMP,
+  "rrc_re_comment" TEXT,
+  "rrc_re_modules" INTEGER DEFAULT NULL
 );
 CREATE INDEX rrc_rc_rc_idx ON "rrc_recipe" ("rrc_re_rrc_rc_id");
-ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 500; 
+ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 1000; 
 
 --
 -- Table structure for table "rrc_recipe_foodstuff"
@@ -260,4 +261,4 @@ CREATE TABLE "rrc_recipe_foodstuff" (
 );
 CREATE INDEX rrc_rf_fs_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_id");
 CREATE INDEX rrc_rf_fss_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_synonym_id");
-ALTER SEQUENCE rrc_recipe_foodstuff_rrc_rf_id_seq RESTART WITH 2000; 
+ALTER SEQUENCE rrc_recipe_foodstuff_rrc_rf_id_seq RESTART WITH 2500; 
