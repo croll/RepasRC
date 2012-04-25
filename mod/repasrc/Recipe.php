@@ -128,14 +128,14 @@ class Recipe {
 		return $result;
 	}
 
-	public static function recipeHasFoodstuff($id) {
+	public static function hasFoodstuff($id) {
 		$num = \core\Core::$db->fetchOne('SELECT count(*) as nb FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id=?', array($id));
 		return ($num > 0) ? true : false;
 	}
 
 	public static function getInfos($id) {
 		if (empty($id)) return null;
-		 return \core\Core::$db->fetchRow('SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared FROM rrc_recipe WHERE rrc_re_id=?', array($id));
+		 return \core\Core::$db->fetchRow("SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared, TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, rrc_re_type AS \"type\" FROM rrc_recipe WHERE rrc_re_id=?", array($id));
 	}
 
 	public static function getFoodstuffList($id) {
@@ -226,20 +226,40 @@ class Recipe {
 		return $recipe;
 	}
 
-	public static function add($rc_id, $label, $shared, $component, $persons, $comment='') {
-		$params = array((int)$rc_id, $label, (int)$shared, $component, $persons, $comment);
+	public static function add($rc_id, $label, $shared, $component, $persons, $type, $comment='') {
+		$params = array((int)$rc_id, $label, (int)$shared, $component, $persons, $type, $comment);
 		$params[] = self::getBitsFromModulesList($_SESSION['recipe']['modules']);
-		return \core\Core::$db->exec_returning('INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_label, rrc_re_public, rrc_re_component, rrc_re_persons, rrc_re_comment, rrc_re_modules, rrc_re_creation) VALUES (?,?,?,?,?,?,?,now()) ', $params, 'rrc_re_id');
+		return \core\Core::$db->exec_returning('INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_label, rrc_re_public, rrc_re_component, rrc_re_persons, rrc_re_type, rrc_re_comment, rrc_re_modules, rrc_re_creation) VALUES (?,?,?,?,?,?,?,?,now()) ', $params, 'rrc_re_id');
 	}
 
-	public static function update($re_id, $label, $shared, $component, $persons, $comment='') {
-		$params = array($label, (int)$shared, $component, $persons, $comment, (int)$re_id);
-		$q = 'UPDATE rrc_recipe SET rrc_re_label=?, rrc_re_public=?, rrc_re_component=?, rrc_re_persons=?, rrc_re_comment=?, rrc_re_modification=now() WHERE rrc_re_id=?';
+	public static function update($recipeId, $label, $shared, $component, $persons, $type, $comment='') {
+		$params = array($label, (int)$shared, $component, $persons, $type, $comment, (int)$recipeId);
+		$q = 'UPDATE rrc_recipe SET rrc_re_label=?, rrc_re_public=?, rrc_re_component=?, rrc_re_persons=?, rrc_re_type=?, rrc_re_comment=?, rrc_re_modification=now() WHERE rrc_re_id=?';
 		$res = \core\Core::$db->exec($q, $params);
 	}
 
-	public static function updateModules($re_id, $modules) {
-		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_modules=? WHERE rrc_re_id=?', array(self::getBitsFromModulesList($modules), (int)$re_id));
+	public static function updateModules($recipeId, $modules) {
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_modules=? WHERE rrc_re_id=?', array(self::getBitsFromModulesList($modules), (int)$recipeId));
+	}
+
+	public static function setConsumptionDate($recipeId, $date) {
+		if (!preg_match("#([0-9]+)/([0-9]+)/([0-9]+)#", $date, $m)) {
+			throw new \Exception('Invalid date');
+		}
+		$d = "$m[3] $m[2] $m[1] 00:00:00";
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_consumptiondate=? WHERE rrc_re_id=?', array($d, (int)$recipeId));
+	}
+
+	public static function getConsumptionDate($recipeId) {
+		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') FROM  rrc_recipe WHERE rrc_re_id=?", array((int)$recipeId));
+	}
+
+	public static function setComments($recipeId, $comments) {
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_comment=? WHERE rrc_re_id=?', array($comments, (int)$recipeId));
+	}
+
+	public static function getComments($recipeId) {
+		return \core\Core::$db->fetchOne("SELECT rrc_re_comment AS comment FROM  rrc_recipe WHERE rrc_re_id=?", array((int)$recipeId));
 	}
 	
 	public static function delete($rid) {
@@ -275,6 +295,10 @@ class Recipe {
 		$num = \core\Core::$db->fetchOne('SELECT rrc_re_modules FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId));
 		$val = (is_null($num)) ? 15 : $num;
 		return self::getModulesListFromBits($val);
+	}
+
+	public static function checkIfExists($recipeId) {
+		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId))) ? true : false;
 	}
 
 }

@@ -40,8 +40,31 @@
 			"value" : 100,
 			"validators" : 
 			[ 
+				"required",
 				"validate-integer"
 			]
+		},
+		{	"type" : "select",
+			"name" : "type",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "STANDARD",
+					"label" : "Recette standard"
+				},
+				{ "type" : "option",
+					"value" : "LIGHTFOOTPRINT",
+					"label" : "Recette pied léger"
+				},
+				{ "type" : "option",
+					"value" : "ADMIN",
+					"label" : "Recette proposée par les administrateurs"
+				},
+				{ "type" : "option",
+					"value" : "STALLION",
+					"label" : "Recette étalon"
+				}
+			]	
 		},
 		{	"type" : "select",
 			"name" : "shared",
@@ -57,9 +80,8 @@
 				}
 			]	
 		},
-		{	"type" : "textarea",
-			"name" : "comment",
-			"class" : "input-xlarge"
+		{	"type" : "text",
+			"name" : "consumptiondate"
 		},
 		{	"type" : "submit",
 			"name" : "submit",

@@ -10,12 +10,13 @@
 	{js file="/mod/cssjs/js/chmypaginate.js"}
 	{js file="/mod/repasrc/js/repasrc.js"}
 	{js file="/mod/page/js/page.js"}
-	{js file="/mod/repasrc/js/MilkChart.js"}
+	{js file="/mod/repasrc/ext/MooDatePicker/js/MooDatePicker.js"}
 	{css file="/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css"}
 	{css file="/mod/repasrc/css/bootstrap-responsive.css"}
 	{css file="/mod/cssjs/css/Modal.css"}
 	{css file="/mod/cssjs/css/mypaginate.css"}
 	{css file="/mod/page/css/page.css"}
+	{css file="/mod/repasrc/ext/MooDatePicker/css/MooDatePicker.css"}
 	{css file="/mod/repasrc/css/repasrc.css"}
 {/block}
 

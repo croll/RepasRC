@@ -37,7 +37,23 @@ class Foodstuff {
 	}
 	 */
 	public static function search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, $searchSynonyms=true) {
-		$params = $fs = array();
+		$params = $tmpParams = $fs = array();
+		$tmpWhere = '';
+		if ($fsIds != NULL) {
+			foreach($fsIds as $aID) {
+				$tmp = '';
+				if (isset($aID['synonym_id']) && !is_null($aID['synonym_id'])) {
+					$tmp .= "(fs.rrc_fs_id = ? AND ss.rrc_ss_id = ?) OR ";
+					$tmpParams[] = $aID['id'];
+					$tmpParams[] = $aID['synonym_id'];
+					$searchSynonyms = true;
+				} else {
+					$tmp .= "(fs.rrc_fs_id = ?) OR ";
+					$tmpParams[] = $aID['id'];
+				}
+				$tmpWhere .= 'AND ('.substr($tmp, 0, -4).') ';
+			}
+		}
 		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint ";
 		if ($searchSynonyms) {
 			$q .= ', rrc_ss_id AS synonym_id, rrc_ss_label AS synonym ';
@@ -65,30 +81,15 @@ class Foodstuff {
 			$params[] = $family;
 			$q .= 'AND fa.rrc_fa_id=? ';
 		}
-		if ($fsIds != NULL) {
-			foreach($fsIds as $aID) {
-				$tmp = '';
-				if (isset($aID['synonym_id']) && !is_null($aID['synonym_id'])) {
-					$tmp .= "(fs.rrc_fs_id = ? AND ss.rrc_ss_id = ?) OR ";
-					$params[] = $aID['id'];
-					$params[] = $aID['synonym_id'];
-				} else {
-					$tmp .= "(fs.rrc_fs_id = ?) OR ";
-					$params[] = $aID['id'];
-				}
-				$q .= 'AND ('.substr($tmp, 0, -4).') ';
-			}
-		}
 
-		$o = 'ORDER BY rrc_fs_label ASC';
+		$o = 'ORDER BY label ASC';
 		if ($searchSynonyms) {
 		  $o .= ', synonym ASC';
 		}
-		$query = $q.$w.$o;
+		$query = $q.$w.$tmpWhere.$o;
 
 		// Do not store duplicate foostuff, for example because it's defined with multiple families
-		foreach(\core\Core::$db->fetchAll($query, $params) as $row) {
-			$s = array();
+		foreach(\core\Core::$db->fetchAll($query, array_merge($params, $tmpParams)) as $row) {
 			if (isset($row['synonym_id']))
 					$currentId = $row['id'].'-'.$row['synonym_id'];
 			else
@@ -127,6 +128,12 @@ class Foodstuff {
 			}
 		}
 		return array_values($fs);
+	}
+
+	public static function searchAll($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL) {
+		$r1 = self::search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, false);
+		$r2 = self::search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, true);
+		return array_merge($r1, $r2);
 	}
 
 	public static function getInfos($id, $synonym_id) {

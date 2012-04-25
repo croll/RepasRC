@@ -52,7 +52,11 @@
 </div>
 <div class="form-actions" style="margin-top:30px">
 	{if ($recipeId)}
-		<a class="btn" href="javascript:void(0)" onclick="addFoodstuffToRecipe({$foodstuff.0.id}, {$recipeId})">Ajouter l'aliment à la recette</a>
+		{if isset($foodstuff.0.synonym)}
+			<a class="btn" href="javascript:void(0)" onclick="addFoodstuffToRecipe({$parent.0.id}, {$foodstuff.0.synonym_id})">Ajouter l'aliment à la recette</a>
+		{else}
+			<a class="btn" href="javascript:void(0)" onclick="addFoodstuffToRecipe({$foodstuff.0.id}, null)">Ajouter l'aliment à la recette</a>
+		{/if}
 	{/if}
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
 </div>

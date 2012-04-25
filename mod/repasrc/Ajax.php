@@ -16,7 +16,7 @@ class Ajax {
 	public static function searchFoodstuff($params) {
 		$familyId = (!empty($params['familyId'])) ? $params['familyId'] : NULL;
 		$subFamilyId = (!empty($params['subFamilyId'])) ? $params['subFamilyId'] : NULL;
-		return \mod\repasrc\Foodstuff::search($familyId, $subFamilyId);
+		return \mod\repasrc\Foodstuff::searchAll($familyId, $subFamilyId);
 	}
 
 	public static function showFoodstuffDetail($params) {
@@ -24,11 +24,10 @@ class Ajax {
 		$infos['synonym_id'] = $params['synonymId'];
     $page = new \mod\webpage\Main();
 		if ($infos['synonym_id']) {
-			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)));
+			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), true);
 			$page->smarty->assign('parent', $parent);
 		}
-		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos));
-		\core\Core::log($foodstuff);
+		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), false);
 		$page->smarty->assign(array('recipeId' => $params['recipeId'], 'foodstuff' => $foodstuff));
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];
 		return array('title' => $label, 'content' => $page->smarty->fetch('repasrc/recipe/foodstuff_detail'));

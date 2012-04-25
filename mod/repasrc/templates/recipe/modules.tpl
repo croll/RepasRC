@@ -1,9 +1,5 @@
 {extends tplextends('repasrc/recipe_edit')}
 
-{block name='webpage_head' append}
-	{js file="/mod/repasrc/js/recipe.js"}
-{/block}
-
 {block name='recipe_title'}
 	<h1>{t d='repasrc' m='Sélectionner les modules'}</h1>
 	<p class="lead">{t d='repasrc' m='Saisonnalité, transport, prix ... Ils vous permettront d\'analyser votre recette selon différents facteurs.'}</p>

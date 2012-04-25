@@ -35,7 +35,7 @@ ALTER SEQUENCE rrc_family_group_rrc_fg_id_seq RESTART WITH 500;
 
 CREATE TYPE "rrc_fs_unit_type" AS ENUM ('KG','L','ONE_PIECE');
 CREATE TYPE "rrc_fs_conservation_type" AS ENUM ('', 'F','Su','Co','D','G1','G2','G3','G4','G5');
-CREATE TYPE "rrc_fs_production_type" AS ENUM ('', 'Conv','AB','Dur','Lab','AOC');
+CREATE TYPE "rrc_fs_production_type" AS ENUM ('', 'Conv','AB','Dur','Lab','AOC','IGP', 'BBC', 'COHERENCE', 'COMMERCEEQUITABLE');
 
 CREATE TABLE "rrc_foodstuff" (
   "rrc_fs_id" SERIAL PRIMARY KEY,
@@ -158,7 +158,8 @@ CREATE TABLE "rrc_menu" (
   "rrc_me_price" INTEGER DEFAULT NULL,
   "rrc_me_creation" TIMESTAMP NOT NULL,
   "rrc_me_modification" TIMESTAMP,
-  "rrc_me_public" INTEGER DEFAULT NULL
+  "rrc_me_public" INTEGER DEFAULT NULL,
+	"rrc_me_consumptiondate" TIMESTAMP
 );
 CREATE INDEX rrc_menu_rid_idx ON "rrc_menu" ("rrc_me_rrc_rc_id");
 ALTER SEQUENCE rrc_menu_rrc_me_id_seq RESTART WITH 500; 
@@ -224,6 +225,7 @@ ALTER SEQUENCE rrc_rc_rrc_rc_id_seq RESTART WITH 500;
 --
 
 CREATE TYPE "rrc_re_component_type" AS ENUM ('STARTER','MEAL','CHEESE/DESSERT','BREAD');
+CREATE TYPE "rrc_re_recipe_type" AS ENUM ('STANDARD','LIGHTFOOTPRINT','ADMIN','STALLION');
 CREATE TABLE "rrc_recipe" (
   "rrc_re_id" SERIAL PRIMARY KEY,
   "rrc_re_rrc_rc_id" INTEGER DEFAULT NULL,
@@ -236,7 +238,9 @@ CREATE TABLE "rrc_recipe" (
   "rrc_re_creation" TIMESTAMP,
   "rrc_re_modification" TIMESTAMP,
   "rrc_re_comment" TEXT,
-  "rrc_re_modules" INTEGER DEFAULT NULL
+  "rrc_re_modules" INTEGER DEFAULT NULL,
+	"rrc_re_consumptiondate" TIMESTAMP,
+	"rrc_re_type" rrc_re_recipe_type DEFAULT 'STANDARD'
 );
 CREATE INDEX rrc_rc_rc_idx ON "rrc_recipe" ("rrc_re_rrc_rc_id");
 ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 1000; 
@@ -246,7 +250,7 @@ ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 1000;
 --
 
 CREATE TYPE "rrc_rf_conservation_type" AS ENUM ('','G1','G2','G3','G4','G5','G6','G7');
-CREATE TYPE "rrc_rf_production_type" AS ENUM ('','Conv','AB','Dur','Lab','AOC','aq','pec');
+CREATE TYPE "rrc_rf_production_type" AS ENUM ('', 'Conv','AB','Dur','Lab','AOC','IGP', 'BBC', 'COHERENCE', 'COMMERCEEQUITABLE');
 CREATE TYPE "rrc_rf_quantity_unit_type" AS ENUM ('KG','G','UNIT');
 CREATE TABLE "rrc_recipe_foodstuff" (
   "rrc_rf_id" SERIAL PRIMARY KEY,

@@ -43,8 +43,8 @@ class Main {
 		} else {
 			$id = null;
 		}
-		
-		/* Modules */
+
+		/* Recipe modules */
 		if (isset($_POST['modules'])) {
 			// Module selection posted, we store it in session
 			$modules = array();
@@ -63,39 +63,57 @@ class Main {
 			}
 		}
 
-		/* Define recipe informations */
+		/* Recipe informations */
 		if (isset($_POST['component'])) {
 			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/informations.json'));
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
 				if (empty($id)) {
-					\mod\repasrc\Recipe::add($_SESSION['rc'], $fields['label'], $fields['shared'], $fields['component'], $fields['persons'], $fields['comment']);
+					$id = \mod\repasrc\Recipe::add($_SESSION['rc'], $fields['label'], $fields['shared'], $fields['component'], $fields['persons'], $fields['type']);
 				} else {
-					\mod\repasrc\Recipe::update($id, $fields['label'], $fields['shared'], $fields['component'], $fields['persons'], $fields['comment']);
+					\mod\repasrc\Recipe::update($id, $fields['label'], $fields['shared'], $fields['component'], $fields['persons'], $fields['type']);
+				}
+				if (isset($fields['consumptiondate']) && !empty($fields['consumptiondate'])) {
+					\mod\repasrc\Recipe::setConsumptionDate($id, $fields['consumptiondate']);
 				}
 				$page->display();
 			}
+		}
+
+		/* Recipe comments */
+		if (isset($_POST['comment'])) {
+			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/comments.json'));
+			if ($form->validate()) {
+				$fields = $form->getFieldValues();
+					\mod\repasrc\Recipe::setComments($id, $fields['comment']);
+				$page->display();
+			}
+		}
+
+		// POST Treatment OK
+		// Now check if recipe ID is valid
+
+		if (!is_null($id)) {
+			$id = (\mod\repasrc\Recipe::checkIfExists($id)) ? $id : null;
 		}
 		
 		if (is_null($section)) $section = $params[1];
 
 		switch($section) {
-			case 'informations':
+			case 'commentaires':
+				$page->smarty->assign('formDefaultValues', array('comment' => \mod\repasrc\Recipe::getComments($id)));
 			break;
 			case 'aliments':
 			if (!empty($id)) {
 				$page->smarty->assign('recipeFoodstuffList', \mod\repasrc\Recipe::getFoodstuffList($id));
 			}
 			break;
-			case 'modules':
-				$page->smarty->assign('modulesList', $modules);
-			break;
 		}
 
-		$tplTrans = array('aliments' => 'foodstuff');
+		$tplTrans = array('aliments' => 'foodstuff', 'commentaires' => 'comments');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
+		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => json_encode($modules)));
 		$page->setLayout('repasrc/recipe/'.$tpl);
-		$page->smarty->assign(array('section' => $section, 'recipeId' => $id));
     $page->display();
 	}
 

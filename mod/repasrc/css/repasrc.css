@@ -99,3 +99,9 @@ div.recipe_content {
 .dl-horizontal {
 	margin-bottom: 2px;
 }
+
+/* COMMENTS */
+.comment-textarea {
+	width: 700px;
+	height: 450px;
+}

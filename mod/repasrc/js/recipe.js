@@ -1,4 +1,5 @@
 window.addEvent('domready', function() {
+		Locale.use('fr-FR');
 
 	// Modules 
 	if (typeOf(document.id('modules_container')) == 'element') {
@@ -22,11 +23,21 @@ window.addEvent('domready', function() {
 		});
 
 		document.id('modules_container').getElements('li').each(function(el) {
+			
 			el.addEvents({
 				click: function(){
 					el.toggleClass('checked').tween('background-color','#87C6DB','#FFF');
 				}
 			});
+		});
+	}
+
+	// Informations
+	if (typeOf(document.id('informations_container')) == 'element') {
+		var myMooDatePicker = new MooDatePicker(document.getElement('input[name=consumptiondate]'), {
+			onPick: function(date){
+				this.element.set('value', date.format('%e/%m/%Y'));
+			}
 		});
 	}
 
@@ -111,6 +122,10 @@ window.addEvent('domready', function() {
 
 });
 
+/* ----------------------------------
+ * Remotely get families of foodstuff
+ *
+ * --------------------------------- */
 function loadFamilies() {
 	var num = null;
 	var el = document.id('family').getElement('option:selected');
@@ -130,6 +145,10 @@ function loadFamilies() {
   }).send();
 }
 
+/* --------------------------------------
+ * Remotely get sub families of foodstuff
+ * @num : Parent family id
+ * ------------------------------------ */
 function loadSubFamilies(num) {
 	if (num == undefined) num = null;
 	var userList = new Request.JSON({
@@ -142,6 +161,10 @@ function loadSubFamilies(num) {
   }).post({id: num});
 }
 
+/* ----------------------------------------------
+ * Retrieve a list of foodstuff 
+ * @reset: Reset families and sub families selects
+ * ---------------------------------------------- */
 function loadFoodstuff(reset) {
 	var familyId = subFamilyId = null;
 	if (reset != true) {
@@ -169,6 +192,11 @@ function loadFoodstuff(reset) {
   }).post({familyId: familyId, subFamilyId: subFamilyId});
 }
 
+/* ---------------------------------------------------------------------
+ * Hide result not matching criterias in foodstuff list
+ * @txt: value of filter
+ * @type: type of filter (name, familie, etc) equal to element class name
+ * --------------------------------------------------------------------- */
 function filterResults(txt, type) {
 	t = type || 'name';
 	var els = document.body.getElements('.result') || null;
@@ -183,6 +211,11 @@ function filterResults(txt, type) {
 	}
 }
 
+/* -------------------------------------------------
+ * Build foodstuff tiny block with image, fs name, etc  
+ * multiple occurences build the foodstuff list
+ * @fs: foodstuff object 
+ * ---------------------------------------------- */
 function buildFoodstuffThumb(fs) {
 	if (typeOf(fs.synonym_id) == 'number') {
 		var imgId = 's'+fs.synonym_id;
@@ -220,6 +253,10 @@ function buildFoodstuffThumb(fs) {
 	return html;
 }
 
+/* ----------------------------------------------
+ * Remotely get list of recipes 
+ * @reset: reset filter search select
+ * ---------------------------------------------- */
 function loadRecipes(reset) {
 	var typeId = componentId = null;
 	if (reset != true) {
@@ -247,6 +284,11 @@ function loadRecipes(reset) {
   }).post({typeId: typeId, componentId: componentId});
 }
 
+/* -------------------------------------------------
+ * Build recipe tiny block with image, name, etc  
+ * multiple occurences build the recipe list
+ * @re: recipe object 
+ * ---------------------------------------------- */
 function buildRecipeThumb(re) {
 	html = '<li onclick="showRecipeDetail('+re.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
@@ -272,6 +314,10 @@ function buildRecipeThumb(re) {
 	return html;
 }
 
+/* -------------------------------------------------
+ * Open a modal window and disply recipe infos  
+ * @id: Recipe id 
+ * ---------------------------------------------- */
 function showRecipeDetail(id) {
 	modalWin = new Modal.Base(document.body, {
 		header: "Fiche site",
@@ -290,15 +336,11 @@ function showRecipeDetail(id) {
 	}).post({id: id});
 }
 
+/* -------------------------------------------------
+ * Open a modal window and disply foodstuff infos  
+ * @id: Foodstuff id 
+ * ---------------------------------------------- */
 function showFoodstuffDetail(id, sid) {
-	var tmp = top.document.location.href.split('/');
-	var len = tmp.length-1;
-	os = tmp[len];
-	if (os == '' || os == 'aliments') {
-		recipeId = null;
-	} else {
-		recipeId = os;
-	}
 	synonymId = sid || null;
 	modalWin = new Modal.Base(document.body, {
 		header: "Fiche site",
@@ -317,5 +359,7 @@ function showFoodstuffDetail(id, sid) {
 	}).post({id: id, synonymId: synonymId, recipeId: recipeId});
 }
 
-function addFoodstuffToRecipe(foodstuffId, recipeId) {
+function addFoodstuffToRecipe(foodstuffId, synonymId) {
+	console.log(foodstuffId+' - '+synonymId+' - '+recipeId);
+	modalWin.setBody('OIOK');
 }

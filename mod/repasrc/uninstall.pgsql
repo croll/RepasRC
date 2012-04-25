@@ -57,6 +57,7 @@ DROP TYPE IF EXISTS "rrc_rc_regime_type";
 DROP INDEX IF EXISTS "rrc_rc_rc_idx"; 
 DROP TABLE IF EXISTS "rrc_recipe";
 DROP TYPE IF EXISTS "rrc_re_component_type";
+DROP TYPE IF EXISTS "rrc_re_recipe_type";
 
 DROP INDEX IF EXISTS "rrc_rf_fs_idx"; 
 DROP INDEX IF EXISTS "rrc_rf_fss_idx"; 
