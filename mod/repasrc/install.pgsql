@@ -182,7 +182,7 @@ ALTER SEQUENCE rrc_menu_recipe_rrc_mr_id_seq RESTART WITH 1000;
 --
 -- Table structure for table "rrc_origin"
 --
-CREATE TYPE "rrc_or_location_type" AS ENUM ('LOCAL','FRANCE','EUROPE','WORLD');
+CREATE TYPE "rrc_or_location_type" AS ENUM ('LOCAL','REGIONAL','FRANCE','EUROPE','WORLD');
 CREATE TABLE "rrc_origin" (
   "rrc_or_id" SERIAL PRIMARY KEY,
   "rrc_or_default_location" rrc_or_location_type DEFAULT NULL,

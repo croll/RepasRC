@@ -1,6 +1,6 @@
 {
 	"method" : "post",
-	"id" : "informations",
+	"id" : "foodstuffForm",
 	"action" : "/recette/edition/aliments",
 	"class" : "form-horizontal",
 	"elements" : 
@@ -11,6 +11,147 @@
 			[ 
 				"required"
 			]
+		},
+		{	"type" : "select",
+			"name" : "conservation",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "G1",
+					"label" : "Frais"
+				},
+				{ "type" : "option",
+					"value" : "G2",
+					"label" : "Conserve"
+				},
+				{ "type" : "option",
+					"value" : "G3",
+					"label" : "Surgelé"
+				},
+				{ "type" : "option",
+					"value" : "G4",
+					"label" : "4e gamme"
+				},
+				{ "type" : "option",
+					"value" : "G5",
+					"label" : "5e gamme"
+				},
+				{ "type" : "option",
+					"value" : "G6",
+					"label" : "Déshydraté"
+				},
+				{ "type" : "option",
+					"value" : "G7",
+					"label" : "G7"
+				},
+				{ "type" : "option",
+					"value" : "G8",
+					"label" : "Pasteurisé"
+				},
+				{ "type" : "option",
+					"value" : "G9",
+					"label" : "UHT"
+				},
+				{ "type" : "option",
+					"value" : "G10",
+					"label" : "Epicérie Sèche"
+				},
+				{ "type" : "option",
+					"value" : "G11",
+					"label" : "Réfrigéré"
+				}
+			]	
+		},
+		{	"type" : "select",
+			"name" : "production",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "Conv",
+					"label" : "Agriculture conventionnelle"
+				},
+				{ "type" : "option",
+					"value" : "AB",
+					"label" : "Agriculture Bio"
+				},
+				{ "type" : "option",
+					"value" : "Dur",
+					"label" : "Agriculture durable"
+				},
+				{ "type" : "option",
+					"value" : "Lab",
+					"label" : "Label Rouge"
+				},
+				{ "type" : "option",
+					"value" : "AOC",
+					"label" : "AOC"
+				},
+				{ "type" : "option",
+					"value" : "IGP",
+					"label" : "IGP"
+				},
+				{ "type" : "option",
+					"value" : "BBC",
+					"label" : "Bleu blanc coeur"
+				},
+				{ "type" : "option",
+					"value" : "COHERENCE",
+					"label" : "Cohérence"
+				},
+				{ "type" : "option",
+					"value" : "COMMERCEEQUITABLE",
+					"label" : "Commerce équitable"
+				}
+			]	
+		},
+		{	"type" : "text",
+			"name" : "price"
+		},
+		{	"type" : "select",
+			"name" : "vat",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : 0,
+					"label" : "Hors taxe"
+				},
+				{ "type" : "option",
+					"value" : 1,
+					"label" : "TTC"
+				}
+			]	
+		},
+		{	"type" : "select",
+			"name" : "location",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "LOCAL",
+					"label" : "Local"
+				},
+				{ "type" : "option",
+					"value" : "REGIONAL",
+					"label" : "Régional"
+				},
+				{ "type" : "option",
+					"value" : "FRANCE",
+					"label" : "France"
+				},
+				{ "type" : "option",
+					"value" : "EUROPE",
+					"label" : "Europe"
+				},
+				{ "type" : "option",
+					"value" : "WORLD",
+					"label" : "Hors Europe"
+				},
+				{ "type" : "option",
+					"value" : "LETMECHOOSE",
+					"label" : "Préciser"
+				}
+
+
+			]	
 		}
 	]
 }

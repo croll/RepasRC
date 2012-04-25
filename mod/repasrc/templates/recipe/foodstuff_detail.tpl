@@ -64,32 +64,27 @@
 		</div> 
 
 		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipeId, $foodstuff.0.id, $foodstuff.0.synonym_id)}
-			<fieldset>
-				<div class="control-group">
-					<label class="control-label">{t d='repasrc' m="Nom de la recette"}</label>
-					<div class="controls">
-						{$foodstuffForm.label}
-					</div>
+			<ul class="nav nav-tabs">
+				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
+				<li><a href="#conservation" data-toggle="tab">Conservation</a></li>
+				<li><a href="#transport" data-toggle="tab">Transport</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="quantity">
+					<fieldset>
+						<div class="control-group">
+							<label class="control-label">{t d='repasrc' m="Quantité"}</label>
+							<div class="controls">
+								{$foodstuffForm.quantity}
+							</div>
+						</div>
+					</fieldset>
 				</div>
-				<div class="form-actions">
-						{$foodstuffForm.submit}
-						{$foodstuffForm.cancel}
-				</div>
-				<input type="hidden" name="recipeId" value="{$recipeId}" />
-			</fieldset>
-				
+				<div class="tab-pane" id="conservation">2</div>
+				<div class="tab-pane" id="transport">3</div>
+			</div>
 		{/form}
-		<ul class="nav nav-tabs">
-			<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
-			<li><a href="#conservation" data-toggle="tab">Conservation</a></li>
-			<li><a href="#transport" data-toggle="tab">Transport</a></li>
-		</ul>
 
-		<div class="tab-content">
-			<div class="tab-pane active" id="quantity">1</div>
-			<div class="tab-pane" id="conservation">2</div>
-			<div class="tab-pane" id="transport">3</div>
-		</div>
 	</div>
 
 	<div id="popup-actions" class="form-actions" style="margin-top:80px">
