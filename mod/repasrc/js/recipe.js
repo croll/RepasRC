@@ -1,5 +1,17 @@
+/* ------------------------------------------------------
+ * Action triggered on page load 
+ * Things done are differents between 
+ * pages identified by an existing *_container element
+ * --------------------------------------------------- */
+
 window.addEvent('domready', function() {
 		Locale.use('fr-FR');
+
+	modalWin = new Modal.Base(document.body, {
+		header: "",
+		body: "Chargement...",
+		limitHeight: false
+	});
 
 	// Modules 
 	if (typeOf(document.id('modules_container')) == 'element') {
@@ -22,8 +34,8 @@ window.addEvent('domready', function() {
 			}
 		});
 
+		// Modules
 		document.id('modules_container').getElements('li').each(function(el) {
-			
 			el.addEvents({
 				click: function(){
 					el.toggleClass('checked').tween('background-color','#87C6DB','#FFF');
@@ -77,6 +89,7 @@ window.addEvent('domready', function() {
 		});
 	}
 
+	// Recipe list in recipe creation section
 	if (typeOf(document.id('recipe_search_form')) == 'element') {
 
 		loadRecipes();
@@ -118,13 +131,10 @@ window.addEvent('domready', function() {
 		});
 	}
 
-	// List
-
 });
 
 /* ----------------------------------
  * Remotely get families of foodstuff
- *
  * --------------------------------- */
 function loadFamilies() {
 	var num = null;
@@ -319,10 +329,6 @@ function buildRecipeThumb(re) {
  * @id: Recipe id 
  * ---------------------------------------------- */
 function showRecipeDetail(id) {
-	modalWin = new Modal.Base(document.body, {
-		header: "Fiche site",
-		body: "Chargement..."
-	});
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showRecipeDetail',
 			onRequest: function() {
@@ -342,16 +348,13 @@ function showRecipeDetail(id) {
  * ---------------------------------------------- */
 function showFoodstuffDetail(id, sid) {
 	synonymId = sid || null;
-	modalWin = new Modal.Base(document.body, {
-		header: "Fiche site",
-		body: "Chargement..."
-	});
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showFoodstuffDetail',
 			onRequest: function() {
 			},
 		onSuccess: function(res) {
 			modalWin.setTitle(res.title).setBody(res.content).show();
+			CaptainHook.Bootstrap.initTabs('messages');
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
@@ -361,5 +364,7 @@ function showFoodstuffDetail(id, sid) {
 
 function addFoodstuffToRecipe(foodstuffId, synonymId) {
 	console.log(foodstuffId+' - '+synonymId+' - '+recipeId);
-	modalWin.setBody('OIOK');
+	modalContent = document.body.getElement('div.modal-content');
+	var fx = new Fx.Morph(modalContent);
+	fx.start({'height': [modalContent.getDimensions().y, modalContent.getDimensions().y+80]});
 }

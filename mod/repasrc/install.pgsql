@@ -156,6 +156,7 @@ CREATE TABLE "rrc_menu" (
   "rrc_me_label" VARCHAR(255) NOT NULL DEFAULT 'NULL',
   "rrc_me_rrc_rc_id" INTEGER NOT NULL,
   "rrc_me_price" INTEGER DEFAULT NULL,
+  "rrc_me_vat" INTEGER DEFAULT 1,
   "rrc_me_creation" TIMESTAMP NOT NULL,
   "rrc_me_modification" TIMESTAMP,
   "rrc_me_public" INTEGER DEFAULT NULL,
@@ -187,7 +188,7 @@ CREATE TABLE "rrc_origin" (
   "rrc_or_default_location" rrc_or_location_type DEFAULT NULL,
   "rrc_or_rrc_geo_zonevalue_id" INTEGER DEFAULT NULL,
   "rrc_or_rrc_recipe_foodstuff_id" INTEGER,
-  "rrc_or_rrc_obsolete_field" INTEGER NOT NULL,
+  "rrc_or_rrc_supply_item_id" INTEGER,
   "rrc_or_step" INTEGER NOT NULL DEFAULT 0
 );
 CREATE INDEX rrc_origin_zo_idx ON "rrc_origin" ("rrc_or_rrc_geo_zonevalue_id");
@@ -240,7 +241,9 @@ CREATE TABLE "rrc_recipe" (
   "rrc_re_comment" TEXT,
   "rrc_re_modules" INTEGER DEFAULT NULL,
 	"rrc_re_consumptiondate" TIMESTAMP,
-	"rrc_re_type" rrc_re_recipe_type DEFAULT 'STANDARD'
+	"rrc_re_type" rrc_re_recipe_type DEFAULT 'STANDARD',
+  "rrc_re_price" INTEGER DEFAULT NULL,
+  "rrc_re_vat" INTEGER DEFAULT 1
 );
 CREATE INDEX rrc_rc_rc_idx ON "rrc_recipe" ("rrc_re_rrc_rc_id");
 ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 1000; 
@@ -260,6 +263,7 @@ CREATE TABLE "rrc_recipe_foodstuff" (
   "rrc_rf_quantity_unit" rrc_rf_quantity_unit_type NOT NULL DEFAULT 'KG',
   "rrc_rf_quantity_value" FLOAT DEFAULT NULL,
   "rrc_rf_price" FLOAT DEFAULT NULL,
+  "rrc_rf_vat" INTEGER DEFAULT 0,
   "rrc_rf_conservation" rrc_rf_conservation_type DEFAULT NULL,
   "rrc_rf_production" rrc_rf_production_type DEFAULT NULL
 );

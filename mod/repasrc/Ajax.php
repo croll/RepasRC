@@ -16,12 +16,13 @@ class Ajax {
 	public static function searchFoodstuff($params) {
 		$familyId = (!empty($params['familyId'])) ? $params['familyId'] : NULL;
 		$subFamilyId = (!empty($params['subFamilyId'])) ? $params['subFamilyId'] : NULL;
-		return \mod\repasrc\Foodstuff::searchAll($familyId, $subFamilyId);
+		$fsList = \mod\repasrc\Foodstuff::searchAll($familyId, $subFamilyId);
+		return $fsList;
 	}
 
 	public static function showFoodstuffDetail($params) {
 		$infos['id'] = $params['id'];
-		$infos['synonym_id'] = $params['synonymId'];
+		$infos['synonym_id'] = ((isset($params['synonymId'])) ? $params['synonymId'] : null);
     $page = new \mod\webpage\Main();
 		if ($infos['synonym_id']) {
 			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), true);

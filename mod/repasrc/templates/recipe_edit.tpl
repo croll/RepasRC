@@ -4,8 +4,16 @@
 	{js file="/mod/repasrc/js/recipe.js"}
 	<script language="javascript">
 		var recipeId = {if isset($recipeId)}{$recipeId}{else}null{/if};
-		var modulesList = {if isset($modulesList)}{$modulesList}{else}null{/if};
+		var modulesList = {if isset($modulesList)}{$modulesList|json_encode}{else}null{/if};
 	</script>
+	<style type="text/css">
+		.modal-box {
+			width: 810px!important;
+		}
+		.modal-body, .modal-content {
+			min-height: 590px;
+		}
+	</style>
 {/block}
 
 {block name='repasrc_content'}

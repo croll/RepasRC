@@ -131,8 +131,8 @@ class Foodstuff {
 	}
 
 	public static function searchAll($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL) {
-		$r1 = self::search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, false);
-		$r2 = self::search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, true);
+		$r1 = self::search($familyGroup, $family, $label, $fsIds, false);
+		$r2 = self::search($familyGroup, $family, $label, $fsIds, true);
 		return array_merge($r1, $r2);
 	}
 
@@ -160,6 +160,15 @@ class Foodstuff {
 			$params[] = $familyId;
 		}
 		return \core\Core::$db->fetchAll($query, $params);
+	}
+
+	public static function getFromRecipe($recipeId, $foodstuffId, $synonymId) {
+		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production, rrc_zv_label FROM rrc_recipe_foodstuff rf ';
+		$q .= 'LEFT JOIN rrc_origin ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id ';
+		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
+		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=? AND rrc_rf_rrc_foodstuff_synonym_id=?';
+		\core\Core::log($q);
+		return \core\Core::$db->fetchOne($q, array($recipeId, $foodstuffId, $synonymId));
 	}
 
 }

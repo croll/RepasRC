@@ -22,8 +22,6 @@ class Main {
 	public static function hook_mod_repasrc_recipe_list($hookname, $userdata) {
     \mod\user\Main::redirectIfNotLoggedIn();
 		$recipes = NULL;
-
-		// Display
     $page = new \mod\webpage\Main();
 		$page->smarty->assign('recipes', $recipes);
 		$page->setLayout('repasrc/recipe/list');
@@ -90,9 +88,8 @@ class Main {
 			}
 		}
 
-		// POST Treatment OK
+		// POST Treatment ok
 		// Now check if recipe ID is valid
-
 		if (!is_null($id)) {
 			$id = (\mod\repasrc\Recipe::checkIfExists($id)) ? $id : null;
 		}
@@ -112,7 +109,7 @@ class Main {
 
 		$tplTrans = array('aliments' => 'foodstuff', 'commentaires' => 'comments');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
-		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => json_encode($modules)));
+		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
 		$page->setLayout('repasrc/recipe/'.$tpl);
     $page->display();
 	}
