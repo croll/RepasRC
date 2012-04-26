@@ -3,7 +3,6 @@
 	"id" : "informations",
 	"action" : "/recette/edition/aliments",
 	"class" : "form-horizontal",
-	"enctype" : "multipart/form-data",
 	"elements" : 
 	[
 		{	"type" : "text",
@@ -82,6 +81,25 @@
 		},
 		{	"type" : "text",
 			"name" : "consumptiondate"
+		},
+		{	"type" : "text",
+			"name" : "price",
+			"style" : "width: 40px"
+		},
+		{	"type" : "select",
+			"name" : "vat",
+			"style" : "width: 60px",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : 0,
+					"label" : "HT"
+				},
+				{ "type" : "option",
+					"value" : 1,
+					"label" : "TTC"
+				}
+			]	
 		},
 		{	"type" : "submit",
 			"name" : "submit",

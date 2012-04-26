@@ -1,4 +1,13 @@
-<div style="padding: 20px 20px 0 20px">
+<style type="text/css">
+	.tab-content {
+		margin-top: 0px;
+		padding: 20px 0 0 10px;
+		border: 1px solid #DDD;
+		border-top: none;
+	}
+</style>
+
+<div style="width:650px;margin: 0 auto">
 
 	<div style="font-size: 16px">
 		<div style="float:left;width: 100px">
@@ -6,7 +15,7 @@
 				<img style="width:90px" src="/mod/repasrc/foodstuffImg/s{$foodstuff.0.synonym_id}.jpg" />
 			{else}
 				<img style="width:90px" src="/mod/repasrc/foodstuffImg/{$foodstuff.0.id}.jpg" />
-			{/if}
+			{/if} 
 		</div>
 		<div style="float:left;padding-top:10px">
 			<div>Identifiant: <strong>{$foodstuff.0.id}</strong></div>
@@ -33,65 +42,129 @@
 			{if (!empty($foodstuff.0.production))}
 				<div>Mode de production: <strong>{$foodstuff.0.production}</strong></div>
 			{/if}
-			{if $info.family_group == 'Fruits' || $info.family_group == 'Légumes'}
+			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>
 				<div class="btn-group">
-						<span class="btn btn-small">Jan</span>
-						<span class="btn">Fev</span>
-						<span class="btn btn-danger">Mar</span>
-						<span class="btn btn-warning">Avr</span>
-						<span class="btn btn-success">Mai</span>
-						<span class="btn btn-success">Jui</span>
-						<span class="btn btn-success">Jui</span>
-						<span class="btn btn-success">Aou</span>
-						<span class="btn btn-success">Sep</span>
-						<span class="btn">Oct</span>
-						<span class="btn">Nov</span>
-						<span class="btn">Dec</span>
+				{foreach $seasonality as $month=>$s}
+						{if $s == 0}
+							{if $s@index == $recipe.consumptionmonth}
+								<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+							{else}
+								<span class="btn btn-danger">{$month}</span>
+							{/if}
+						{else if $s == 1}
+							{if $s@index == $recipe.consumptionmonth}
+								<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+							{else}
+								<span class="btn btn-warning">{$month}</span>
+							{/if}
+						{else}
+							{if $s@index == $recipe.consumptionmonth}
+								<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+							{else}
+								<span class="btn btn-success">{$month}</span>
+							{/if}
+						{/if}
+				{/foreach}
 				</div>
 			{/if}
 		</div>
 	</div>
 
-	<div id="foodstuff-form-comtainer" style="margin-top:20px;width:90%">
+	<div id="foodstuff-form-comtainer" style="margin-top:20px">
 
 		<div class="alert alert-info">
 			<a class="close" data-dismiss="alert">×</a>
 			<p>
 				En fonction des modules choisis, il vous est possible de saisir différentes informations.<br />
-				Chaque onglet ci dessous correpond à un module.
+				Veuillez renseigner les informations demandées dans chacun des onglets ci dessous pour avoir une analyse la plus complète de votre recette.
 			</p>
 		</div> 
 
-		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipeId, $foodstuff.0.id, $foodstuff.0.synonym_id)}
-			<ul class="nav nav-tabs">
+		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $foodstuff.0.id, $foodstuff.0.synonym_id)}
+			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
-				<li><a href="#conservation" data-toggle="tab">Conservation</a></li>
-				<li><a href="#transport" data-toggle="tab">Transport</a></li>
+				{if (isset($modulesList) && $modulesList.production == 1)}
+					<li><a href="#production" data-toggle="tab">Conservation</a></li>
+				{/if}
+				{if (isset($modulesList) && $modulesList.transport == 1)}
+					<li><a href="#transport" data-toggle="tab">Transport</a></li>
+				{/if}
+				{if (isset($modulesList) && $modulesList.price == 1)}
+					<li><a href="#price" data-toggle="tab">Prix</a></li>
+				{/if}
 			</ul>
 			<div class="tab-content">
-				<div class="tab-pane active" id="quantity">
+				<div class="tab-pane" id="quantity">
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label">{t d='repasrc' m="Quantité"}</label>
-							<div class="controls">
-								{$foodstuffForm.quantity}
+							<label class="control-label" for="prependInput" style="width: 60px">{t d='repasrc' m="Quantité"}</label>
+							<div class="controls" style="margin-left:75px">
+								<div class="input-append">
+									{$foodstuffForm.quantity}
+									<span class="add-on">Kg</span>
+								</div>
 							</div>
 						</div>
 					</fieldset>
 				</div>
-				<div class="tab-pane" id="conservation">2</div>
-				<div class="tab-pane" id="transport">3</div>
+				{if (isset($modulesList) && $modulesList.production == 1)}
+					<div class="tab-pane" rel="les informations de production" id="production">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" style="width: 150px">{t d='repasrc' m="Mode de production"}</label>
+								<div class="controls" style="margin-left:160x">
+									{$foodstuffForm.production}
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" style="width: 150px">{t d='repasrc' m="Mode de conservation"}</label>
+								<div class="controls" style="margin-left: 160px">
+									{$foodstuffForm.conservation}
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				{/if}
+				{if (isset($modulesList) && $modulesList.transport == 1)}
+					<div class="tab-pane" rel="les informations de production/conservation" id="transport">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" style="width: 50px">{t d='repasrc' m="Origine"}</label>
+								<div class="controls" style="margin-left:75px">
+									{$foodstuffForm.location}
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				{/if}
+				{if (isset($modulesList) && $modulesList.price == 1)}
+					<div class="tab-pane" rel="les informations de prix" id="price">
+						<fieldset>
+							<div class="control-group">
+								<label class="control-label" style="width: 50px">{t d='repasrc' m="Prix"}</label>
+								<div class="controls" style="margin-left:75px">
+								<div class="input-append">
+									{$foodstuffForm.price}
+									<span class="add-on">au Kg</span>
+								</div>
+									{$foodstuffForm.vat}
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				{/if}
 			</div>
 		{/form}
 
-	</div>
+		<div id="popup-actions" class="form-actions" style="margin-top:-20px">
+			{if (isset($recipe.id))}
+				<input type="hidden" name="recipeId" value="recipeId"></input>
+				{$foodstuffForm.submit}
+				{$foodstuffForm.cancel}
+			{/if}
+		</div>
 
-	<div id="popup-actions" class="form-actions" style="margin-top:80px">
-		{if ($recipeId)}
-				<a class="btn" href="javascript:void(0)" onclick="addFoodstuffToRecipe({$parent.0.id}, {if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{else}null{/if})">Ajouter l'aliment à la recette</a>
-		{/if}
-		<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
 	</div>
 
 </div>

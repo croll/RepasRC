@@ -8,6 +8,7 @@
 {block name='recipe_content'}
 
 	<div id="informations_container">
+		<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 		<div class="alert alert-info">
 			<a class="close" data-dismiss="alert">×</a>
 			Les commentaires seront visibles par tous les utilisateurs.

@@ -4,38 +4,6 @@ namespace mod\repasrc;
 
 class Foodstuff {
 
-	/*
-	public static function search($familyGroup=NULL, $family=NULL, $label=NULL) {
-		$done = $params = array();
-		$q = "SELECT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, ";
-    $q.= "array_agg((SELECT rrc_ss_id FROM rrc_foodstuff_synonym WHERE rrc_ss_rrc_foodstuff_id=rrc_fs_id)) AS synonym_id ";
-		$q.= "FROM rrc_foodstuff AS fs LEFT JOIN rrc_foodstuff_datavalue as dv ON fs.rrc_fs_id=dv.rrc_dv_rrc_foodstuff_id ";
-		$q.= "WHERE 1=1 ";
-		\core\Core::log($q);
-		if ($label != NULL) {
-			$params[] = "%$label%";
-			$params[] = "%$label%";
-			$q .= " AND UPPER(fs.rrc_fs_label) LIKE ? OR UPPER(ss.rrc_ss_label) LIKE ?";
-		}
-		if ($familyGroup != NULL) {
-			$params[] =  $familyGroup;
-			$q .= ' AND fg.rrc_fg_code=?';
-		}
-		if ($family != NULL) {
-			$params[] = $family;
-			$q .= ' AND fa.rrc_fa_id=?';
-		}
-
-		$o = ' GROUP BY rrc_fs_id ORDER BY rrc_fs_label ASC';
-		$query = $q.$o;
-		// Do not store duplicate foostuff, for example because it's defined with multiple families
-		$num = 0;
-		foreach(\core\Core::$db->fetchAll($query, $params) as $row) {
-		}
-		\core\Core::log($fs);
-		return $fs;
-	}
-	 */
 	public static function search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, $searchSynonyms=true) {
 		$params = $tmpParams = $fs = array();
 		$tmpWhere = '';
@@ -54,9 +22,9 @@ class Foodstuff {
 				$tmpWhere .= 'AND ('.substr($tmp, 0, -4).') ';
 			}
 		}
-		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint ";
+		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint, rrc_fs_seasonality AS seasonality ";
 		if ($searchSynonyms) {
-			$q .= ', rrc_ss_id AS synonym_id, rrc_ss_label AS synonym ';
+			$q .= ', rrc_ss_id AS synonym_id, rrc_ss_label AS synonym, rrc_ss_seasonality AS synonym_seasonality ';
 		}
 		$q .= "FROM rrc_foodstuff AS fs ";
 		$q .= "LEFT JOIN rrc_foodstuff_family AS ff ON fs.rrc_fs_id=ff.rrc_ff_rrc_foodstuff_id ";
@@ -105,6 +73,9 @@ class Foodstuff {
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					$tmp['synonym'] = $row['synonym'];
+					$tmp['seasonality'] = $row['synonym_seasonality'];
+				} else {
+					$tmp['seasonality'] = $row['seasonality'];
 				}
 				if (!is_null($row['family_id'])) {
 					$tmp['infos'][$num]['family_id'] = $row['family_id'];
@@ -167,8 +138,16 @@ class Foodstuff {
 		$q .= 'LEFT JOIN rrc_origin ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id ';
 		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
 		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=? AND rrc_rf_rrc_foodstuff_synonym_id=?';
-		\core\Core::log($q);
 		return \core\Core::$db->fetchOne($q, array($recipeId, $foodstuffId, $synonymId));
+	}
+
+	public static function parseSeasonality($str) {
+		$ret = array();
+		$m = array('Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Jui', 'Août', 'Sep', 'Oct', 'Nov', 'Dec');
+		for($i=0;$i<strlen($str);$i++) {
+			$ret[$m[$i]] = $str[$i];
+		}
+		return $ret;
 	}
 
 }

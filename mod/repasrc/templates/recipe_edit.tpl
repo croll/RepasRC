@@ -8,10 +8,11 @@
 	</script>
 	<style type="text/css">
 		.modal-box {
-			width: 810px!important;
+			width: 750px!important;
+			max-width: 800px;
 		}
 		.modal-body, .modal-content {
-			min-height: 590px;
+			min-height: 490px;
 		}
 	</style>
 {/block}

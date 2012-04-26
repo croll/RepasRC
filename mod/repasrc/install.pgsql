@@ -46,6 +46,7 @@ CREATE TABLE "rrc_foodstuff" (
   "rrc_fs_unit" rrc_fs_unit_type DEFAULT 'KG',
   "rrc_fs_conservation" rrc_fs_conservation_type DEFAULT NULL,
   "rrc_fs_production" rrc_fs_production_type DEFAULT NULL,
+  "rrc_fs_seasonality" VARCHAR(12) DEFAULT NULL,
   "rrc_fs_creation" TIMESTAMP NOT NULL,
   "rrc_fs_modification" TIMESTAMP
 );
@@ -108,6 +109,7 @@ ALTER SEQUENCE rrc_foodstuff_family_rrc_ff_id_seq RESTART WITH 1000;
 CREATE TABLE "rrc_foodstuff_synonym" (
   "rrc_ss_id" SERIAL PRIMARY KEY,
   "rrc_ss_label" varchar(255) NOT NULL DEFAULT 'NULL',
+  "rrc_ss_seasonality" VARCHAR(12) DEFAULT NULL,
   "rrc_ss_rrc_foodstuff_id" INTEGER DEFAULT NULL
 );
 CREATE INDEX rrc_foodstufsynonym_fs_idx ON "rrc_foodstuff_synonym" ("rrc_ss_rrc_foodstuff_id");

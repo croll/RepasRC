@@ -7,15 +7,22 @@
 	[
 		{	"type" : "text",
 			"name" : "quantity",
+			"class" : "span2",
+			"style" : "width:60px",
 			"validators" : 
 			[ 
-				"required"
+				"required",
+				"validate-numeric"
 			]
 		},
 		{	"type" : "select",
 			"name" : "conservation",
 			"children" :
 			[
+				{ "type" : "option",
+					"value" : "",
+					"label" : "Indéfini"
+				},
 				{ "type" : "option",
 					"value" : "G1",
 					"label" : "Frais"
@@ -67,6 +74,10 @@
 			"children" :
 			[
 				{ "type" : "option",
+					"value" : "",
+					"label" : "Indéfini"
+				},
+				{ "type" : "option",
 					"value" : "Conv",
 					"label" : "Agriculture conventionnelle"
 				},
@@ -105,15 +116,17 @@
 			]	
 		},
 		{	"type" : "text",
-			"name" : "price"
+			"name" : "price",
+			"style" : "width: 40px"
 		},
 		{	"type" : "select",
 			"name" : "vat",
+			"style" : "width: 60px",
 			"children" :
 			[
 				{ "type" : "option",
 					"value" : 0,
-					"label" : "Hors taxe"
+					"label" : "HT"
 				},
 				{ "type" : "option",
 					"value" : 1,
@@ -125,6 +138,10 @@
 			"name" : "location",
 			"children" :
 			[
+				{ "type" : "option",
+					"value" : "",
+					"label" : "Indéfinie"
+				},
 				{ "type" : "option",
 					"value" : "LOCAL",
 					"label" : "Local"
@@ -149,9 +166,18 @@
 					"value" : "LETMECHOOSE",
 					"label" : "Préciser"
 				}
-
-
 			]	
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Ajouter l'aliment à la recette"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Ne pas ajouter l'aliment",
+			"onclick" : "modalWin.hide()"
 		}
 	]
 }

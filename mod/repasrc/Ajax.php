@@ -29,7 +29,17 @@ class Ajax {
 			$page->smarty->assign('parent', $parent);
 		}
 		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), false);
-		$page->smarty->assign(array('recipeId' => $params['recipeId'], 'foodstuff' => $foodstuff));
+		$recipeInfos = \mod\repasrc\Recipe::getInfos($params['recipeId']);
+		$tmp = preg_split('#/#', $recipeInfos['consumptiondate']);
+		if ($tmp)
+			$recipeInfos['consumptionmonth'] = trim($tmp[1]-1, '0');
+		$page->smarty->assign(
+			array(
+					'recipe' => $recipeInfos, 
+					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList'], 
+					'seasonality' => \mod\repasrc\Foodstuff::parseSeasonality($foodstuff[0]['seasonality'])
+			)
+		);
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];
 		return array('title' => $label, 'content' => $page->smarty->fetch('repasrc/recipe/foodstuff_detail'));
 	}

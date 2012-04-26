@@ -110,6 +110,7 @@ class Main {
 		$tplTrans = array('aliments' => 'foodstuff', 'commentaires' => 'comments');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
 		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
+		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getInfos($id));
 		$page->setLayout('repasrc/recipe/'.$tpl);
     $page->display();
 	}

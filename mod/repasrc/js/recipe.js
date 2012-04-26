@@ -335,6 +335,7 @@ function showRecipeDetail(id) {
 			},
 		onSuccess: function(res) {
 			modalWin.setTitle(res.title).setBody(res.content).show();
+			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
@@ -354,12 +355,13 @@ function showFoodstuffDetail(id, sid) {
 			},
 		onSuccess: function(res) {
 			modalWin.setTitle(res.title).setBody(res.content).show();
-			CaptainHook.Bootstrap.initTabs('messages');
+			CaptainHook.Bootstrap.initTabs('quantity');
+			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id, synonymId: synonymId, recipeId: recipeId});
+	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList});
 }
 
 function addFoodstuffToRecipe(foodstuffId, synonymId) {

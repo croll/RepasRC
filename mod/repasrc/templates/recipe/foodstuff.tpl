@@ -10,6 +10,7 @@
 {/block}
 
 {block name='recipe_content'}
+	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 	<div class="alert alert-info">
 		<a class="close" data-dismiss="alert">×</a>
 		Cliquez sur un aliment pour l'ajouter à votre recette.<br />
@@ -33,7 +34,7 @@
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Composition de la recette</h3>
-			{if (!isset($recipeFoodstuffList))}
+			{if (!isset($recipeFoodstuffList) || empty($recipeFoodstuffList))}
 			<div class="alert alert-error">
 				Aucun aliment.
 			</div>
@@ -43,7 +44,7 @@
 						<li class="clearfix" style="cursor:pointer">
 							<a style="color: #000;font-size:12px">
 								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.0.infos))}{$fs.foodstuff.0.infos.0.family_group_id}{/if}">&nbsp;</div>
-								<span style="">
+								<span style="" onclick="showFoodstuffDetail({$fs.foodstuff.0.id}, {if (isset($fs.foodstuff.0.synonym))}{$fs.foodstuff.0.synonym}{else}null{/if})">
 									{$fs.quantity} {$fs.unit}
 									<strong>
 									{if (isset($fs.foodstuff.0.synonym))}
