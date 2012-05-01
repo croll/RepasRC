@@ -53,9 +53,27 @@ class Ajax {
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
 		$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
-		$recipe = \mod\repasrc\Recipe::getDetail($id);
+		for($i=0;$i<sizeof($foodstuffList);$i++) {
+			$foodstuffList[$i]['foodstuff'][0]['seasonality'] = \mod\repasrc\Foodstuff::parseSeasonality($foodstuffList[$i]['foodstuff'][0]['seasonality']);
+		}
+		$recipeInfos = \mod\repasrc\Recipe::getDetail($id);
+		\core\Core::log($recipeInfos);
+		$tmp = preg_split('#/#', $recipeInfos['consumptiondate']);
+		if ($tmp)
+			$recipeInfos['consumptionmonth'] = trim($tmp[1]-1, '0');
     $page = new \mod\webpage\Main();
-		$page->smarty->assign(array('recipe' => $recipe, 'foodstuffList' => $foodstuffList));
-		return array('title' => $recipe['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
+		$page->smarty->assign(
+			array(
+				'recipe' => $recipeInfos, 
+				'foodstuffList' => $foodstuffList
+			)
+		);
+		return array('title' => $recipeInfos['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
+	}
+
+	public static function getCities($params) {
+		$name=$params['q'].'%';
+		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_rrc_geo_zonetype_id = 8 AND rrc_zv_label_caps ILIKE ? ORDER BY rrc_zv_label";
+		return \core\Core::$db->fetchAll($query, array($name));
 	}
 }

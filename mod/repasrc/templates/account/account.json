@@ -1,9 +1,8 @@
 {
 	"method" : "post",
 	"id" : "informations",
-	"action" : "/compte/saisie",
+	"action" : "/compte",
 	"class" : "form-horizontal",
-	"enctype" : "multipart/form-data",
 	"elements" : 
 	[
 		{	"type" : "text",
@@ -14,35 +13,33 @@
 			]
 		},
 		{	"type" : "select",
-			"name" : "select_public",
-			"multiple" : "multiple",
-			"style" :  "height:90px",
+			"name" : "public",
 			"children" :
 			[
 				{ "type" : "option",
-					"value" : "noum",
-					"label" : "Maternelles"
-				},
-				{ "type" : "option",
 					"value" : "SCHOLASTIC",
-					"label" : "Ecoliers"
+					"label" : "Enfants"
 				},
 				{ "type" : "option",
-					"value" : "STUDENT",
-					"label" : "Etudiants"
-				},
-				{ "type" : "option",
-					"value" : "ADULT",
+					"value" : "WORKERS",
 					"label" : "Adultes"
 				},
 				{ "type" : "option",
 					"value" : "ELDERIES",
 					"label" : "Personnes agées"
+				},
+				{ "type" : "option",
+					"value" : "SICKS",
+					"label" : "Malades"
+				},
+				{ "type" : "option",
+					"value" : "OTHER",
+					"label" : "Autre"
 				}
 			]	
 		},
 		{	"type" : "select",
-			"name" : "select_administration",
+			"name" : "type",
 			"children" :
 			[
 				{ "type" : "option",
@@ -65,10 +62,18 @@
 		},
 		{	"type" : "text",
 			"name" : "city",
+			"id" : "city",
 			"class" : "input-xlarge"
 		},
 		{	"type" : "text",
-			"name" : "city_selected",
+			"name" : "zonelabel",
+			"disabled" : "disabled",
+			"id" : "zonelabel",
+			"class" : "input-xlarge"
+		},
+		{	"type" : "hidden",
+			"name" : "zoneid",
+			"id" : "zoneid",
 			"class" : "input-xlarge"
 		},
 		{	"type" : "submit",

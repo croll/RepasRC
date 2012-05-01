@@ -4,6 +4,9 @@ namespace mod\repasrc;
 
 class Foodstuff {
 
+	public static $conservation = array('G1' => 'Frais','G2' => 'Conserve','G3' => 'Surgelé','G4' => '4e gamme','G5' => '%e gamme','G6' => 'Déshydraté','G7' => 'G7','G8' => 'Pasteurisé','G9' => 'UHT','G10' => 'Epicerie sèche','G11' => 'Réfrigéré');
+	public static $production = array('Conv' => 'Agriculture conventionnelle', 'AB' => 'Agriculture Bio', 'Dur' => 'Agriculture durable', 'Lab' => 'Label Rouge', 'AOC' => 'AOC', 'IGP' => 'IGP', 'BBC' => 'Bleu blanc coeur', 'COHERENCE' => 'Cohérence', 'COMMERCEEQUITABLE' => 'Commerce équitable');
+
 	public static function search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, $searchSynonyms=true) {
 		$params = $tmpParams = $fs = array();
 		$tmpWhere = '';
@@ -114,7 +117,7 @@ class Foodstuff {
 			$params[] = $synonym_id;
 			$query.= " AND rrc_ss_id = ?";
 		} else {
-			$query = "SELECT rrc_fs_id AS id, rrc_fs_label AS label FROM rrc_foodstuff AS fs WHERE rrc_fs_id=?";
+			$query = "SELECT rrc_fs_id AS id, rrc_fs_label AS label FROM rrc_foodstuff AS fs WHERE rrc_fs_id=? AND rrc_ss_id=0";
 		}
 		return array_values(\core\Core::$db->fetchAll($query, $params));
 	}
@@ -134,11 +137,19 @@ class Foodstuff {
 	}
 
 	public static function getFromRecipe($recipeId, $foodstuffId, $synonymId) {
+		$params = array($recipeId, $foodstuffId);
 		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production, rrc_zv_label FROM rrc_recipe_foodstuff rf ';
 		$q .= 'LEFT JOIN rrc_origin ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id ';
 		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
-		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=? AND rrc_rf_rrc_foodstuff_synonym_id=?';
-		return \core\Core::$db->fetchOne($q, array($recipeId, $foodstuffId, $synonymId));
+		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=?';
+		if ($synonymId) {
+			$params[] = $synonymId;
+			$q.= 'AND rrc_rf_rrc_foodstuff_synonym_id=?';
+		} else {
+			$q.= 'AND rrc_rf_rrc_foodstuff_synonym_id=0';
+		}
+		$ret = \core\Core::$db->fetchOne($q, $params);
+		return $ret;
 	}
 
 	public static function parseSeasonality($str) {
@@ -148,6 +159,18 @@ class Foodstuff {
 			$ret[$m[$i]] = $str[$i];
 		}
 		return $ret;
+	}
+
+	public static function getConservation($id) {
+		if (!isset(self::$conservation[$id]))
+			return $id;
+		return self::$conservation[$id];
+	}
+
+	public static function getProduction($id) {
+		if (!isset(self::$production[$id]))
+			return $id;
+		return self::$production[$id];
 	}
 
 }

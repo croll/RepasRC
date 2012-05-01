@@ -8,6 +8,8 @@ class Main {
 		if (\mod\user\Main::userIsLoggedIn() && (!isset($_SESSION['rc']) || empty($_SESSION['rc']))) {
 			$uid = \mod\user\Main::getUserId($_SESSION['login']);
 			$_SESSION['rc'] = \mod\repasrc\RC::getUserRC($uid);
+			if (!isset($_SESSION['recipe']['comp']))
+				$_SESSION['recipe']['comp'] = array();
 		}
 	}
 
@@ -19,11 +21,30 @@ class Main {
     $page->display();
   }
 
-	public static function hook_mod_repasrc_recipe_list($hookname, $userdata) {
+	public static function hook_mod_repasrc_recipe_list($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
+		// Add recipe for comparison
+		$rid = (isset($params[1])) ? $params[1] : null;
+		if (strstr($params[0], 'add') && !empty($rid)) {
+			if (isset($rid) && !in_array($rid, $_SESSION['recipe']['comp'])) {
+				$_SESSION['recipe']['comp'][] = (int)$rid;
+			}
+		}
+		// Remove recipe from comparison list
+		if (strstr($params[0], 'del') && !empty($rid)) {
+			if (isset($_SESSION['recipe']['comp']) && is_array($_SESSION['recipe']['comp'])) {
+				$tmp = array();
+				foreach($_SESSION['recipe']['comp'] as $tmpid) {
+					if ($tmpid != $rid)
+						$tmp[] = (int)$tmpid;
+				}
+				$_SESSION['recipe']['comp'] = $tmp;
+			}
+		}
+		// Display
 		$recipes = NULL;
     $page = new \mod\webpage\Main();
-		$page->smarty->assign('recipes', $recipes);
+		$page->smarty->assign(array('recipesForComparison' => $_SESSION['recipe']['comp']));
 		$page->setLayout('repasrc/recipe/list');
     $page->display();
 	}
@@ -74,7 +95,19 @@ class Main {
 				if (isset($fields['consumptiondate']) && !empty($fields['consumptiondate'])) {
 					\mod\repasrc\Recipe::setConsumptionDate($id, $fields['consumptiondate']);
 				}
-				$page->display();
+			}
+		}
+
+		/* Recipe foodstuff */
+		if (isset($_POST['quantity'])) {
+			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/foodstuff.json'));
+			if ($form->validate()) {
+				$fields = $form->getFieldValues();
+				\core\Core::log($_POST);
+				$foodstuffId = (int)$_POST['foodstuffId'];
+				$recipeId = (int)$_POST['recipeId'];
+				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
+				\mod\repasrc\Recipe::addFoodstuff($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
 			}
 		}
 
@@ -84,7 +117,6 @@ class Main {
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
 					\mod\repasrc\Recipe::setComments($id, $fields['comment']);
-				$page->display();
 			}
 		}
 
@@ -117,6 +149,14 @@ class Main {
 
 	public static function hook_mod_repasrc_account($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
+		if (isset($_POST['name'])) {
+			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/account/account.json'));
+			if ($form->validate()) {
+				$fields = $form->getFieldValues();
+				\core\Core::log($fields);
+				\mod\repasrc\RC::updateRcInfos($_SESSION['rc'], $fields['name'], $fields['type'], $fields['public'], $fields['zoneid']);
+			}
+		}
     $page = new \mod\webpage\Main();
 		$page->setLayout('repasrc/account/account');
     $page->display();
@@ -139,9 +179,26 @@ class Main {
 		if (isset($params[2]))
 			$id = $params[2];
     $page = new \mod\webpage\Main();
-		$page->setLayout('repasrc/recipe/map');
-		$section = 'transport';
-		$page->smarty->assign(array('section' => $section, 'recipe_id' => $id));
+		
+		if (is_null($section)) $section = $params[1];
+
+		switch($section) {
+			case 'resume':
+				$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
+				$page->smarty->assign('foodstuffList', $foodstuffList);
+			break;
+			case 'aliments':
+			if (!empty($id)) {
+				$page->smarty->assign('recipeFoodstuffList', \mod\repasrc\Recipe::getFoodstuffList($id));
+			}
+			break;
+		}
+
+		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'map',  'prix' => 'price');
+		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
+		$page->setLayout('repasrc/recipe/'.$tpl);
+		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getInfos($id));
+		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
     $page->display();
 	}
 

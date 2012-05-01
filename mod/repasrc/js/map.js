@@ -28,19 +28,20 @@ window.addEvent('domready', function() {
 	}
     });
 
-		     google.maps.event.addListener(map, 'bounds_changed', function() {
+   google.maps.event.addListener(map, 'bounds_changed', function() {
 		var bounds = map.getBounds();
 		var southWest = bounds.getSouthWest();
 		var northEast = bounds.getNorthEast();
 		var lngSpan = northEast.lng() - southWest.lng();
 		var latSpan = northEast.lat() - southWest.lat();
 		for (var i = 0; i < 5; i++) {
-			var latlng = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
-					southWest.lng() + lngSpan * Math.random());
-				  var marker = new google.maps.Marker({
-						      position: latlng,
-									      map: map,
-												      title:"RC"
-															  });}
-		      });
+		var latlng = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
+			southWest.lng() + lngSpan * Math.random());
+			var marker = new google.maps.Marker({
+				position: latlng,
+				map: map,
+				title:"RC"
+			});
+		}
+   });
 });

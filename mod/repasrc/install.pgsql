@@ -34,7 +34,7 @@ ALTER SEQUENCE rrc_family_group_rrc_fg_id_seq RESTART WITH 500;
 --
 
 CREATE TYPE "rrc_fs_unit_type" AS ENUM ('KG','L','ONE_PIECE');
-CREATE TYPE "rrc_fs_conservation_type" AS ENUM ('', 'F','Su','Co','D','G1','G2','G3','G4','G5');
+CREATE TYPE "rrc_fs_conservation_type" AS ENUM ('', 'F','Su','Co','D','G1','G2','G3','G4','G5','G6','G7','G8','G9','G10','G11');
 CREATE TYPE "rrc_fs_production_type" AS ENUM ('', 'Conv','AB','Dur','Lab','AOC','IGP', 'BBC', 'COHERENCE', 'COMMERCEEQUITABLE');
 
 CREATE TABLE "rrc_foodstuff" (
@@ -254,7 +254,7 @@ ALTER SEQUENCE rrc_recipe_rrc_re_id_seq RESTART WITH 1000;
 -- Table structure for table "rrc_recipe_foodstuff"
 --
 
-CREATE TYPE "rrc_rf_conservation_type" AS ENUM ('','G1','G2','G3','G4','G5','G6','G7');
+CREATE TYPE "rrc_rf_conservation_type" AS ENUM ('','G1','G2','G3','G4','G5','G6','G7','G8','G9','G10', 'G11');
 CREATE TYPE "rrc_rf_production_type" AS ENUM ('', 'Conv','AB','Dur','Lab','AOC','IGP', 'BBC', 'COHERENCE', 'COMMERCEEQUITABLE');
 CREATE TYPE "rrc_rf_quantity_unit_type" AS ENUM ('KG','G','UNIT');
 CREATE TABLE "rrc_recipe_foodstuff" (
@@ -271,4 +271,4 @@ CREATE TABLE "rrc_recipe_foodstuff" (
 );
 CREATE INDEX rrc_rf_fs_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_id");
 CREATE INDEX rrc_rf_fss_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_synonym_id");
-ALTER SEQUENCE rrc_recipe_foodstuff_rrc_rf_id_seq RESTART WITH 2500; 
+ALTER SEQUENCE rrc_recipe_foodstuff_rrc_rf_id_seq RESTART WITH 3000; 

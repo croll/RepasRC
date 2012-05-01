@@ -17,7 +17,7 @@ class ModuleDefinition extends \core\ModuleDefinition {
 		\mod\regroute\Main::registerRoute($this->id, '#^/$#', 'mod_repasrc_index');
 		\mod\regroute\Main::registerRoute($this->id, '#^/compte/?$#', 'mod_repasrc_account');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/edition/?([a-z]*)/?([0-9]*)/?$#', 'mod_repasrc_recipe_edit');
-		\mod\regroute\Main::registerRoute($this->id, '#^/recette/liste$#', 'mod_repasrc_recipe_list');
+		\mod\regroute\Main::registerRoute($this->id, '#^/recette/liste/?a?d?d?d?e?l?/?([0-9]*)$#', 'mod_repasrc_recipe_list');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/comparer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_compare');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/importer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_import');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/analyse/?([a-z]*)/?([0-9]*)$#', 'mod_repasrc_recipe_analyze');

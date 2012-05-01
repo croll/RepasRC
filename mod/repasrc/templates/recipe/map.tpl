@@ -1,7 +1,6 @@
 {extends tplextends('repasrc/recipe_edit')}
 
 {block name='webpage_head' append}
-	{js file="/mod/repasrc/js/recipe.js"}
 	{js file="/mod/repasrc/js/map.js"}
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 {/block}

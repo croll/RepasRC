@@ -1,0 +1,42 @@
+#!/usr/bin/php -q
+<?php  //  -*- mode:php; tab-width:2; c-basic-offset:2; -*-
+
+
+$CAPTAINHOOK_PATH = getenv('CAPTAINHOOK_PATH');
+if ($CAPTAINHOOK_PATH === false) {
+  if (is_file(getcwd().'/conf/general.conf')) $CAPTAINHOOK_PATH=getcwd();
+  else $CAPTAINHOOK_PATH = "/home/web/dev/captainhook_repasrc/";
+}
+
+echo $CAPTAINHOOK_PATH;
+
+function _readline($prompt = '') {
+  echo $prompt;
+  return rtrim(fgets(STDIN), "\n");
+}
+
+$scriptDir = dirname(__FILE__);
+
+if (!is_dir($CAPTAINHOOK_PATH)) {
+	echo "Captainhook core not found, please edit me and set \$CAPTAINHOOK_PATH variable.\n";
+	exit;
+}
+
+if (!is_file($CAPTAINHOOK_PATH.'/conf/general.conf') || !is_readable($CAPTAINHOOK_PATH.'/conf/general.conf')) {
+	echo "Captainhook config file not found.\n";
+	exit;
+}
+
+require($CAPTAINHOOK_PATH.'/core/Core.php');
+\core\Core::init();
+
+$datas = \core\Core::$db->fetchAll("SELECT rrc_zv_id AS id, rrc_zv_lat AS lat, rrc_zv_lon AS lon FROM rrc_geo_zonevalue");
+foreach($datas as $d) {
+	if (!empty($d['lat']) && !empty($d['lon'])) {
+		$ins = "UPDATE rrc_geo_zonevalue SET rrc_zv_geom=ST_GeomFromText('POINT($d[lat] $d[lon])', 4326) WHERE rrc_zv_id = ?";
+		echo str_replace('?', $d['id'], $ins)."\n";
+		\Core\core::$db->exec($ins, array($d['id']));
+	}
+}
+
+exit;

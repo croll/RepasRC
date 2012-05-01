@@ -4,9 +4,6 @@ namespace mod\repasrc;
 
 class Recipe {
 
-	function __construct() {
-	}
-
 	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false) {
 
 		$params = array();
@@ -140,7 +137,7 @@ class Recipe {
 
 	public static function getFoodstuffList($id) {
 		$params = array($id);
-		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id, rrc_zv_label AS zone, rrc_zt_label as zone_type ";
+		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id, rrc_zv_label AS zone, rrc_zt_label as zone_type ";
 		$q.= "FROM rrc_recipe_foodstuff AS rf ";
 		$q.= "LEFT JOIN rrc_origin AS ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id "; 
 		$q.= "LEFT JOIN rrc_geo_zonevalue AS zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id "; 
@@ -158,6 +155,7 @@ class Recipe {
 			$tmp['unit'] = $row['unit'];
 			$tmp['quantity'] = $row['quantity'];
 			$tmp['price'] = $row['price'];
+			$tmp['vat'] = $row['vat'];
 			$tmp['conservation'] = $row['conservation'];
 			$tmp['production'] = $row['production'];
 			$tmp['foodstuff'] = $infos;
@@ -180,8 +178,7 @@ class Recipe {
 		$conservation['G9'] = 1;
 		$conservation['10'] = 1;
 		$conservation['11'] = 1;
-		$q = "SELECT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id as owner, rrc_re_creation AS creation, rrc_re_modification AS modification FROM rrc_recipe WHERE rrc_re_id=?";
-		$recipe = \core\Core::$db->fetchRow($q, $params);
+		$recipe = self::getInfos($id);
 		$recipe['families'] = $recipe['foodstuff'] = array();
 		switch($recipe['component']) {
 			case 'STARTER':
@@ -210,7 +207,7 @@ class Recipe {
 			}
 			$footprint = $fs['foodstuff'][0]['footprint']*$fs['quantity'];
 			if ($fs['conservation']) {
-			$footprint = $footprint*$conservation[$fs['conservation']];
+				$footprint = $footprint*$conservation[$fs['conservation']];
 			}
 			$recipe['footprint'] += $footprint;
 				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
@@ -299,6 +296,13 @@ class Recipe {
 
 	public static function checkIfExists($recipeId) {
 		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId))) ? true : false;
+	}
+
+	public static function addFoodstuff($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null) {
+		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production) ';
+		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
+		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
+		\core\Core::log('ID: '.$recipeFoodstuffId);
 	}
 
 }

@@ -81,11 +81,12 @@
 			</p>
 		</div> 
 
-		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $foodstuff.0.id, $foodstuff.0.synonym_id)}
+		{assign var="fsid" value=$foodstuff.0.id}
+		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $fsid, $foodstuff.0.synonym_id)}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
 				{if (isset($modulesList) && $modulesList.production == 1)}
-					<li><a href="#production" data-toggle="tab">Conservation</a></li>
+					<li><a href="#production" data-toggle="tab">Production / Conservation</a></li>
 				{/if}
 				{if (isset($modulesList) && $modulesList.transport == 1)}
 					<li><a href="#transport" data-toggle="tab">Transport</a></li>
@@ -94,7 +95,7 @@
 					<li><a href="#price" data-toggle="tab">Prix</a></li>
 				{/if}
 			</ul>
-			<div class="tab-content">
+			<div class="tab-content" style="padding-bottom:18px">
 				<div class="tab-pane" id="quantity">
 					<fieldset>
 						<div class="control-group">
@@ -155,15 +156,17 @@
 					</div>
 				{/if}
 			</div>
-		{/form}
 
-		<div id="popup-actions" class="form-actions" style="margin-top:-20px">
+		<div id="popup-actions" class="form-actions" style="margin-top:-16px">
 			{if (isset($recipe.id))}
-				<input type="hidden" name="recipeId" value="recipeId"></input>
+				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
+				<input type="hidden" name="foodstuffId" value="{$foodstuff.0.id}"></input>
+				<input type="hidden" name="synonymId" value="{if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{/if}"></input>
 				{$foodstuffForm.submit}
 				{$foodstuffForm.cancel}
 			{/if}
 		</div>
+		{/form}
 
 	</div>
 

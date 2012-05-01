@@ -331,6 +331,8 @@ function buildRecipeThumb(re) {
 function showRecipeDetail(id) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showRecipeDetail',
+		'evalScripts' : true,
+		'evalResponse' : true,
 			onRequest: function() {
 			},
 		onSuccess: function(res) {
@@ -351,22 +353,19 @@ function showFoodstuffDetail(id, sid) {
 	synonymId = sid || null;
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showFoodstuffDetail',
+		'evalScripts' : true,
+		'evalResponse' : true,
 			onRequest: function() {
 			},
-		onSuccess: function(res) {
+		onSuccess: function(res,a,b,c) {
 			modalWin.setTitle(res.title).setBody(res.content).show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
+			var chForm_foodstuffForm=document.id('foodstuffForm');
+			var chForm_foodstuffFormValidator = new Form.Validator.Inline(chForm_foodstuffForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList});
-}
-
-function addFoodstuffToRecipe(foodstuffId, synonymId) {
-	console.log(foodstuffId+' - '+synonymId+' - '+recipeId);
-	modalContent = document.body.getElement('div.modal-content');
-	var fx = new Fx.Morph(modalContent);
-	fx.start({'height': [modalContent.getDimensions().y, modalContent.getDimensions().y+80]});
 }
