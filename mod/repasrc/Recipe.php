@@ -151,7 +151,7 @@ class Recipe {
 			} else {
 				$infos = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $row['foodstuff_id'])), false);
 			}
-			$tmp['foodstuff_recipe_id'] = $row['foodstuff_recipe_id'];
+			$tmp['recipeFoodstuffId'] = $row['foodstuff_recipe_id'];
 			$tmp['unit'] = $row['unit'];
 			$tmp['quantity'] = $row['quantity'];
 			$tmp['price'] = $row['price'];

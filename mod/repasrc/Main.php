@@ -54,6 +54,7 @@ class Main {
 		$section = NULL;
     $page = new \mod\webpage\Main();
 		$path = $params[0];
+		\core\Core::log($params);
 
 		if (isset($_REQUEST['recipeId']) && !empty($_REQUEST['recipeId'])) {
 			$id = $_REQUEST['recipeId'];
@@ -103,11 +104,14 @@ class Main {
 			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/foodstuff.json'));
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
-				\core\Core::log($_POST);
 				$foodstuffId = (int)$_POST['foodstuffId'];
 				$recipeId = (int)$_POST['recipeId'];
 				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
-				\mod\repasrc\Foodstuff::addToRecipe($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+				if (isset($_POST['recipeFoodstuffId']) && !empty($_POST['recipeFoodstuffId'])) {
+					\mod\repasrc\Foodstuff::updateForRecipe((int)$_POST['recipeFoodstuffId'], $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+				} else {
+					\mod\repasrc\Foodstuff::addToRecipe($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+				}
 			}
 		}
 
@@ -153,7 +157,6 @@ class Main {
 			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/account/account.json'));
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
-				\core\Core::log($fields);
 				\mod\repasrc\RC::updateRcInfos($_SESSION['rc'], $fields['name'], $fields['type'], $fields['public'], $fields['zoneid']);
 			}
 		}

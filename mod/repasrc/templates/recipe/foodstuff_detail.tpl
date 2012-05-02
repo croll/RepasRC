@@ -81,7 +81,7 @@
 			</p>
 		</div> 
 
-			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $foodstuff.0.id, $foodstuff.0.synonym_id)}
+			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
 				{if (isset($modulesList) && $modulesList.production == 1)}
@@ -172,15 +172,19 @@
 		<div id="popup-actions" class="form-actions" style="margin-top:-16px">
 			{if (isset($recipe.id))}
 				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
+				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
 				<input type="hidden" name="foodstuffId" value="{$foodstuff.0.id}"></input>
 				<input type="hidden" name="synonymId" value="{if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{/if}"></input>
+				<input type="hidden" name="locationsId" value=""></input>
 				<input type="hidden" name="action" value="{$action}"></input>
-				{if $action == 'add'}
-					{$foodstuffForm.submitAdd}
-				{else}
+				{if isset($recipeFoodstuffId) && !empty($recipeFoodstuffId)}
 					{$foodstuffForm.submitEdit}
+					{$foodstuffForm.cancel}
+					{$foodstuffForm.del}
+				{else}
+					{$foodstuffForm.submitAdd}
+					{$foodstuffForm.cancel}
 				{/if}
-				{$foodstuffForm.cancel}
 			{/if}
 		</div>
 		{/form}

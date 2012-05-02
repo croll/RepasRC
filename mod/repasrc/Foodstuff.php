@@ -142,27 +142,29 @@ class Foodstuff {
 		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
 		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
 		self::setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds);
-		\core\Core::log('ID: '.$recipeFoodstuffId);
 		return $recipeFoodstuffId;
 	}
 
-	public static function updateForRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null, $zoneIds=array()) {
-		$recipeFoodstuffId = \core\Core::$db->exec($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production));
+	public static function getRecipeFoodstuffId($recipeId, $foodstuffId, $synonymId) {
+		return \core\Core::$db->fetchOne('SELECT rrc_rf_id FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ? AND rrc_rf_rrc_foodstuff_id = ? AND rrc_rf_rrc_foodstuff_synonym_id = ?', array($recipeId, $foodstuffId, (($synonymId) ? $synonymId : 0)));
 	}
 
-	public static function getFromRecipe($recipeId, $foodstuffId, $synonymId) {
-		$params = array($recipeId, $foodstuffId);
-		$q = 'SELECT rrc_rf_id AS recipefoodstuffid, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production FROM rrc_recipe_foodstuff rf ';
-		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=?';
-		if ($synonymId) {
-			$params[] = $synonymId;
-			$q.= 'AND rrc_rf_rrc_foodstuff_synonym_id=?';
-		} else {
-			$q.= 'AND rrc_rf_rrc_foodstuff_synonym_id=0';
-		}
+	public static function updateForRecipe($recipeFoodstuffId, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null, $zoneIds=array()) {
+		$q = 'UPDATE rrc_recipe_foodstuff SET rrc_rf_quantity_value = ?, rrc_rf_price = ?, rrc_rf_vat = ?, rrc_rf_conservation = ?, rrc_rf_production = ? WHERE rrc_rf_id = ?';
+		$recipeFoodstuffId = \core\Core::$db->exec($q, array((float)$quantity, (float)$price, (int)$vat, $conservation, $production, (int)$recipeFoodstuffId));
+	}
+
+	public static function getFromRecipe($recipeFoodstuffId) {
+		$params = array((int)$recipeFoodstuffId);
+		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production FROM rrc_recipe_foodstuff rf ';
+		$q .= 'WHERE rf.rrc_rf_id=?';
 		$foodstuff = \core\Core::$db->fetchRow($q, $params);
-		$foodstuff['origin'] = self::getOriginFromRecipe($foodstuff['recipefoodstuffid']);
+		$foodstuff['origin'] = self::getOriginFromRecipe($recipeFoodstuffId);
 		return $foodstuff;
+	}
+
+	public static function deleteFromRecipe($recipeFoodstuffId) {
+		\core\Core::$db->exec('DELETE FROM rrc_recipe_foodstuff WHERE rrc_rf_id = ?', array($recipeFoodstuffId));
 	}
 
 	public static function getOriginFromRecipe($recipeFoodstuffId) {
@@ -176,11 +178,11 @@ class Foodstuff {
 	public static function setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds) {
 		\core\Core::$db->exec('DELETE FROM rrc_origin WHERE rrc_or_rrc_recipe_foodstuff_id = ?', array($recipeFoodstuffId));
 		if ($type != 'LETMECHOOSE') {
-			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, step) VALUES (?,?,?)';
+			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, rrc_or_step) VALUES (?,?,?)';
 			$args = array($recipeFoodstuffId, $type, 0);
 			\core\Core::$db->exec($q, $args);
 		} else {
-			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, step, rrc_or_rrc_geo_zonevalue_id) VALUES (?,?,?,?)';
+			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, rrc_or_step, rrc_or_rrc_geo_zonevalue_id) VALUES (?,?,?,?)';
 			for($i=0;$i<sizeof($zoneIds);$i++) {
 				$args = array($recipeFoodstuffId, $type, $i, $zoneIds[$i]);
 				\core\Core::$db->exec($q, $args);

@@ -235,7 +235,7 @@ function buildFoodstuffThumb(fs) {
 		var imgId = fs.id;
 		var name = fs.label;
 	}
-	html = '<li onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="width: 550px"><div class="thumbnail">';
+	html = '<li onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+imgId+'.jpg" alt /></li>';
 	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
@@ -349,11 +349,10 @@ function showRecipeDetail(id) {
  * Open a modal window and disply foodstuff infos  
  * @id: Foodstuff id 
  * @sid: Synonym id 
- * @action: add or edit, default add 
+ * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
-function showFoodstuffDetail(id, sid, action) {
+function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 	synonymId = sid || null;
-	action = action || 'add'
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showFoodstuffDetail',
 		'evalScripts' : true,
@@ -361,6 +360,7 @@ function showFoodstuffDetail(id, sid, action) {
 			onRequest: function() {
 			},
 		onSuccess: function(res,a,b,c) {
+
 			modalWin.setTitle(res.title).setBody(res.content).show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
@@ -393,5 +393,30 @@ function showFoodstuffDetail(id, sid, action) {
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList, action: action});
+	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList, recipeFoodstuffId: recipeFoodstuffId});
+}
+/* -------------------------------------------------
+ * Send ajax request to delete foodstuff from recipe
+ * and close modal window  
+ * @recipeFoodstuffId: foodstuff id for this recipe
+ * ---------------------------------------------- */
+
+function deleteRecipeFoodstuff() {
+	id = $('recipeFoodstuffId').get('value');
+	if (!id) {
+		alert('Erreur lors de la suppression de l\'aliment');
+		return;
+	}
+	console.log(id);
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/deleteRecipeFoodstuff',
+			onRequest: function() {
+			},
+		onSuccess: function(res,a,b,c) {
+			top.document.location.href=top.document.location.href;
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id});
 }

@@ -38,7 +38,7 @@ class Ajax {
 					'recipe' => $recipeInfos, 
 					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList'], 
 					'seasonality' => \mod\repasrc\Foodstuff::parseSeasonality($foodstuff[0]['seasonality']),
-					'action' => $params['action']
+					'recipeFoodstuffId' => (int)$params['recipeFoodstuffId']
 			)
 		);
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];
@@ -58,7 +58,6 @@ class Ajax {
 			$foodstuffList[$i]['foodstuff'][0]['seasonality'] = \mod\repasrc\Foodstuff::parseSeasonality($foodstuffList[$i]['foodstuff'][0]['seasonality']);
 		}
 		$recipeInfos = \mod\repasrc\Recipe::getDetail($id);
-		\core\Core::log($recipeInfos);
 		$tmp = preg_split('#/#', $recipeInfos['consumptiondate']);
 		if ($tmp)
 			$recipeInfos['consumptionmonth'] = trim($tmp[1]-1, '0');
@@ -77,4 +76,14 @@ class Ajax {
 		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_rrc_geo_zonetype_id = 8 AND rrc_zv_label_caps ILIKE ? ORDER BY rrc_zv_label";
 		return \core\Core::$db->fetchAll($query, array($name));
 	}
+
+	public static function deleteRecipeFoodstuff($params) {
+		if (isset($params['id'])) {
+			\mod\repasrc\Foodstuff::deleteFromRecipe((int)$params['id']);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

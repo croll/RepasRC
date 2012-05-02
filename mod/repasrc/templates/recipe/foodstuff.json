@@ -178,13 +178,19 @@
 			"name" : "submitEdit",
 			"id" : "submitEdit",
 			"class" : "btn btn-primary",
-			"value" : "Mettre à jour les informations de l'aliment"
+			"value" : "Mettre à jour les informations"
 		},
 		{	"type" : "button",
 			"name" : "cancel",
-			"class" : "btn",
-			"value" : "Ne pas ajouter l'aliment",
+			"class" : "btn btn-inverse",
+			"value" : "Fermer",
 			"onclick" : "modalWin.hide()"
+		},
+		{	"type" : "button",
+			"name" : "del",
+			"class" : "btn btn-danger",
+			"value" : "Enlever l'aliment",
+			"onclick" : "deleteRecipeFoodstuff()"
 		}
 	]
 }
