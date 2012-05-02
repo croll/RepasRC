@@ -44,7 +44,7 @@ class Main {
 		// Display
 		$recipes = NULL;
     $page = new \mod\webpage\Main();
-		$page->smarty->assign(array('recipesForComparison' => $_SESSION['recipe']['comp']));
+		$page->smarty->assign(array('recipeList' => $_SESSION['recipe']['comp']));
 		$page->setLayout('repasrc/recipe/list');
     $page->display();
 	}
@@ -107,7 +107,7 @@ class Main {
 				$foodstuffId = (int)$_POST['foodstuffId'];
 				$recipeId = (int)$_POST['recipeId'];
 				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
-				\mod\repasrc\Recipe::addFoodstuff($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+				\mod\repasrc\Foodstuff::addToRecipe($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
 			}
 		}
 

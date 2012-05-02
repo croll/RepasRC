@@ -34,7 +34,6 @@ window.addEvent('domready', function() {
 			}
 		});
 
-		// Modules
 		document.id('modules_container').getElements('li').each(function(el) {
 			el.addEvents({
 				click: function(){
@@ -53,7 +52,7 @@ window.addEvent('domready', function() {
 		});
 	}
 
-	// Foodstuff
+	// Recipe foodstuff list
 	if (typeOf(document.id('foodstuff_container')) == 'element') {
 
 		document.id('subfamily').adopt(new Element('option').set('value', '').set('html', 'Sous famille de produit'));
@@ -87,6 +86,7 @@ window.addEvent('domready', function() {
 				}
 				filterResults(this.get('value'));
 		});
+
 	}
 
 	// Recipe list in recipe creation section
@@ -348,9 +348,12 @@ function showRecipeDetail(id) {
 /* -------------------------------------------------
  * Open a modal window and disply foodstuff infos  
  * @id: Foodstuff id 
+ * @sid: Synonym id 
+ * @action: add or edit, default add 
  * ---------------------------------------------- */
-function showFoodstuffDetail(id, sid) {
+function showFoodstuffDetail(id, sid, action) {
 	synonymId = sid || null;
+	action = action || 'add'
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showFoodstuffDetail',
 		'evalScripts' : true,
@@ -361,11 +364,34 @@ function showFoodstuffDetail(id, sid) {
 			modalWin.setTitle(res.title).setBody(res.content).show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
+			// Form
 			var chForm_foodstuffForm=document.id('foodstuffForm');
 			var chForm_foodstuffFormValidator = new Form.Validator.Inline(chForm_foodstuffForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
+			// JS for location
+			document.body.getElement('select[name=location]').addEvent('change', function() {
+				if (this.getSelected().get('value') == 'LETMECHOOSE') {
+					document.id('location_steps').setStyle('display', 'block');
+				}
+			});
+			// Autocomplete
+			var myAutocomplete = new Meio.Autocomplete($('steps_input'), '/ajax/call/repasrc/getCities', {
+					filter: {
+						type: 'contains',
+						path: 'label'
+					},
+					onNoItemToList: function(elements){
+						elements.field.node.highlight('#ff5858');
+					},
+					onSelect: function(elements, value) {
+						var el = new Element('div').addClass('step step'+value.id);
+						el.adopt(new Element('span').set('html', value.label));
+						el.adopt(new Element('i').addClass('icon icon-remove'));
+						el.inject(document.id('steps'));
+					}
+			});
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList});
+	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList, action: action});
 }

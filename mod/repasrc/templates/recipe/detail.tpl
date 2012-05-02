@@ -63,6 +63,6 @@
 {/foreach}
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn" href="/recette/edition/aliments/{$recipe.id}">Modifier la recette</a>
-	<a class="btn" href="/recette/edition/aliments/{$recipe.id}">Ajouter la recette pour comparaison</a>
+	<a class="btn" href="/recette/liste/add/{$recipe.id}">Ajouter la recette pour comparaison</a>
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
 </div>

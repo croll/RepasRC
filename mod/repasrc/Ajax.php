@@ -37,7 +37,8 @@ class Ajax {
 			array(
 					'recipe' => $recipeInfos, 
 					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList'], 
-					'seasonality' => \mod\repasrc\Foodstuff::parseSeasonality($foodstuff[0]['seasonality'])
+					'seasonality' => \mod\repasrc\Foodstuff::parseSeasonality($foodstuff[0]['seasonality']),
+					'action' => $params['action']
 			)
 		);
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];

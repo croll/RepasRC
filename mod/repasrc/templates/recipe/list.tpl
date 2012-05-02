@@ -40,25 +40,20 @@
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Recettes sélectionnées</h3>
-			{if (!isset($recipeList))}
+			{if (!is_array($recipeList) || sizeof($recipeList) < 1)}
 			<div class="alert alert-error">
 				Aucune recette.
 			</div>
 			{else}
 				<ul class="nav nav-tabs nav-stacked">
-					{foreach $recipeList as $re}
-						<li class="clearfix" style="cursor:pointer">
-							<a style="color: #000;font-size:12px">
-								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.0.infos))}{$fs.foodstuff.0.infos.0.family_group_id}{/if}">&nbsp;</div>
-								<span style="">
-									{$fs.quantity} {$fs.unit}
-									<strong>
-									{if (isset($fs.foodstuff.0.synonym))}
-										{$fs.foodstuff.0.synonym}
-									{else}
-										{$fs.foodstuff.0.label}
-									{/if}
+					{foreach $recipeList as $rid}
+						<li class="clearfix" style="cursor:pointer;width:270px">
+							<a href="javascript:void(0)">
+								<span>
+									<strong onclick="showRecipeDetail({$rid})">
+										{\mod\repasrc\Recipe::getNameFromId($rid)}
 									</strong>
+									<span style="margin-left:5px"><i onclick="window.document.location.href='/recette/liste/del/{$rid}'" class="icon icon-remove"></i></span>
 								</span>
 							</a>
 						</li>

@@ -136,11 +136,23 @@ class Foodstuff {
 		return \core\Core::$db->fetchAll($query, $params);
 	}
 
+
+	public static function addToRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null, $zoneIds=array()) {
+		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production) ';
+		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
+		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
+		self::setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds);
+		\core\Core::log('ID: '.$recipeFoodstuffId);
+		return $recipeFoodstuffId;
+	}
+
+	public static function updateForRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null, $zoneIds=array()) {
+		$recipeFoodstuffId = \core\Core::$db->exec($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production));
+	}
+
 	public static function getFromRecipe($recipeId, $foodstuffId, $synonymId) {
 		$params = array($recipeId, $foodstuffId);
-		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production, rrc_zv_label FROM rrc_recipe_foodstuff rf ';
-		$q .= 'LEFT JOIN rrc_origin ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id ';
-		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
+		$q = 'SELECT rrc_rf_id AS recipefoodstuffid, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production FROM rrc_recipe_foodstuff rf ';
 		$q .= 'WHERE rf.rrc_rf_rrc_recipe_id=? AND rf.rrc_rf_rrc_foodstuff_id=?';
 		if ($synonymId) {
 			$params[] = $synonymId;
@@ -148,8 +160,32 @@ class Foodstuff {
 		} else {
 			$q.= 'AND rrc_rf_rrc_foodstuff_synonym_id=0';
 		}
-		$ret = \core\Core::$db->fetchOne($q, $params);
-		return $ret;
+		$foodstuff = \core\Core::$db->fetchRow($q, $params);
+		$foodstuff['origin'] = self::getOriginFromRecipe($foodstuff['recipefoodstuffid']);
+		return $foodstuff;
+	}
+
+	public static function getOriginFromRecipe($recipeFoodstuffId) {
+		$q = 'SELECT rrc_zv_id AS zoneid, rrc_zv_label AS zonelabel, rrc_zt_label AS zonetypelabel FROM rrc_origin AS ori ';
+		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
+		$q .= 'LEFT JOIN rrc_geo_zonetype zt ON zv.rrc_zv_rrc_geo_zonetype_id=zt.rrc_zt_id ';
+		$q .= 'WHERE ori.rrc_or_rrc_recipe_foodstuff_id = ? ';
+		return \core\Core::$db->fetchAll($q, array((int)$recipeFoodstuffId));
+	}
+
+	public static function setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds) {
+		\core\Core::$db->exec('DELETE FROM rrc_origin WHERE rrc_or_rrc_recipe_foodstuff_id = ?', array($recipeFoodstuffId));
+		if ($type != 'LETMECHOOSE') {
+			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, step) VALUES (?,?,?)';
+			$args = array($recipeFoodstuffId, $type, 0);
+			\core\Core::$db->exec($q, $args);
+		} else {
+			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, step, rrc_or_rrc_geo_zonevalue_id) VALUES (?,?,?,?)';
+			for($i=0;$i<sizeof($zoneIds);$i++) {
+				$args = array($recipeFoodstuffId, $type, $i, $zoneIds[$i]);
+				\core\Core::$db->exec($q, $args);
+			}
+		}
 	}
 
 	public static function parseSeasonality($str) {

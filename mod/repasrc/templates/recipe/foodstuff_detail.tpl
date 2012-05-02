@@ -81,8 +81,7 @@
 			</p>
 		</div> 
 
-		{assign var="fsid" value=$foodstuff.0.id}
-		{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $fsid, $foodstuff.0.synonym_id)}
+			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipe.id, $foodstuff.0.id, $foodstuff.0.synonym_id)}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
 				{if (isset($modulesList) && $modulesList.production == 1)}
@@ -136,6 +135,19 @@
 									{$foodstuffForm.location}
 								</div>
 							</div>
+							<div class="control-group" id="location_steps" style="display:none">
+								<label class="control-label" style="width: 50px">{t d='repasrc' m="Etapes"}</label>
+								<div class="controls" style="margin-left:75px">
+									<input type="text" id="steps_input" />
+									<div id="steps" style="margin-top:10px">
+										{if isset($steps) && is_array($steps) && sizeof($steps) > 0}
+											{foreach $steps as $step}
+												<div class="step step{$step.id}"><span>{$step.name}</span><i class="icon icon-remove"></i></div>
+											{/foreach}
+										{/if}
+									</div>
+								</div>
+							</div>
 						</fieldset>
 					</div>
 				{/if}
@@ -162,7 +174,12 @@
 				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
 				<input type="hidden" name="foodstuffId" value="{$foodstuff.0.id}"></input>
 				<input type="hidden" name="synonymId" value="{if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{/if}"></input>
-				{$foodstuffForm.submit}
+				<input type="hidden" name="action" value="{$action}"></input>
+				{if $action == 'add'}
+					{$foodstuffForm.submitAdd}
+				{else}
+					{$foodstuffForm.submitEdit}
+				{/if}
 				{$foodstuffForm.cancel}
 			{/if}
 		</div>

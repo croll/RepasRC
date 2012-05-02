@@ -42,9 +42,9 @@
 				<ul class="nav nav-tabs nav-stacked">
 					{foreach $recipeFoodstuffList as $fs}
 						<li class="clearfix" style="cursor:pointer">
-							<a style="color: #000;font-size:12px">
+							<a href="javascript:showFoodstuffDetail({$fs.foodstuff.0.id}, {if (isset($fs.foodstuff.0.synonym))}{$fs.foodstuff.0.synonym}{else}null{/if}, 'edit')" style="color: #000;font-size:12px">
 								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.0.infos))}{$fs.foodstuff.0.infos.0.family_group_id}{/if}">&nbsp;</div>
-								<span style="" onclick="showFoodstuffDetail({$fs.foodstuff.0.id}, {if (isset($fs.foodstuff.0.synonym))}{$fs.foodstuff.0.synonym}{else}null{/if})">
+								<span>
 									{$fs.quantity} {$fs.unit}
 									<strong>
 									{if (isset($fs.foodstuff.0.synonym))}

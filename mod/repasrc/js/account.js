@@ -12,7 +12,7 @@ window.addEvent('domready', function() {
 				$('zoneid').set('value', value.id);
 			}
 		});
-		$('zonelabel').addEvent('onchange', function() {
+		$('city').addEvent('onchange', function() {
 			$('zonelabel').set('value', '');
 			$('zoneid').set('value', '');
 		});

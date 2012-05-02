@@ -298,11 +298,8 @@ class Recipe {
 		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId))) ? true : false;
 	}
 
-	public static function addFoodstuff($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $location_steps=null) {
-		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production) ';
-		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
-		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
-		\core\Core::log('ID: '.$recipeFoodstuffId);
+	public static function getNameFromId($id) {
+		return \core\Core::$db->fetchOne('SELECT rrc_re_label FROM rrc_recipe WHERE rrc_re_id = ?', array($id));
 	}
 
 }

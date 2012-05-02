@@ -169,9 +169,16 @@
 			]	
 		},
 		{	"type" : "submit",
-			"name" : "submit",
+			"name" : "submitAdd",
+			"id" : "submitAdd",
 			"class" : "btn btn-primary",
 			"value" : "Ajouter l'aliment à la recette"
+		},
+		{	"type" : "submit",
+			"name" : "submitEdit",
+			"id" : "submitEdit",
+			"class" : "btn btn-primary",
+			"value" : "Mettre à jour les informations de l'aliment"
 		},
 		{	"type" : "button",
 			"name" : "cancel",
