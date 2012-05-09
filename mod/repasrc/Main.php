@@ -54,7 +54,6 @@ class Main {
 		$section = NULL;
     $page = new \mod\webpage\Main();
 		$path = $params[0];
-		\core\Core::log($params);
 
 		if (isset($_REQUEST['recipeId']) && !empty($_REQUEST['recipeId'])) {
 			$id = $_REQUEST['recipeId'];
@@ -107,10 +106,14 @@ class Main {
 				$foodstuffId = (int)$_POST['foodstuffId'];
 				$recipeId = (int)$_POST['recipeId'];
 				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
+				$steps = array();
+				if (!empty($_POST['origin_steps'])) {
+					$steps = explode(' ', trim($_POST['origin_steps']));
+				}
 				if (isset($_POST['recipeFoodstuffId']) && !empty($_POST['recipeFoodstuffId'])) {
-					\mod\repasrc\Foodstuff::updateForRecipe((int)$_POST['recipeFoodstuffId'], $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+					\mod\repasrc\Foodstuff::updateForRecipe((int)$_POST['recipeFoodstuffId'], $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $steps);
 				} else {
-					\mod\repasrc\Foodstuff::addToRecipe($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $fields['location_steps']);
+					\mod\repasrc\Foodstuff::addToRecipe($recipeId, $foodstuffId, $synonymId, $fields['quantity'], $fields['conservation'], $fields['production'], $fields['price'], $fields['vat'], $fields['location'], $steps);
 				}
 			}
 		}
@@ -200,7 +203,7 @@ class Main {
 		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'map',  'prix' => 'price');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
 		$page->setLayout('repasrc/recipe/'.$tpl);
-		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getInfos($id));
+		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getDetail($id));
 		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
     $page->display();
 	}

@@ -73,7 +73,7 @@ class Ajax {
 
 	public static function getCities($params) {
 		$name=$params['q'].'%';
-		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_rrc_geo_zonetype_id = 8 AND rrc_zv_label_caps ILIKE ? ORDER BY rrc_zv_label";
+		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_label_caps ILIKE ? ORDER BY rrc_zv_label";
 		return \core\Core::$db->fetchAll($query, array($name));
 	}
 

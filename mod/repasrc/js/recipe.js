@@ -383,10 +383,14 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 						elements.field.node.highlight('#ff5858');
 					},
 					onSelect: function(elements, value) {
-						var el = new Element('div').addClass('step step'+value.id);
+						var el = new Element('div').addClass('step').set('rel', value.id);
 						el.adopt(new Element('span').set('html', value.label));
-						el.adopt(new Element('i').addClass('icon icon-remove'));
+						el.adopt(new Element('i').addClass('icon icon-remove').setStyle('cursor', 'pointer').addEvent('click', function() {
+							$('steps_input').set('value', '');
+							removeFoodstuffStep(this.getParent().get('rel'));
+						}));
 						el.inject(document.id('steps'));
+						document.id('origin_steps').value+=value.id+' ';
 					}
 			});
 		},
@@ -395,12 +399,28 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 		}
 	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList, recipeFoodstuffId: recipeFoodstuffId});
 }
+
+/* -------------------------------------------------
+ * Remove origin step from receipe foodstuff 
+ * @this: element
+ * ---------------------------------------------- */
+function removeFoodstuffStep(id) {
+	el = document.body.getElement('div[rel='+id+']');
+	el.dispose();
+	var val = '';
+	$('oritin_steps').get('value').split(' ').each(function(v) {
+			if (v != id) {
+				val += v+' ';
+			}
+	});
+	$('origin_steps').set('value', val);
+}
+
 /* -------------------------------------------------
  * Send ajax request to delete foodstuff from recipe
  * and close modal window  
  * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
-
 function deleteRecipeFoodstuff() {
 	id = $('recipeFoodstuffId').get('value');
 	if (!id) {

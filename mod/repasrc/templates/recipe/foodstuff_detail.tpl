@@ -81,7 +81,8 @@
 			</p>
 		</div> 
 
-			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
+			{assign var='defaultValues' value=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
+			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=$defaultValues}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
 				{if (isset($modulesList) && $modulesList.production == 1)}
@@ -140,9 +141,11 @@
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
 									<div id="steps" style="margin-top:10px">
-										{if isset($steps) && is_array($steps) && sizeof($steps) > 0}
-											{foreach $steps as $step}
-												<div class="step step{$step.id}"><span>{$step.name}</span><i class="icon icon-remove"></i></div>
+										{assign var="steps" value=""}
+										{if isset($defaultValues.origin) && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
+											{foreach $defaultValues.origin as $step}
+												<div class="step step{$step.zoneid}"><span>{$step.zonelabel}</span><i class="icon icon-remove" onclick="removeFoodstuffStep({$step.zoneid})"></i></div>
+												{assign var="steps" value=$steps.$step}
 											{/foreach}
 										{/if}
 									</div>
@@ -175,7 +178,7 @@
 				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
 				<input type="hidden" name="foodstuffId" value="{$foodstuff.0.id}"></input>
 				<input type="hidden" name="synonymId" value="{if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{/if}"></input>
-				<input type="hidden" name="locationsId" value=""></input>
+				<input type="hidden" id="origin_steps" name="origin_steps" value="{$steps}"></input>
 				<input type="hidden" name="action" value="{$action}"></input>
 				{if isset($recipeFoodstuffId) && !empty($recipeFoodstuffId)}
 					{$foodstuffForm.submitEdit}

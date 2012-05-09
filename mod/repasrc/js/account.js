@@ -8,6 +8,7 @@ window.addEvent('domready', function() {
 				elements.field.node.highlight('#ff5858');
 			},
 			onSelect: function(elements, value) {
+				$('city').set('value', '');
 				$('zonelabel').set('value', value.label);
 				$('zoneid').set('value', value.id);
 			}

@@ -71,50 +71,7 @@ class Recipe {
 		$result = array();
 		
 		foreach ($recipes as $recipe) {
-			$recipe['families'] = $recipe['foodstuff'] = array();
-			switch($recipe['component']) {
-				case 'STARTER':
-					$recipe['component'] = 'Entrée';
-				break;	
-				case 'MEAL':
-					$recipe['component'] = 'Plat';
-				break;	
-				case 'CHEESE/DESSERT':
-					$recipe['component'] = 'Fromage ou dessert';
-				break;	
-				case 'BREAD':
-					$recipe['component'] = 'Pain';
-				break;	
-			}
-			$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
-			$recipe['label'] = str_replace("''", "'", $recipe['label']);
-			$foodstuffList = self::getFoodstuffList($recipe['id']);
-			$recipe['footprint'] = 0;
-			foreach($foodstuffList as $fs) {
-				/* CHECK THAT */
-				/* CHECK THAT */
-				/* CHECK THAT */
-				if (sizeof($fs['foodstuff']) == 0) {
-					continue;
-				}
-				$footprint = $fs['foodstuff'][0]['footprint']*$fs['quantity'];
-				if ($fs['conservation']) {
-					$footprint = $footprint*$conservation[$fs['conservation']];
-				}
-				$recipe['footprint'] += $footprint;
-				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
-				if (!in_array($fam, $recipe['families'])) {
-					$recipe['families'][] = $fam;  
-				}
-				$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
-				if (!in_array($fs_label, $recipe['foodstuff'])) {
-					$recipe['foodstuff'][] = $fs_label;  
-				}
-				$recipe['footprint'] = round($recipe['footprint'], 3);
-			}
-
-			$result[] = $recipe;
-
+			$result[] = self::getDetail($recipe['id']);
 		}
 		/*
 		$fp = fopen('/tmp/test.txt', 'w');
@@ -137,11 +94,8 @@ class Recipe {
 
 	public static function getFoodstuffList($id) {
 		$params = array($id);
-		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id, rrc_zv_label AS zone, rrc_zt_label as zone_type ";
+		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id ";
 		$q.= "FROM rrc_recipe_foodstuff AS rf ";
-		$q.= "LEFT JOIN rrc_origin AS ori ON rf.rrc_rf_id=ori.rrc_or_rrc_recipe_foodstuff_id "; 
-		$q.= "LEFT JOIN rrc_geo_zonevalue AS zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id "; 
-		$q.= "LEFT JOIN rrc_geo_zonetype AS zt ON zv.rrc_zv_rrc_geo_zonetype_id=zt.rrc_zt_id ";
 		$q.= "WHERE rrc_rf_rrc_recipe_id=? ORDER BY rrc_rf_id";
 		$fs = array();
 		foreach(\core\Core::$db->fetchAll($q, $params) as $row) {
@@ -159,6 +113,7 @@ class Recipe {
 			$tmp['conservation'] = $row['conservation'];
 			$tmp['production'] = $row['production'];
 			$tmp['foodstuff'] = $infos;
+			$tmp['origin'] = \mod\repasrc\Foodstuff::getOriginFromRecipe($tmp['recipeFoodstuffId']);
 			$fs[] = $tmp;
 		}
 		return $fs;
@@ -180,20 +135,7 @@ class Recipe {
 		$conservation['11'] = 1;
 		$recipe = self::getInfos($id);
 		$recipe['families'] = $recipe['foodstuff'] = array();
-		switch($recipe['component']) {
-			case 'STARTER':
-				$recipe['component'] = 'Entrée';
-			break;	
-			case 'MEAL':
-				$recipe['component'] = 'Plat';
-		break;	
-			case 'CHEESE/DESSERT':
-				$recipe['component'] = 'Fromage ou dessert';
-			break;	
-			case 'BREAD':
-				$recipe['component'] = 'Pain';
-			break;	
-		}
+		$recipe['component'] = \mod\repasrc\Foodstuff::getComponent($recipe['component']);
 		$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
 		$recipe['label'] = str_replace("''", "'", $recipe['label']);
 		$foodstuffList = self::getFoodstuffList($recipe['id']);

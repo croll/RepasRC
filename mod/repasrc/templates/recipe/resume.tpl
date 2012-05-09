@@ -36,42 +36,40 @@
 		</div>
 		<div style="font-size: 14px">
 			{if (!empty($fs.conservation))}
-				<div>Mode de conservation: <strong>{$fs.conservation}</strong></div>
+				<div>Mode de conservation: <strong>{\mod\repasrc\Foodstuff::getConservation($fs.conservation)}</strong></div>
 			{/if}
 			{if (!empty($fs.production))}
-				<div>Mode de production: <strong>{$fs.production}</strong></div>
+				<div>Mode de production: <strong>{\mod\repasrc\Foodstuff::getConservation($fs.production)}</strong></div>
 			{/if}
 			<div>Empreinte écologique foncière (donnée générale): <strong>{$fs.foodstuff.0.footprint} gah</strong></div>
 			<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.0.footprint y=$fs.quantity} gah</strong></div>
 
-			{* TODO
-			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.seasonality}
+			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.0.seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>
 				<div class="btn-group">
-				{foreach $seasonality as $month=>$s}
-						{if $s == 0}
-							{if $s@index == $recipe.consumptionmonth}
-								<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-							{else}
-								<span class="btn btn-danger">{$month}</span>
-							{/if}
-						{else if $s == 1}
-							{if $s@index == $recipe.consumptionmonth}
-								<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-							{else}
-								<span class="btn btn-warning">{$month}</span>
-							{/if}
+				{foreach $fs.foodstuff.0.seasonality as $month=>$s}
+					{if $s == 0}
+						{if $s@index == $recipe.consumptionmonth}
+							<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 						{else}
-							{if $s@index == $recipe.consumptionmonth}
-								<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-							{else}
-								<span class="btn btn-success">{$month}</span>
-							{/if}
+							<span class="btn btn-danger">{$month}</span>
 						{/if}
+					{else if $s == 1}
+						{if $s@index == $recipe.consumptionmonth}
+							<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+						{else}
+							<span class="btn btn-warning">{$month}</span>
+						{/if}
+					{else}
+						{if $s@index == $recipe.consumptionmonth}
+							<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+						{else}
+							<span class="btn btn-success">{$month}</span>
+						{/if}
+					{/if}
 				{/foreach}
 				</div>
 			{/if}
-			*}
 
 		</div>
 	</div>
