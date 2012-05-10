@@ -28,27 +28,27 @@
 		{if (!empty($fs.production))}
 			<div>Mode de production: <strong>{\mod\repasrc\Foodstuff::getProduction($fs.production)}</strong></div>
 		{/if}
-		<div>Empreinte écologique foncière par kilo: <strong>{$fs.foodstuff.0.footprint} gah</strong></div>
-		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.0.footprint y=$fs.quantity} gah</strong></div>
+		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.0.footprint} m²/Kg</strong></div>
+		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.0.footprint y=$fs.quantity} gha</strong></div>
 
 		{if ($fs.foodstuff.0.infos.0.family_group == 'Fruits' || $fs.foodstuff.0.infos.0.family_group == 'Légumes') && $fs.foodstuff.0.seasonality}
 		<div style="margin-top:10px">Saisonnalité: <span></span></div>
 			<div class="btn-group">
 			{foreach $fs.foodstuff.0.seasonality as $month=>$s}
 					{if $s == 0}
-						{if $s@index == $recipe.consumptionmonth}
+						{if $s@index+1 == $recipe.consumptionmonth}
 							<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 						{else}
 							<span class="btn btn-danger">{$month}</span>
 						{/if}
 					{else if $s == 1}
-						{if $s@index == $recipe.consumptionmonth}
+						{if $s@index+1 == $recipe.consumptionmonth}
 							<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 						{else}
 							<span class="btn btn-warning">{$month}</span>
 						{/if}
 					{else}
-						{if $s@index == $recipe.consumptionmonth}
+						{if $s@index+1 == $recipe.consumptionmonth}
 							<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 						{else}
 							<span class="btn btn-success">{$month}</span>

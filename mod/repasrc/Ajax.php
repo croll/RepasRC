@@ -25,19 +25,15 @@ class Ajax {
 		$infos['synonym_id'] = ((isset($params['synonymId'])) ? $params['synonymId'] : null);
     $page = new \mod\webpage\Main();
 		if ($infos['synonym_id']) {
-			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), true);
+			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), false);
 			$page->smarty->assign('parent', $parent);
 		}
-		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), false);
-		$recipeInfos = \mod\repasrc\Recipe::getInfos($params['recipeId']);
-		$tmp = preg_split('#/#', $recipeInfos['consumptiondate']);
-		if ($tmp)
-			$recipeInfos['consumptionmonth'] = trim($tmp[1]-1, '0');
+		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), true);
+		$recipeInfos = \mod\repasrc\Recipe::getDetail((int)$params['recipeId']);
 		$page->smarty->assign(
 			array(
 					'recipe' => $recipeInfos, 
 					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList'], 
-					'seasonality' => \mod\repasrc\Foodstuff::parseSeasonality($foodstuff[0]['seasonality']),
 					'recipeFoodstuffId' => (int)$params['recipeFoodstuffId']
 			)
 		);
@@ -48,19 +44,13 @@ class Ajax {
 	public static function searchRecipe($params) {
 		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
 		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
-		return \mod\repasrc\Recipe::searchComputed(12, $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
+		return \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
 	}
 
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
 		$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
-		for($i=0;$i<sizeof($foodstuffList);$i++) {
-			$foodstuffList[$i]['foodstuff'][0]['seasonality'] = \mod\repasrc\Foodstuff::parseSeasonality($foodstuffList[$i]['foodstuff'][0]['seasonality']);
-		}
 		$recipeInfos = \mod\repasrc\Recipe::getDetail($id);
-		$tmp = preg_split('#/#', $recipeInfos['consumptiondate']);
-		if ($tmp)
-			$recipeInfos['consumptionmonth'] = trim($tmp[1]-1, '0');
     $page = new \mod\webpage\Main();
 		$page->smarty->assign(
 			array(

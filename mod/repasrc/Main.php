@@ -149,6 +149,12 @@ class Main {
 		$tplTrans = array('aliments' => 'foodstuff', 'commentaires' => 'comments');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
 		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
+			if (!empty($id)) {
+				$modules = \mod\repasrc\Recipe::getModulesList($id);
+			} else {
+				// Otherwise we get modules defined in session
+				$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
+			}
 		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getInfos($id));
 		$page->setLayout('repasrc/recipe/'.$tpl);
     $page->display();
@@ -187,6 +193,13 @@ class Main {
     $page = new \mod\webpage\Main();
 		
 		if (is_null($section)) $section = $params[1];
+
+		if (!empty($id)) {
+			$modules = \mod\repasrc\Recipe::getModulesList($id);
+		} else {
+			// Otherwise we get modules defined in session
+			$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
+		}
 
 		switch($section) {
 			case 'resume':

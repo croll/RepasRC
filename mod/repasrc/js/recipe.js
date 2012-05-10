@@ -247,7 +247,7 @@ function buildFoodstuffThumb(fs) {
 			});
 			html += '</div>';
 		}
-		html += '<dl class="dl-horizontal"><dt style="width:235px">Empreinte écologique foncière:</dt><dd style="margin-left: 240px">'+Math.round(fs.footprint,3)+'&nbsp;gha</dd></dl>';
+		html += '<dl class="dl-horizontal"><dt style="width:235px">Empreinte écologique foncière:</dt><dd style="margin-left: 240px">'+Math.round(fs.footprint,3)+'&nbsp;m²/Kg</dd></dl>';
 		if (fs.synonym) {
 			html += '<dl class="alert dl-horizontal" style="width:300px"><dt style="width:70px">Basé sur:</dt><dd style="margin-left: 75px">'+fs.label+'</dd></dl>';
 		}
@@ -316,7 +316,7 @@ function buildRecipeThumb(re) {
 		html += '</div>';
 	}
   html += '<dl class="dl-horizontal" style="height: 12px"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
-	html += '<dl class="dl-horizontal" style="height: 12px" style="margin:0px" style=""><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;gha</dd></dl>';
+	html += '<dl class="dl-horizontal" style="height: 12px" style="margin:0px" style=""><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;m²/Kg</dd></dl>';
   html += '<dl class="dl-horizontal" style="height: 12px"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuff.length+'</dd></dl>';
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';

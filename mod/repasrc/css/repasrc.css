@@ -105,3 +105,8 @@ div.recipe_content {
 	width: 700px;
 	height: 450px;
 }
+
+/* MODAL */
+.modal-box {
+	width: 600px;
+}

@@ -36,18 +36,42 @@ class Recipe {
 					$w.= ' AND rrc_re_rrc_rc_id=? ';	
 				break;
 				// Recipe flagged as admin
-				case "admin":
-					$w.= ' AND rrc_re_byadmin=1 ';
+				case "ADMIN":
+					$w.= " AND rrc_re_byadmin=1 OR rrc_re_type='ADMIN' ";
+					if (!\mod\user\Main::userBelongsToGroup('admin')) {
+						$w.= ' AND rrc_re_public=\'1\' ';
+					}
+				break;
+				// Light footprint 
+				case "LIGHTFOOTPRINT":
+					$params[] = $owner;
+					$w.= ' AND rrc_re_type = ? ';
+					if (!\mod\user\Main::userBelongsToGroup('admin')) {
+						$w.= ' AND rrc_re_public=\'1\' ';
+					}
+				break;
+				// Stallion 
+				case "STALLION":
+					$params[] = $owner;
+					$w.= ' AND rrc_re_type = ? AND rrc_re_public=\'1\' ';
+					if (!\mod\user\Main::userBelongsToGroup('admin')) {
+						$w.= ' AND rrc_re_public=\'1\' ';
+					}
 				break;
 				// Other recipes
-				case "other":
+				case "OTHER":
 					$params[] = $rc_id;
-					$w.= ' AND rrc_re_rrc_rc_id != ? AND rrc_re_byadmin!=1 AND rrc_re_public=\'1\' ';
+					$w.= " AND rrc_re_rrc_rc_id != ? AND rrc_re_byadmin!=1 AND rrc_re_public='1' AND rrc_re_type = 'STANDARD' ";
+					if (!\mod\user\Main::userBelongsToGroup('admin')) {
+						$w.= ' AND rrc_re_public=\'1\' ';
+					}
 				break;
 			}
 		}
 		$o = "ORDER BY label ";
 		$query = $q.$w.$o;
+		//\core\Core::log($params);
+		//\core\Core::log('Query: '.$query);
 
 		return \core\Core::$db->fetchAll($query, $params);
 	}
@@ -55,29 +79,9 @@ class Recipe {
 	public static function searchComputed($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL) {
 
 		$recipes = self::search($rc_id, $owner, $component, $label, $foodstuff, $shared, true);
-
-		$conservation['G1'] = 1;
-		$conservation['G2'] = 0.83333;
-		$conservation['G3'] = 0.83333;
-		$conservation['G4'] = 0.83333;
-		$conservation['G5'] = 0.83333;
-		$conservation['G6'] = 0.3;
-		$conservation['G7'] = 0.15;
-		$conservation['G8'] = 1;
-		$conservation['G9'] = 1;
-		$conservation['10'] = 1;
-		$conservation['11'] = 1;
-
-		$result = array();
-		
 		foreach ($recipes as $recipe) {
 			$result[] = self::getDetail($recipe['id']);
 		}
-		/*
-		$fp = fopen('/tmp/test.txt', 'w');
-		fputs($fp, json_encode($recipes));
-		fclose($fp);
-		 */
 
 		return $result;
 	}
@@ -89,7 +93,7 @@ class Recipe {
 
 	public static function getInfos($id) {
 		if (empty($id)) return null;
-		 return \core\Core::$db->fetchRow("SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared, TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, rrc_re_type AS \"type\" FROM rrc_recipe WHERE rrc_re_id=?", array($id));
+		 return \core\Core::$db->fetchRow("SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared, TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, TO_CHAR(rrc_re_consumptiondate, 'MM') AS consumptionmonth, rrc_re_type AS \"type\" FROM rrc_recipe WHERE rrc_re_id=?", array($id));
 	}
 
 	public static function getFoodstuffList($id) {
@@ -152,9 +156,11 @@ class Recipe {
 				$footprint = $footprint*$conservation[$fs['conservation']];
 			}
 			$recipe['footprint'] += $footprint;
-				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
-				if (!in_array($fam, $recipe['families'])) {
-					$recipe['families'][] = $fam;  
+				if (isset($fs['foodstuff'][0]['infos'])) {
+					$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
+					if (!in_array($fam, $recipe['families'])) {
+						$recipe['families'][] = $fam;  
+					}
 				}
 				$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
 				if (!in_array($fs_label, $recipe['foodstuff'])) {

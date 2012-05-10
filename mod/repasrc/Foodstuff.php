@@ -76,9 +76,9 @@ class Foodstuff {
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					$tmp['synonym'] = $row['synonym'];
-					$tmp['seasonality'] = $row['synonym_seasonality'];
+					$tmp['seasonality'] = self::parseSeasonality($row['synonym_seasonality']);
 				} else {
-					$tmp['seasonality'] = $row['seasonality'];
+					$tmp['seasonality'] = self::parseSeasonality($row['seasonality']);
 				}
 				if (!is_null($row['family_id'])) {
 					$tmp['infos'][$num]['family_id'] = $row['family_id'];
@@ -107,7 +107,13 @@ class Foodstuff {
 	public static function searchAll($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL) {
 		$r1 = self::search($familyGroup, $family, $label, $fsIds, false);
 		$r2 = self::search($familyGroup, $family, $label, $fsIds, true);
-		return array_merge($r1, $r2);
+		$synList = array();
+		foreach($r2 as $fs) {
+			if(isset($fs['synonym_id']) && !empty($fs['synonym_id'])) {
+				$synList[] = $fs;
+			}
+		}
+		return array_merge($r1, $synList);
 	}
 
 	public static function getInfos($id, $synonym_id) {

@@ -16,7 +16,8 @@
      <option value="me">Vos recettes</option>
      <option value="LIGHTFOOTPRINT">Recettes "Pied léger"</option>
      <option value="STALLION">Recettes "Etalon"</option>
-     <option value="ADMIN">Recettes proposées par les administratieurs</option>
+     <option value="OTHER">Recettes partagées par les autres RC</option>
+     <option value="ADMIN">Recettes proposées par les administrateurs</option>
    </select>
 
 	<select name="component" id="component">

@@ -19,7 +19,7 @@
 		</div>
 		<div style="float:left;padding-top:10px">
 			<div>Identifiant: <strong>{$foodstuff.0.id}</strong></div>
-			<div>Empreinte écologique foncière pour 1Kg: <strong>{$foodstuff.0.footprint}</strong> gha</div>
+			<div>Empreinte écologique foncière: <strong>{$foodstuff.0.footprint}</strong> m²/Kg</div>
 			{if isset($foodstuff.0.synonym)}
 				<div class="alert alert-warn" style="margin-top: 5px;width: 457px">
 					Cet aliment est basé sur l'aliment <strong>{$parent.0.label}</strong>
@@ -42,24 +42,24 @@
 			{if (!empty($foodstuff.0.production))}
 				<div>Mode de production: <strong>{$foodstuff.0.production}</strong></div>
 			{/if}
-			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $seasonality}
+			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $foodstuff.0.seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>
 				<div class="btn-group">
-				{foreach $seasonality as $month=>$s}
+				{foreach $foodstuff.0.seasonality as $month=>$s}
 						{if $s == 0}
-							{if $s@index == $recipe.consumptionmonth}
+							{if $s@index+1 == $recipe.consumptionmonth}
 								<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 							{else}
 								<span class="btn btn-danger">{$month}</span>
 							{/if}
 						{else if $s == 1}
-							{if $s@index == $recipe.consumptionmonth}
+							{if $s@index+1 == $recipe.consumptionmonth}
 								<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 							{else}
 								<span class="btn btn-warning">{$month}</span>
 							{/if}
 						{else}
-							{if $s@index == $recipe.consumptionmonth}
+							{if $s@index+1 == $recipe.consumptionmonth}
 								<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
 							{else}
 								<span class="btn btn-success">{$month}</span>
@@ -144,8 +144,10 @@
 										{assign var="steps" value=""}
 										{if isset($defaultValues.origin) && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
 											{foreach $defaultValues.origin as $step}
-												<div class="step step{$step.zoneid}"><span>{$step.zonelabel}</span><i class="icon icon-remove" onclick="removeFoodstuffStep({$step.zoneid})"></i></div>
-												{assign var="steps" value=$steps.$step}
+												{if isset($step.zonelabel)}
+													<div class="step step{$step.zoneid}"><span>{$step.zonelabel}</span><i class="icon icon-remove" onclick="removeFoodstuffStep({$step.zoneid})"></i></div>
+												{/if}
+												{assign var="steps" value=$step}
 											{/foreach}
 										{/if}
 									</div>
