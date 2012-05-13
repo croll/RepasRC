@@ -43,11 +43,12 @@
 			{/if}
 			<div>Empreinte écologique foncière (donnée générale): <strong>{$fs.foodstuff.0.footprint} gah</strong></div>
 			<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.0.footprint y=$fs.quantity} gah</strong></div>
-			{if (isset($fs.price) && !empty($fs.price))}
-				<div>Prix: <strong>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</strong></div>
-			{/if}
+			{$fs.origin|print_r}
 			{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 				<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
+			{/if}
+			{if (isset($fs.price) && !empty($fs.price))}
+				<div>Prix: <strong>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</strong></div>
 			{/if}
 
 			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.0.seasonality}

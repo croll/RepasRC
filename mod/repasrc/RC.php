@@ -20,14 +20,12 @@ class RC {
 		return \core\Core::$db->exec('UPDATE rrc_rc SET rrc_rc_name=?, rrc_rc_type=?, rrc_rc_public=?, rrc_rc_rrc_geo_zonevalue_id=?, rrc_rc_modification=now() WHERE rrc_rc_id=?', array($name, $type, $public, $zoneid, $_SESSION['rc']));
 	}
 
-	public static function rcOwnsRecipe($recipe_id) {
-		$res = \core\Core::$db->exec('SELECT rrc_re_id FROM rrc_recipe WHERE rrc_re_id=? AND rrc_re_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']));
-		print_r($res);
+	public static function isRecipeOwner($recipe_id) {
+		return (\core\Core::$db->exec('SELECT rrc_re_id FROM rrc_recipe WHERE rrc_re_id=? AND rrc_re_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
 	}
 
-	public static function rcOwnsMenu($menu_id) {
-		$res = \core\Core::$db->exec('SELECT rrc_me_id FROM rrc_menu WHERE rrc_me_id=? AND rrc_me_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']));
-		print_r($res);
+	public static function isMenuOwner($menu_id) {
+		return (\core\Core::$db->exec('SELECT rrc_me_id FROM rrc_menu WHERE rrc_me_id=? AND rrc_me_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
 	}
 
 }

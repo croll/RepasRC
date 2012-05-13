@@ -65,4 +65,7 @@
 	<a class="btn" href="/recette/edition/aliments/{$recipe.id}">Modifier la recette</a>
 	<a class="btn" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
+	{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id})}
+		<div style="width:140px;margin:20px auto"><a class="btn btn-danger" href="javascript:void(0)" onclick="deleteRecipe({$recipe.id})">Effacer la recette</a></div>
+	{/if}
 </div>

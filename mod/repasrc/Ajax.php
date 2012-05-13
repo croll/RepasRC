@@ -33,10 +33,11 @@ class Ajax {
 		$page->smarty->assign(
 			array(
 					'recipe' => $recipeInfos, 
-					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList'], 
-					'recipeFoodstuffId' => (int)$params['recipeFoodstuffId']
+					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList']
 			)
 		);
+		if (isset($params['recipeFoodstuffId'])) 
+			$page->smarty->assign('recipeFoodstuffId', (int)$params['recipeFoodstuffId']);
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];
 		return array('title' => $label, 'content' => $page->smarty->fetch('repasrc/recipe/foodstuff_detail'));
 	}
@@ -70,6 +71,15 @@ class Ajax {
 	public static function deleteRecipeFoodstuff($params) {
 		if (isset($params['id'])) {
 			\mod\repasrc\Foodstuff::deleteFromRecipe((int)$params['id']);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function deleteRecipe($params) {
+		if (isset($params['id'])) {
+			\mod\repasrc\Recipe::delete((int)$params['id']);
 			return true;
 		} else {
 			return false;

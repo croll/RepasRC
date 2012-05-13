@@ -7,7 +7,8 @@
 	{js file="/mod/cssjs/js/Modal.js"}
 	{js file="/mod/cssjs/js/chtable.js"}
 	{js file="/mod/cssjs/js/chfilter.js"}
-	{js file="/mod/cssjs/js/chmypaginate.js"}
+	{js file="/mod/cssjs/js/messageclass.js"}
+	{js file="/mod/cssjs/js/message.js"}
 	{js file="/mod/cssjs/js/chbootstrap.js"}
 	{js file="/mod/repasrc/js/repasrc.js"}
 	{js file="/mod/page/js/page.js"}

@@ -427,11 +427,28 @@ function deleteRecipeFoodstuff() {
 		alert('Erreur lors de la suppression de l\'aliment');
 		return;
 	}
-	console.log(id);
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/deleteRecipeFoodstuff',
 			onRequest: function() {
-			},
+		},
+		onSuccess: function(res,a,b,c) {
+			top.document.location.href=top.document.location.href;
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id});
+}
+
+/* -------------------------------------------------
+ * Send ajax request to delete recipe
+ * @recipeId: id of the recipe
+ * ---------------------------------------------- */
+function deleteRecipe(id) {
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/deleteRecipe',
+			onRequest: function() {
+		},
 		onSuccess: function(res,a,b,c) {
 			top.document.location.href=top.document.location.href;
 		},
