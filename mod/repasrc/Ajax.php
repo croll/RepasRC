@@ -86,4 +86,10 @@ class Ajax {
 		}
 	}
 
+	public static function duplicateRecipeModal($params) {
+    $page = new \mod\webpage\Main();
+		$page->smarty->assign('recipeId', (int)$params['id']);
+		return array('content' => $page->smarty->fetch('repasrc/recipe/duplicate'));
+	}
+
 }

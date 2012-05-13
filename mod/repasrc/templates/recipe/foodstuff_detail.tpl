@@ -80,7 +80,7 @@
 				Veuillez renseigner les informations demandées dans chacun des onglets ci dessous pour avoir une analyse la plus complète de votre recette.
 			</p>
 		</div> 
-
+			
 			{assign var='defaultValues' value=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
 			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=$defaultValues}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
@@ -136,20 +136,23 @@
 									{$foodstuffForm.location}
 								</div>
 							</div>
-							<div class="control-group" id="location_steps" style="display:none">
+							<div class="control-group" id="location_steps"{if $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
 								<label class="control-label" style="width: 50px">{t d='repasrc' m="Etapes"}</label>
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
 									<div id="steps" style="margin-top:10px">
 										{assign var="steps" value=""}
-										{if isset($defaultValues.origin) && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
+										{if isset($defaultValues.origin) && $defaultValues.location == 'LETMECHOOSE' && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
 											{foreach $defaultValues.origin as $step}
 												{if isset($step.zonelabel)}
-													<div class="step step{$step.zoneid}"><span>{$step.zonelabel}</span><i class="icon icon-remove" onclick="removeFoodstuffStep({$step.zoneid})"></i></div>
+													<div rel="{$step.zoneid}" class="step"><span>{$step.zonelabel}</span><i class="icon icon-remove" style="cursor:pointer" onclick="$('steps_input').set('value', '');removeFoodstuffStep({$step.zoneid})"></i></div>
 												{/if}
-												{assign var="steps" value=$step}
+												{assign var="steps" value=$steps|cat: $step.zoneid|cat: ' ' }
 											{/foreach}
 										{/if}
+									</div>
+									<div id="locationWarning" class="alert alert-danger" style="margin-top:10px" style="display: none">
+										Cliquez sur le bouton "Mettre à jour les informations" pour prendre en compte les changements
 									</div>
 								</div>
 							</div>

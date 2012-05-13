@@ -53,7 +53,6 @@ class Main {
     \mod\user\Main::redirectIfNotLoggedIn();
 		$section = NULL;
     $page = new \mod\webpage\Main();
-		$path = $params[0];
 
 		if (isset($_REQUEST['recipeId']) && !empty($_REQUEST['recipeId'])) {
 			$id = $_REQUEST['recipeId'];
@@ -107,6 +106,7 @@ class Main {
 				$recipeId = (int)$_POST['recipeId'];
 				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
 				$steps = array();
+				\core\Core::log($_POST);
 				if (!empty($_POST['origin_steps'])) {
 					$steps = explode(' ', trim($_POST['origin_steps']));
 				}
@@ -124,6 +124,16 @@ class Main {
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
 					\mod\repasrc\Recipe::setComments($id, $fields['comment']);
+			}
+		}
+
+		/* Recipe copy */
+		if (isset($_POST['action']) && $_POST['action'] == 'duplicate') {
+			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/duplicate.json'));
+			if ($form->validate()) {
+				$fields = $form->getFieldValues();
+				\mod\repasrc\Recipe::duplicate($id, $fields['label']);
+				$section = 'informations';
 			}
 		}
 

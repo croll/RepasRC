@@ -48,7 +48,9 @@ CREATE TABLE "rrc_foodstuff" (
   "rrc_fs_production" rrc_fs_production_type DEFAULT NULL,
   "rrc_fs_seasonality" VARCHAR(12) DEFAULT NULL,
   "rrc_fs_creation" TIMESTAMP NOT NULL,
-  "rrc_fs_modification" TIMESTAMP
+  "rrc_fs_modification" TIMESTAMP,
+  "rrc_fs_comment" TEXT DEFAULT NULL,
+	"rrc_fs_fake" INTEGER DEFAULT 0
 );
 CREATE INDEX rrc_foodstuff_label_caps_idx ON "rrc_foodstuff" ("rrc_fs_label_caps");
 CREATE INDEX rrc_foodstuff_conservation_type_idx ON "rrc_foodstuff" ("rrc_fs_conservation");
@@ -184,7 +186,7 @@ ALTER SEQUENCE rrc_menu_recipe_rrc_mr_id_seq RESTART WITH 1000;
 --
 -- Table structure for table "rrc_origin"
 --
-CREATE TYPE "rrc_or_location_type" AS ENUM ('LOCAL','REGIONAL','FRANCE','EUROPE','WORLD');
+CREATE TYPE "rrc_or_location_type" AS ENUM ('LOCAL','REGIONAL','FRANCE','EUROPE','WORLD','LETMECHOOSE');
 CREATE TABLE "rrc_origin" (
   "rrc_or_id" SERIAL PRIMARY KEY,
   "rrc_or_default_location" rrc_or_location_type DEFAULT NULL,

@@ -4,8 +4,7 @@
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
-window.addEvent('domready', function() {
-		Locale.use('fr-FR');
+window.addEvent('domready', function() { Locale.use('fr-FR');
 
 	modalWin = new Modal.Base(document.body, {
 		header: "",
@@ -383,6 +382,9 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 						elements.field.node.highlight('#ff5858');
 					},
 					onSelect: function(elements, value) {
+						if (document.body.getElement('div[rel='+value.id+']')) {
+							return false;
+						}
 						var el = new Element('div').addClass('step').set('rel', value.id);
 						el.adopt(new Element('span').set('html', value.label));
 						el.adopt(new Element('i').addClass('icon icon-remove').setStyle('cursor', 'pointer').addEvent('click', function() {
@@ -390,7 +392,9 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 							removeFoodstuffStep(this.getParent().get('rel'));
 						}));
 						el.inject(document.id('steps'));
+						$('steps_input').set('value', '');
 						document.id('origin_steps').value+=value.id+' ';
+						$('locationWarning').setStyle('display', 'block');
 					}
 			});
 		},
@@ -405,15 +409,13 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
  * @this: element
  * ---------------------------------------------- */
 function removeFoodstuffStep(id) {
-	el = document.body.getElement('div[rel='+id+']');
-	el.dispose();
+	$('locationWarning').setStyle('display', 'block');
+	document.body.getElement('div[rel='+id+']').dispose();
 	var val = '';
-	$('oritin_steps').get('value').split(' ').each(function(v) {
-			if (v != id) {
-				val += v+' ';
-			}
+	document.body.getElements('div[class="step"]').each(function(el) {
+		val += el.get('rel')+' ';
 	});
-	$('origin_steps').set('value', val);
+	$('origin_steps').empty().set('value', val);
 }
 
 /* -------------------------------------------------
@@ -451,6 +453,42 @@ function deleteRecipe(id) {
 		},
 		onSuccess: function(res,a,b,c) {
 			top.document.location.href=top.document.location.href;
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id});
+}
+
+/* -------------------------------------------------
+ * Replace modal content to duplicate recipe
+ * @recipeId: id of the recipe
+ * ---------------------------------------------- */
+function duplicateRecipeModal(id) {
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/duplicateRecipeModal',
+			onRequest: function() {
+		},
+		onSuccess: function(res,a,b,c) {
+			modalWin.setTitle('Dupliquer la recette').setBody(res.content);
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({id: id});
+}
+
+/* -------------------------------------------------
+ * Send ajax request to duplicate recipe
+ * @recipeId: id of the recipe
+ * ---------------------------------------------- */
+function duplicateRecipe(id) {
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/duplicateRecipe',
+			onRequest: function() {
+		},
+		onSuccess: function(res,a,b,c) {
+			top.document.location.href='/recette/edition/informations/'+id;
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();

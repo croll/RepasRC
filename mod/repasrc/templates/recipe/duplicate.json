@@ -1,0 +1,26 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/recette/edition/duplicate",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "label",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Dupliquer la recette"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Abandonner la duplication"
+		}
+	]
+}
