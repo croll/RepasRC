@@ -148,7 +148,7 @@ class Foodstuff {
 		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
 		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
 		if ($recipeFoodstuffId) {
-			self::setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds);
+			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
 		}
 	}
 
@@ -186,9 +186,6 @@ class Foodstuff {
 
 	public static function setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds) {
 		\core\Core::$db->exec('DELETE FROM rrc_origin WHERE rrc_or_rrc_recipe_foodstuff_id = ?', array($recipeFoodstuffId));
-		\core\Core::log($recipeFoodstuffId);	
-		\core\Core::log($type);	
-		\core\Core::log($zoneIds);	
 		if (empty($type)) return;
 		if ($type != 'LETMECHOOSE') {
 			$q = 'INSERT INTO rrc_origin (rrc_or_rrc_recipe_foodstuff_id, rrc_or_default_location, rrc_or_step) VALUES (?,?,?)';
