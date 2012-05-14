@@ -11,16 +11,16 @@
 
 	<div style="font-size: 16px">
 		<div style="float:left;width: 100px">
-			{if isset($foodstuff.0.synonym)}
-				<img style="width:90px" src="/mod/repasrc/foodstuffImg/s{$foodstuff.0.synonym_id}.jpg" />
+			{if isset($foodstuff.synonym)}
+				<img style="width:90px" src="/mod/repasrc/foodstuffImg/s{$foodstuff.synonym_id}.jpg" />
 			{else}
-				<img style="width:90px" src="/mod/repasrc/foodstuffImg/{$foodstuff.0.id}.jpg" />
+				<img style="width:90px" src="/mod/repasrc/foodstuffImg/{$foodstuff.id}.jpg" />
 			{/if} 
 		</div>
 		<div style="float:left;padding-top:10px">
-			<div>Identifiant: <strong>{$foodstuff.0.id}</strong></div>
-			<div>Empreinte écologique foncière: <strong>{$foodstuff.0.footprint}</strong> m²/Kg</div>
-			{if isset($foodstuff.0.synonym)}
+			<div>Identifiant: <strong>{$foodstuff.id}</strong></div>
+			<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²/Kg</div>
+			{if isset($foodstuff.synonym)}
 				<div class="alert alert-warn" style="margin-top: 5px;width: 457px">
 					Cet aliment est basé sur l'aliment <strong>{$parent.0.label}</strong>
 				</div>
@@ -31,21 +31,21 @@
 
 	<div>
 		<div>
-		{foreach $foodstuff.0.infos as $info}
+		{foreach $foodstuff.infos as $info}
 			<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
 		{/foreach}
 		</div>
 		<div style="font-size: 14px">
-			{if (!empty($foodstuff.0.conservation))}
-				<div>Mode de conservation: <strong>{$foodstuff.0.conservation}</strong></div>
+			{if (!empty($foodstuff.conservation))}
+				<div>Mode de conservation: <strong>{$foodstuff.conservation}</strong></div>
 			{/if}
-			{if (!empty($foodstuff.0.production))}
-				<div>Mode de production: <strong>{$foodstuff.0.production}</strong></div>
+			{if (!empty($foodstuff.production))}
+				<div>Mode de production: <strong>{$foodstuff.production}</strong></div>
 			{/if}
-			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $foodstuff.0.seasonality}
+			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $foodstuff.seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>
 				<div class="btn-group">
-				{foreach $foodstuff.0.seasonality as $month=>$s}
+				{foreach $foodstuff.seasonality as $month=>$s}
 						{if $s == 0}
 							{if $s@index+1 == $recipe.consumptionmonth}
 								<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
@@ -181,8 +181,8 @@
 			{if (isset($recipe.id))}
 				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
 				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
-				<input type="hidden" name="foodstuffId" value="{$foodstuff.0.id}"></input>
-				<input type="hidden" name="synonymId" value="{if isset($foodstuff.0.synonym)}{$foodstuff.0.synonym_id}{/if}"></input>
+				<input type="hidden" name="foodstuffId" value="{$foodstuff.id}"></input>
+				<input type="hidden" name="synonymId" value="{if isset($foodstuff.synonym)}{$foodstuff.synonym_id}{/if}"></input>
 				<input type="hidden" id="origin_steps" name="origin_steps" value="{$steps}"></input>
 				<input type="hidden" name="action" value="{$action}"></input>
 				{if isset($recipeFoodstuffId) && !empty($recipeFoodstuffId)}

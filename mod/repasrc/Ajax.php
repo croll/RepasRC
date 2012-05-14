@@ -29,11 +29,12 @@ class Ajax {
 			$page->smarty->assign('parent', $parent);
 		}
 		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), true);
-		$recipeInfos = \mod\repasrc\Recipe::getDetail((int)$params['recipeId']);
+		$recipeDetail = \mod\repasrc\Recipe::getDetail((int)$params['recipeId']);
 		$page->smarty->assign(
 			array(
-					'recipe' => $recipeInfos, 
-					'foodstuff' => $foodstuff, 'modulesList' => $params['modulesList']
+					'recipe' => $recipeDetail, 
+					'foodstuff' => $foodstuff, 
+					'modulesList' => $params['modulesList']
 			)
 		);
 		if (isset($params['recipeFoodstuffId'])) 
@@ -51,15 +52,14 @@ class Ajax {
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
 		$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
-		$recipeInfos = \mod\repasrc\Recipe::getDetail($id);
+		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
     $page = new \mod\webpage\Main();
 		$page->smarty->assign(
 			array(
-				'recipe' => $recipeInfos, 
-				'foodstuffList' => $foodstuffList
+				'recipe' => $recipeDetail,
 			)
 		);
-		return array('title' => $recipeInfos['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
+		return array('title' => $recipeDetail['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
 	}
 
 	public static function getCities($params) {

@@ -202,32 +202,33 @@ class Main {
 			$id = $params[2];
     $page = new \mod\webpage\Main();
 		
-		if (is_null($section)) $section = $params[1];
+		if (!isset($section) || is_null($section)) $section = $params[1];
 
 		if (!empty($id)) {
 			$modules = \mod\repasrc\Recipe::getModulesList($id);
 		} else {
-			// Otherwise we get modules defined in session
 			$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
 		}
 
+		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
+
 		switch($section) {
-			case 'resume':
-				$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
-				$page->smarty->assign('foodstuffList', $foodstuffList);
-			break;
-			case 'aliments':
-			if (!empty($id)) {
-				$page->smarty->assign('recipeFoodstuffList', \mod\repasrc\Recipe::getFoodstuffList($id));
-			}
+			case 'saisonnalite':
+				if (empty($recipeDetail['consumptionmonth'])) continue;
+				$recipeDetail['seasonality'] = \mod\repasrc\Analyze::seasonality($recipeDetail);
 			break;
 		}
 
-		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'map',  'prix' => 'price');
+		$recipes = array($recipeDetail);
+
+		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'transport',  'prix' => 'price');
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
-		$page->setLayout('repasrc/recipe/'.$tpl);
-		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getDetail($id));
-		$page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
+		$page->setLayout('repasrc/recipe/analyze/'.$tpl);
+		$page->smarty->assign(array(
+			'recipe' => $recipeDetail, 
+			'recipes' => $recipes,
+			'modulesList' => $modules
+		));
     $page->display();
 	}
 

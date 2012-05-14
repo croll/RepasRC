@@ -17,44 +17,55 @@
 		<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> gha</div>
 	</div>
 
-	{foreach $foodstuffList as $fs}
+	{foreach $recipe.foodstuffList as $fs}
 	<div style="margin: 0 0 20px 0px">
 		<div style="font-size: 18px">
 			{$fs.quantity} {$fs.unit}
 			<strong>
-				{if (isset($fs.foodstuff.0.synonym))}
-					{$fs.foodstuff.0.synonym}
+				{if (isset($fs.foodstuff.synonym))}
+					{$fs.foodstuff.synonym}
 				{else}
-					{$fs.foodstuff.0.label}
+					{$fs.foodstuff.label}
 				{/if}
 			</strong>
 		</div>
 		<div>
-		{foreach $fs.foodstuff.0.infos as $info}
+		{foreach $fs.foodstuff.infos as $info}
 			<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
 		{/foreach}
 		</div>
 		<div style="font-size: 14px">
 			{if (!empty($fs.conservation))}
-				<div>Mode de conservation: <strong>{\mod\repasrc\Foodstuff::getConservation($fs.conservation)}</strong></div>
+				<div>Mode de conservation: <strong>{$fs.conservation}</strong></div>
 			{/if}
 			{if (!empty($fs.production))}
-				<div>Mode de production: <strong>{\mod\repasrc\Foodstuff::getConservation($fs.production)}</strong></div>
+				<div>Mode de production: <strong>{$fs.production}</strong></div>
 			{/if}
-			<div>Empreinte écologique foncière (donnée générale): <strong>{$fs.foodstuff.0.footprint} gah</strong></div>
-			<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.0.footprint y=$fs.quantity} gah</strong></div>
-			{$fs.origin|print_r}
+			<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²/Kg</strong></div>
+			<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²</strong></div>
 			{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 				<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
+			{else if (isset($fs.origin) && !empty($fs.origin.0.location))} 
+				{if $fs.origin.0.location == 'LOCAL'}
+					<div>Origine: <strong>Locale</strong></div>
+				{else if $fs.origin.0.location == 'REGIONAL'}
+					<div>Origine: <strong>Locale</strong></div>
+				{else if $fs.origin.0.location == 'FRANCE'}
+					<div>Origine: <strong>France</strong></div>
+				{else if $fs.origin.0.location == 'EUROPE'}
+					<div>Origine: <strong>Europe</strong></div>
+				{else if $fs.origin.0.location == 'WORLD'}
+					<div>Origine: <strong>Monde</strong></div>
+				{/if}
 			{/if}
 			{if (isset($fs.price) && !empty($fs.price))}
 				<div>Prix: <strong>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</strong></div>
 			{/if}
 
-			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.0.seasonality}
+			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>
 				<div class="btn-group">
-				{foreach $fs.foodstuff.0.seasonality as $month=>$s}
+				{foreach $fs.foodstuff.seasonality as $month=>$s}
 					{if $s == 0}
 						{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
 							<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>

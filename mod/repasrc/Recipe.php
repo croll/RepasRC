@@ -114,10 +114,17 @@ class Recipe {
 			$tmp['quantity'] = $row['quantity'];
 			$tmp['price'] = $row['price'];
 			$tmp['vat'] = $row['vat'];
-			$tmp['conservation'] = $row['conservation'];
-			$tmp['production'] = $row['production'];
-			$tmp['foodstuff'] = $infos;
+			$tmp['conservation'] = \mod\repasrc\Foodstuff::getConservation($row['conservation']);
+			$tmp['production'] = \mod\repasrc\Foodstuff::getProduction($row['production']);
+			$tmp['foodstuff'] = $infos[0];
 			$tmp['origin'] = \mod\repasrc\Foodstuff::getOriginFromRecipe($tmp['recipeFoodstuffId']);
+
+			$families = array();
+			foreach($infos[0]['infos'] as $info) {
+				if (isset($info['family_group']))
+					$families[$info['family_group_id']] = $info['family_group'];
+			}
+			$tmp['families'] = $families;
 			$fs[] = $tmp;
 		}
 		return $fs;
@@ -137,14 +144,22 @@ class Recipe {
 		$conservation['G9'] = 1;
 		$conservation['10'] = 1;
 		$conservation['11'] = 1;
+
 		$recipe = self::getInfos($id);
+
 		$recipe['families'] = $recipe['foodstuff'] = array();
+
 		$recipe['component'] = \mod\repasrc\Foodstuff::getComponent($recipe['component']);
+
 		$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
+
 		$recipe['label'] = str_replace("''", "'", $recipe['label']);
-		$foodstuffList = self::getFoodstuffList($recipe['id']);
+
+		$recipe['foodstuffList'] = self::getFoodstuffList($recipe['id']);
+
 		$recipe['footprint'] = 0;
-		foreach($foodstuffList as $fs) {
+
+		foreach($recipe['foodstuffList'] as $fs) {
 			/* CHECK THAT */
 			/* CHECK THAT */
 			/* CHECK THAT */
@@ -156,18 +171,19 @@ class Recipe {
 				$footprint = $footprint*$conservation[$fs['conservation']];
 			}
 			$recipe['footprint'] += $footprint;
-				if (isset($fs['foodstuff'][0]['infos'])) {
-					$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
-					if (!in_array($fam, $recipe['families'])) {
-						$recipe['families'][] = $fam;  
-					}
+			if (isset($fs['foodstuff'][0]['infos'])) {
+				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
+				if (!in_array($fam, $recipe['families'])) {
+					$recipe['families'][] = $fam;  
 				}
-				$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
-				if (!in_array($fs_label, $recipe['foodstuff'])) {
-					$recipe['foodstuff'][] = $fs_label;  
-				}
-				$recipe['footprint'] = round($recipe['footprint'], 3);
 			}
+			$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
+			if (!in_array($fs_label, $recipe['foodstuff'])) {
+				$recipe['foodstuff'][] = $fs_label;  
+			}
+			$recipe['footprint'] = round($recipe['footprint'], 3);
+		}
+
 		return $recipe;
 	}
 
