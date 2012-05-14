@@ -147,7 +147,7 @@ class Recipe {
 
 		$recipe = self::getInfos($id);
 
-		$recipe['families'] = $recipe['foodstuff'] = array();
+		$recipe['families'] = array();
 
 		$recipe['component'] = \mod\repasrc\Foodstuff::getComponent($recipe['component']);
 
@@ -166,18 +166,18 @@ class Recipe {
 			if (sizeof($fs['foodstuff']) == 0) {
 				continue;
 			}
-			$footprint = $fs['foodstuff'][0]['footprint']*$fs['quantity'];
+			$footprint = $fs['foodstuff']['footprint']*$fs['quantity'];
 			if ($fs['conservation']) {
 				$footprint = $footprint*$conservation[$fs['conservation']];
 			}
 			$recipe['footprint'] += $footprint;
-			if (isset($fs['foodstuff'][0]['infos'])) {
-				$fam = $fs['foodstuff'][0]['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff'][0]['infos'][0]['family_group']);
+			if (isset($fs['foodstuff']['infos'])) {
+				$fam = $fs['foodstuff']['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff']['infos'][0]['family_group']);
 				if (!in_array($fam, $recipe['families'])) {
 					$recipe['families'][] = $fam;  
 				}
 			}
-			$fs_label = (isset($fs['foodstuff'][0]['synonym'])) ? $fs['foodstuff'][0]['synonym'] : $fs['foodstuff'][0]['label'];
+			$fs_label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 			if (!in_array($fs_label, $recipe['foodstuff'])) {
 				$recipe['foodstuff'][] = $fs_label;  
 			}

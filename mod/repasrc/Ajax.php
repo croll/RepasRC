@@ -46,7 +46,9 @@ class Ajax {
 	public static function searchRecipe($params) {
 		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
 		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
-		return \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
+		$ret = \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
+		\core\Core::log($ret);
+		return $ret;
 	}
 
 	public static function showRecipeDetail($params) {
