@@ -56,4 +56,48 @@ class Tools {
 		$months = array('Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Jui', 'Aout', 'Sep', 'Oct', 'Nov', 'Dec');
 		return $months[(int)$num-1];
 	}
+
+	public static function gradient($startColor,$endColor, $stepNumber) {
+		$colors = array($startColor);
+		$sColor = str_split($startColor,2);
+		$eColor = str_split($endColor,2);
+		for($i = 0 ;$i< 3 ;$i++)
+		{
+			$diff [$i] = (hexdec($sColor[$i])-hexdec($eColor[$i]))/($stepNumber-2);
+		}
+		for ($i = 1;$i<$stepNumber-1;$i++)
+		{
+			$c = str_split($colors[$i-1],2);
+			$colors[$i] = sprintf('%02X',max(0,min(255,(hexdec($c[0])-$diff[0])))).
+				sprintf('%02X',max(0,min(255,(hexdec($c[1])-$diff[1])))).
+				sprintf('%02X',max(0,min(255,(hexdec($c[2])-$diff[2]))));
+		}
+		$colors[$i] = $endColor;
+		return $colors;
+	}
+
+	public static function getColorsArray($foodstuffList) {
+		$colors = array();
+		foreach($foodstuffList as $foodstuff) {
+			$familyNum = @array_shift(array_keys($foodstuff['families']));
+			$done = false;
+			if (!$familyNum) {
+				$colors[] = '#000';
+			} else {
+				$co = \mod\repasrc\Foodstuff::$familyColors[$familyNum];
+				foreach(self::gradient($co, 'ffffff', 7) as $c) {
+					if (!in_array($c, $colors) && !$done) {
+						$colors[] = $c;
+						$done = true;
+					}
+				}
+			}
+		}
+		return $colors;
+	}
+
+	public static function toGoogleDataTable($array) {
+		return str_replace(array('{','}',':'), array('[',']',','), json_encode($array));
+	}
+
 }

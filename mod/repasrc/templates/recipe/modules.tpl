@@ -42,8 +42,8 @@ Vous avez le choix de sélectionner ou non chacune de ces fonctionnalités du ca
 					<input type="button" class="btn" id="cancel" value="Annuler la création de la recette" />
 				</div>
 				<input type="hidden" id="modules" name="modules" value="" />
-				{if isset($recipeId)}
-					<input type="hidden" name="recipeId" value="{$recipeId}" />
+				{if isset($recipe.id)}
+					<input type="hidden" name="recipeId" value="{$recipe.id}" />
 				{/if}
 			</form>
 	</div>

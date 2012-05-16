@@ -33,7 +33,7 @@ class Ajax {
 		$page->smarty->assign(
 			array(
 					'recipe' => $recipeDetail, 
-					'foodstuff' => $foodstuff, 
+					'foodstuff' => $foodstuff[0], 
 					'modulesList' => $params['modulesList']
 			)
 		);

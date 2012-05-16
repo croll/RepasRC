@@ -34,23 +34,23 @@
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Composition de la recette</h3>
-			{if (!isset($recipeFoodstuffList) || empty($recipeFoodstuffList))}
+			{if (!isset($recipe.foodstuffList) || empty($recipe.foodstuffList))}
 			<div class="alert alert-error">
 				Aucun aliment.
 			</div>
 			{else}
 				<ul class="nav nav-tabs nav-stacked">
-					{foreach $recipeFoodstuffList as $fs}
+					{foreach $recipe.foodstuffList as $fs}
 						<li class="clearfix" style="cursor:pointer">
-							<a href="javascript:showFoodstuffDetail({$fs.foodstuff.0.id}, {if (isset($fs.foodstuff.0.synonym))}{$fs.foodstuff.0.synonym_id}{else}null{/if}, {$fs.recipeFoodstuffId})" style="color: #000;font-size:12px">
-								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.0.infos))}{$fs.foodstuff.0.infos.0.family_group_id}{/if}">&nbsp;</div>
+							<a href="javascript:showFoodstuffDetail({$fs.foodstuff.id}, {if (isset($fs.foodstuff.synonym))}{$fs.foodstuff.synonym_id}{else}null{/if}, {$fs.recipeFoodstuffId})" style="color: #000;font-size:12px">
+								<div style="float:left;height:7px;font-size:4px;margin:4px 5px 0 0" class="label fam{if (isset($fs.foodstuff.infos))}{$fs.foodstuff.infos.0.family_group_id}{/if}">&nbsp;</div>
 								<span>
 									{$fs.quantity} {$fs.unit}
 									<strong>
-									{if (isset($fs.foodstuff.0.synonym))}
-										{$fs.foodstuff.0.synonym}
+									{if (isset($fs.foodstuff.synonym))}
+										{$fs.foodstuff.synonym}
 									{else}
-										{$fs.foodstuff.0.label}
+										{$fs.foodstuff.label}
 									{/if}
 									</strong>
 								</span>

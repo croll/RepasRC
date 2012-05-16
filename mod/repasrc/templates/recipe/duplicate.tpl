@@ -12,7 +12,7 @@
 					{$informations.cancel}
 			</div>
 		</fieldset>
-		<input type="hidden" name="recipeId" value="{$recipeId}" />
+		<input type="hidden" name="recipeId" value="{$recipe.id}" />
 		<input type="hidden" name="action" value="duplicate" />
 	{/form}
 </div>

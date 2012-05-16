@@ -12,7 +12,7 @@
 			<a class="close" data-dismiss="alert">×</a>
 			Veuillez remplir le formulaire suivant pour renseigner les informations essentielles pour qualifier votre recette.
 		</div> 
-		{form mod="repasrc" file="templates/recipe/informations.json" defaultValues=\mod\repasrc\Recipe::getInfos($recipeId)}
+		{form mod="repasrc" file="templates/recipe/informations.json" defaultValues=\mod\repasrc\Recipe::getInfos($recipe.id)}
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Nom de la recette"}</label>
@@ -61,7 +61,7 @@
 						{$informations.submit}
 						{$informations.cancel}
 				</div>
-				<input type="hidden" name="recipeId" value="{$recipeId}" />
+				<input type="hidden" name="recipeId" value="{$recipe.id}" />
 			</fieldset>
 			{/form}
 		</div>

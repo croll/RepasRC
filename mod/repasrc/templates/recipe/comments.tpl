@@ -24,7 +24,7 @@
 				<div class="form-actions">
 						{$comments.submit}
 				</div>
-				<input type="hidden" name="recipeId" value="{$recipeId}" />
+				<input type="hidden" name="recipeId" value="{$recipe.id}" />
 			</fieldset>
 			{/form}
 		</div>

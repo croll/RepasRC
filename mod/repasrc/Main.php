@@ -50,6 +50,7 @@ class Main {
 	}
 
 	public static function hook_mod_repasrc_recipe_edit($hookname, $userdata, $params) {
+
     \mod\user\Main::redirectIfNotLoggedIn();
 		$section = NULL;
     $page = new \mod\webpage\Main();
@@ -139,7 +140,7 @@ class Main {
 
 		// POST Treatment ok
 		// Now check if recipe ID is valid
-		if (!is_null($id)) {
+		if (!empty($_POST) && !is_null($id)) {
 			$id = (\mod\repasrc\Recipe::checkIfExists($id)) ? $id : null;
 		}
 		
@@ -165,7 +166,13 @@ class Main {
 				// Otherwise we get modules defined in session
 				$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
 			}
-		$page->smarty->assign('recipe', \mod\repasrc\Recipe::getInfos($id));
+		$re = \mod\repasrc\Recipe::getDetail($id);
+		if (isset($re) && !empty($re)) {
+			$recipe = $re;
+		} else {
+			$recipe = array('id' => $id);
+		}
+		$page->smarty->assign('recipe', $recipe);
 		$page->setLayout('repasrc/recipe/'.$tpl);
     $page->display();
 	}
@@ -211,8 +218,34 @@ class Main {
 		}
 
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
+		$colors = \mod\repasrc\Tools::getColorsArray($recipeDetail['foodstuffList']);
+		$noData = array();
 
 		switch($section) {
+			case 'resume':
+				// Footprint Pie
+				$dataFootprintPie = array();
+				$dataFootprintPie['cols'] = array(
+					array('label' => 'Aliment', 'type' => 'string'),
+					array('label' => 'Empreinte écologique foncière', 'type' => 'number')
+				);
+				foreach($recipeDetail['foodstuffList'] as $foodstuff) {
+					if (empty($foodstuff['foodstuff']['footprint'])) {
+						$noData[] = $foodstuff['foodstuff']['label'];
+					}
+					$dataFootprintPie['rows'][]['c'] = array(
+						array('v' => $foodstuff['foodstuff']['label']),
+						array('v' => $foodstuff['foodstuff']['footprint']*$foodstuff['quantity'])
+					);
+					$dataFootprintBar[][$foodstuff['foodstuff']['label']] = $foodstuff['quantity']*$foodstuff['foodstuff']['footprint'];
+				}
+				$page->smarty->assign(array(
+					'colors' => json_encode($colors),
+					'dataFootprintPie' => json_encode($dataFootprintPie)
+				));
+				\core\Core::log(json_encode($dataFootprintPie));
+			break;
+
 			case 'saisonnalite':
 				if (empty($recipeDetail['consumptionmonth'])) continue;
 				$recipeDetail['seasonality'] = \mod\repasrc\Analyze::seasonality($recipeDetail);
@@ -225,6 +258,7 @@ class Main {
 		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
 		$page->setLayout('repasrc/recipe/analyze/'.$tpl);
 		$page->smarty->assign(array(
+			'section' => $section,
 			'recipe' => $recipeDetail, 
 			'recipes' => $recipes,
 			'modulesList' => $modules

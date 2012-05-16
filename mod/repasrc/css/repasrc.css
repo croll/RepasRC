@@ -49,13 +49,8 @@ div.recipe_content {
 	margin-left: 140px;
 } 
 
-.fam6 {
-	background-color: #ed1c24;
-	font-size: 10px;
-}
-
-.fam5 {
-	background-color: #00adef;
+.fam1 {
+	background-color: #ffb1fa;
 	font-size: 10px;
 }
 
@@ -69,13 +64,18 @@ div.recipe_content {
 	font-size: 10px;
 }
 
-.fam7 {
-	background-color: #fcc707;
+.fam5 {
+	background-color: #00adef;
 	font-size: 10px;
 }
 
-.fam1 {
-	background-color: #ffb1fa;
+.fam6 {
+	background-color: #ed1c24;
+	font-size: 10px;
+}
+
+.fam7 {
+	background-color: #fcc707;
 	font-size: 10px;
 }
 

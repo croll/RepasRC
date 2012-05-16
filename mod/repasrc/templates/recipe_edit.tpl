@@ -3,7 +3,7 @@
 {block name='webpage_head' append}
 	{js file="/mod/repasrc/js/recipe.js"}
 	<script language="javascript">
-		var recipeId = {if isset($recipeId)}{$recipe.id}{else}null{/if};
+		var recipeId = {if isset($recipe.id)}{$recipe.id}{else}null{/if};
 		var modulesList = {if isset($modulesList)}{$modulesList|json_encode}{else}null{/if};
 	</script>
 	<style type="text/css">
@@ -29,10 +29,10 @@
 			{block name='recipe_sidebar'}
 			<div class="well" style="padding: 8px 0;">
 				<ul class="nav nav-list">
-					{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id})}
+					{if empty($recipe.id) || (\mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id}))}
 						<li class="nav-header">{t d='repasrc' m='Recette'}</li>
 						<li{if ($section == 'modules')} class="active"{/if}><a href="/recette/edition/modules/{$recipe.id}"><i class="icon-th"></i>{t d='repasrc' m='Choix des modules'}</a></li>
-						<li{if ($section == 'informations')} class="active"{/if}><a href="/recette/edition/informations/{$recipe.d}"><i class="icon-info-sign"></i>{t d='repasrc' m='Informations'}</a>
+						<li{if ($section == 'informations')} class="active"{/if}><a href="/recette/edition/informations/{$recipe.id}"><i class="icon-info-sign"></i>{t d='repasrc' m='Informations'}</a>
 					{/if}
 					{if isset($recipe.id)}
 						{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id})}
