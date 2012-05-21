@@ -161,26 +161,32 @@ class Recipe {
 
 		$recipe['footprint'] = 0;
 
+		$recipe['foodstuffWeight'] = 0;
+
+		$recipe['price'] = array();
+		$recipe['price']['in'] = 0;
+		$recipe['price']['out'] = 0;
+
 		$recipe['noData'] = array();
 
-		\core\Core::log(' ---------------- ');
+		$recipe['foodstuff'] = array();
+
+		$recipe['fakes'] = array();
+
 		foreach($recipe['foodstuffList'] as $fs) {
-			//\core\Core::log($recipe);
-			/*
-			* CHECK THAT
-			* CHECK THAT 
-			if (sizeof($fs['foodstuff']) == 0) {
-				continue;
-			}
-			 */
+
+			$fs_label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 
 			// Footprint
 			$footprint = $fs['foodstuff']['footprint']*$fs['quantity'];
-			if ($fs['conservation']) {
-				$footprint = $footprint*$conservation[$fs['conservation']];
+			if (!empty($footprint)) {
+				if ($fs['conservation']) {
+					$footprint = $footprint*$conservation[$fs['conservation']];
+				}
+				$recipe['footprint'] += $footprint;
+			} else {
+				$recipe['noData'][$fs['foodstuff']['id']] = $fs_label;
 			}
-			\core\Core::log($fs['conservation']);
-			$recipe['footprint'] += $footprint;
 
 			// Foodstuff families
 			if (isset($fs['foodstuff']['infos'])) {
@@ -191,13 +197,21 @@ class Recipe {
 			}
 
 			// Simple foodstuff list
-			$fs_label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 			if (!in_array($fs_label, $recipe['foodstuff'])) {
-				$recipe['foodstuff'][] = $fs_label;  
+				$recipe['foodstuff'][$fs['foodstuff']['id']] = $fs_label;
 			}
+
+			// Foodstuff weight (for graphs)
+			$recipe['foodstuffWeight'] += $fs['quantity'];
+
+			// Fakes
+			if ($fs['fake']) {
+				$recipe['fake'][$fs['foodstuff']['id']] = array('label' => $fs_label, 'comment' => $fs['comment']);;
+			}
+
 		}
-		\core\Core::log(' ---------------- ');
 		$recipe['footprint'] = round($recipe['footprint'], 3);
+		\core\Core::log($recipe);
 
 		return $recipe;
 	}

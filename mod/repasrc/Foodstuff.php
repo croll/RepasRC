@@ -26,7 +26,7 @@ class Foodstuff {
 				$tmpWhere .= 'AND ('.substr($tmp, 0, -4).') ';
 			}
 		}
-		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint, rrc_fs_seasonality AS seasonality ";
+		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint, rrc_fs_seasonality AS seasonality, rrc_fs_fake AS fake, rrc_fs_comment AS comment ";
 		if ($searchSynonyms) {
 			$q .= ', rrc_ss_id AS synonym_id, rrc_ss_label AS synonym, rrc_ss_seasonality AS synonym_seasonality ';
 		}
@@ -74,6 +74,8 @@ class Foodstuff {
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
 				$tmp['footprint'] = round($row['footprint'], 3);
+				$tmp['fake'] = (int)$row['fake'];
+				$tmp['comment'] = $row['comment'];
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					$tmp['synonym'] = $row['synonym'];

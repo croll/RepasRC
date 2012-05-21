@@ -113,6 +113,7 @@
 			function drawChart() {
 					var dataPie = new google.visualization.DataTable({$dataFootprintPie});
 					var dataCol = new google.visualization.DataTable({$dataFootprintCol});
+					var dataComp = new google.visualization.DataTable({$dataFootprintComp});
 
 					var optionsPie = { 
 						'title':'Empreinte écologique foncière par aliment',
@@ -128,14 +129,24 @@
 						'height':400 
 					};
 
+					var optionsComp = { 
+						'title':'Relation entre  l\'empreinte écologique foncière et la quantité d\'aliment',
+						'width':800,
+						'height':400,
+						'isStacked':false
+					};
+
 					var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
 					var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+					var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
 					chart.draw(dataPie, optionsPie);
 					chart2.draw(dataCol, optionsCol);
+					chart3.draw(dataComp, optionsComp);
 			}
 			</script>
 
-			<div id="chart_div{$recipe@index}"></div>
-			<div id="chart_div2{$recipe@index}"></div>
+			<div id="chart_div"></div>
+			<div id="chart_div2"></div>
+			<div id="chart_div3"></div>
 
 		</div>

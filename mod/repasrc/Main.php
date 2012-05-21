@@ -226,20 +226,28 @@ class Main {
 			case 'resume':
 				$gctPie = new \mod\googlecharttools\Main();
 				$gctCol = new \mod\googlecharttools\Main();
+				$gctComp = new \mod\googlecharttools\Main();
 				$gctPie->addColumn('Aliment', 'string');
-				$gctPie->addColumn('Empreinte écologique foncière', 'number');
+				$gctPie->addColumn('Empreinte écologique foncière pour la recette', 'number');
 				$gctCol->addColumn('Val', 'string');
-				$gctCol->addRow('Empreinte écologique foncière');
+				$gctCol->addRow('Empreinte écologique foncière pour une personne');
+				$gctComp->addColumn('Aliment', 'string');
+				$gctComp->addColumn('Empreinte écologique foncière', 'number');
+				$gctComp->addColumn('Quantité', 'number');
 				foreach($recipeDetail['foodstuffList'] as $foodstuff) {
 					$gctPie->addRow($foodstuff['foodstuff']['label']);
 					$gctPie->addRow($foodstuff['foodstuff']['footprint']*$foodstuff['quantity']);
 					$gctCol->addColumn($foodstuff['foodstuff']['label'], 'number');
-					$gctCol->addRow($foodstuff['foodstuff']['footprint']*$foodstuff['quantity']);
+					$gctCol->addRow($foodstuff['foodstuff']['footprint']*($foodstuff['quantity']/$recipeDetail['persons']));
+					$gctComp->addRow($foodstuff['foodstuff']['label']);
+					$gctComp->addRow(round(($foodstuff['foodstuff']['footprint']*($foodstuff['quantity'])*100)/$recipeDetail['footprint'],2));
+					$gctComp->addRow(round(((float)$foodstuff['quantity']*100)/$recipeDetail['foodstuffWeight']),2);
 				}
 				$page->smarty->assign(array(
 					'colors' => json_encode($colors),
 					'dataFootprintPie' => $gctPie->getJSON(),
-					'dataFootprintCol' => $gctCol->getJSON()
+					'dataFootprintCol' => $gctCol->getJSON(),
+					'dataFootprintComp' => $gctComp->getJSON()
 				));
 			break;
 

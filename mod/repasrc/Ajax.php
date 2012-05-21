@@ -25,10 +25,10 @@ class Ajax {
 		$infos['synonym_id'] = ((isset($params['synonymId'])) ? $params['synonymId'] : null);
     $page = new \mod\webpage\Main();
 		if ($infos['synonym_id']) {
-			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), false);
+			$parent = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $params['id'], 'synonym_id' => NULL)), true);
 			$page->smarty->assign('parent', $parent);
 		}
-		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), true);
+		$foodstuff = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array($infos), false);
 		$recipeDetail = \mod\repasrc\Recipe::getDetail((int)$params['recipeId']);
 		$page->smarty->assign(
 			array(
