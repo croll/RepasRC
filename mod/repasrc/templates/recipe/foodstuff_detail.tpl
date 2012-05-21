@@ -37,10 +37,10 @@
 		</div>
 		<div style="font-size: 14px">
 			{if (!empty($foodstuff.conservation))}
-				<div>Mode de conservation: <strong>{$foodstuff.conservation}</strong></div>
+				<div>Mode de conservation: <strong>{$foodstuff.conservation_label}</strong></div>
 			{/if}
 			{if (!empty($foodstuff.production))}
-				<div>Mode de production: <strong>{$foodstuff.production}</strong></div>
+				<div>Mode de production: <strong>{$foodstuff.production_label}</strong></div>
 			{/if}
 			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $foodstuff.seasonality}
 			<div style="margin-top:10px">Saisonnalité: <span></span></div>

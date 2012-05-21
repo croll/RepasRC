@@ -23,10 +23,10 @@
 	</div>
 	<div style="font-size: 14px">
 		{if (!empty($fs.conservation))}
-			<div>Mode de conservation: <strong>{$fs.conservation}</strong></div>
+			<div>Mode de conservation: <strong>{$fs.conservation_label}</strong></div>
 		{/if}
 		{if (!empty($fs.production))}
-			<div>Mode de production: <strong>{$fs.production}</strong></div>
+			<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 		{/if}
 		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²/Kg</strong></div>
 		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²</strong></div>

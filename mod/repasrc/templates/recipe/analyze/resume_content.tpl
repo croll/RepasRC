@@ -1,8 +1,3 @@
-{if (isset($fs.foodstuff.synonym))}
-	{assign var='label' value=$fs.foodstuff.synonym}
-{else}
-	{assign var='label' value=$fs.foodstuff.label}
-{/if}
 
 {* *************************
  * Tabs
@@ -27,6 +22,11 @@
 		</div>
 
 		{foreach $recipe.foodstuffList as $fs}
+		{if (isset($fs.foodstuff.synonym))}
+			{assign var='label' value=$fs.foodstuff.synonym}
+		{else}
+			{assign var='label' value=$fs.foodstuff.label}
+		{/if}
 		<div style="margin: 0 0 20px 0px">
 			<div style="font-size: 18px">
 				{$fs.quantity} {$fs.unit}
@@ -41,13 +41,13 @@
 			</div>
 			<div style="font-size: 14px">
 				{if (!empty($fs.conservation))}
-					<div>Mode de conservation: <strong>{$fs.conservation}</strong></div>
+					<div>Mode de conservation: <strong>{$fs.conservation_label}</strong></div>
 				{/if}
 				{if (!empty($fs.production))}
-					<div>Mode de production: <strong>{$fs.production}</strong></div>
+					<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 				{/if}
-				<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²/Kg</strong></div>
-				<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²</strong></div>
+				<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} mètres carrés globaux/Kg</strong></div>
+				<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} mètres carrés globaux</strong></div>
 				{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 					<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
 				{else if (isset($fs.origin) && !empty($fs.origin.0.location))} 
@@ -111,9 +111,17 @@
 			google.setOnLoadCallback(drawChart);
 
 			function drawChart() {
-					var data = new google.visualization.DataTable({$dataFootprintPie});
+					var dataPie = new google.visualization.DataTable({$dataFootprintPie});
+					var dataCol = new google.visualization.DataTable({$dataFootprintCol});
 
-					var options = { 
+					var optionsPie = { 
+						'title':'Empreinte écologique foncière par aliment',
+						'colors' : {$colors},
+						'width':800,
+						'height':400 
+					};
+
+					var optionsCol = { 
 						'title':'Empreinte écologique foncière par aliment',
 						'colors' : {$colors},
 						'width':800,
@@ -122,8 +130,8 @@
 
 					var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
 					var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-					chart.draw(data, options);
-					chart2.draw(data, options);
+					chart.draw(dataPie, optionsPie);
+					chart2.draw(dataCol, optionsCol);
 			}
 			</script>
 

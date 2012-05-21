@@ -218,32 +218,29 @@ class Main {
 		}
 
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
+
 		$colors = \mod\repasrc\Tools::getColorsArray($recipeDetail['foodstuffList']);
 		$noData = array();
 
 		switch($section) {
 			case 'resume':
-				// Footprint Pie
-				$dataFootprintPie = array();
-				$dataFootprintPie['cols'] = array(
-					array('label' => 'Aliment', 'type' => 'string'),
-					array('label' => 'Empreinte écologique foncière', 'type' => 'number')
-				);
+				$gctPie = new \mod\googlecharttools\Main();
+				$gctCol = new \mod\googlecharttools\Main();
+				$gctPie->addColumn('Aliment', 'string');
+				$gctPie->addColumn('Empreinte écologique foncière', 'number');
+				$gctCol->addColumn('Val', 'string');
+				$gctCol->addRow('Empreinte écologique foncière');
 				foreach($recipeDetail['foodstuffList'] as $foodstuff) {
-					if (empty($foodstuff['foodstuff']['footprint'])) {
-						$noData[] = $foodstuff['foodstuff']['label'];
-					}
-					$dataFootprintPie['rows'][]['c'] = array(
-						array('v' => $foodstuff['foodstuff']['label']),
-						array('v' => $foodstuff['foodstuff']['footprint']*$foodstuff['quantity'])
-					);
-					$dataFootprintBar[][$foodstuff['foodstuff']['label']] = $foodstuff['quantity']*$foodstuff['foodstuff']['footprint'];
+					$gctPie->addRow($foodstuff['foodstuff']['label']);
+					$gctPie->addRow($foodstuff['foodstuff']['footprint']*$foodstuff['quantity']);
+					$gctCol->addColumn($foodstuff['foodstuff']['label'], 'number');
+					$gctCol->addRow($foodstuff['foodstuff']['footprint']*$foodstuff['quantity']);
 				}
 				$page->smarty->assign(array(
 					'colors' => json_encode($colors),
-					'dataFootprintPie' => json_encode($dataFootprintPie)
+					'dataFootprintPie' => $gctPie->getJSON(),
+					'dataFootprintCol' => $gctCol->getJSON()
 				));
-				\core\Core::log(json_encode($dataFootprintPie));
 			break;
 
 			case 'saisonnalite':

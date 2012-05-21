@@ -85,7 +85,7 @@ class Tools {
 				$colors[] = '#000';
 			} else {
 				$co = \mod\repasrc\Foodstuff::$familyColors[$familyNum];
-				foreach(self::gradient($co, 'ffffff', 7) as $c) {
+				foreach(self::gradient($co, 'ffffff', 9) as $c) {
 					if (!in_array($c, $colors) && !$done) {
 						$colors[] = $c;
 						$done = true;

@@ -114,8 +114,10 @@ class Recipe {
 			$tmp['quantity'] = $row['quantity'];
 			$tmp['price'] = $row['price'];
 			$tmp['vat'] = $row['vat'];
-			$tmp['conservation'] = \mod\repasrc\Foodstuff::getConservation($row['conservation']);
-			$tmp['production'] = \mod\repasrc\Foodstuff::getProduction($row['production']);
+			$tmp['conservation'] = $row['conservation'];
+			$tmp['conservation_label'] = \mod\repasrc\Foodstuff::getConservation($row['conservation']);
+			$tmp['production'] = $row['production'];
+			$tmp['production_label'] = \mod\repasrc\Foodstuff::getProduction($row['production']);
 			$tmp['foodstuff'] = $infos[0];
 			$tmp['origin'] = \mod\repasrc\Foodstuff::getOriginFromRecipe($tmp['recipeFoodstuffId']);
 
@@ -159,30 +161,43 @@ class Recipe {
 
 		$recipe['footprint'] = 0;
 
+		$recipe['noData'] = array();
+
+		\core\Core::log(' ---------------- ');
 		foreach($recipe['foodstuffList'] as $fs) {
-			/* CHECK THAT */
-			/* CHECK THAT */
-			/* CHECK THAT */
+			//\core\Core::log($recipe);
+			/*
+			* CHECK THAT
+			* CHECK THAT 
 			if (sizeof($fs['foodstuff']) == 0) {
 				continue;
 			}
+			 */
+
+			// Footprint
 			$footprint = $fs['foodstuff']['footprint']*$fs['quantity'];
 			if ($fs['conservation']) {
 				$footprint = $footprint*$conservation[$fs['conservation']];
 			}
+			\core\Core::log($fs['conservation']);
 			$recipe['footprint'] += $footprint;
+
+			// Foodstuff families
 			if (isset($fs['foodstuff']['infos'])) {
 				$fam = $fs['foodstuff']['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff']['infos'][0]['family_group']);
 				if (!in_array($fam, $recipe['families'])) {
 					$recipe['families'][] = $fam;  
 				}
 			}
+
+			// Simple foodstuff list
 			$fs_label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 			if (!in_array($fs_label, $recipe['foodstuff'])) {
 				$recipe['foodstuff'][] = $fs_label;  
 			}
-			$recipe['footprint'] = round($recipe['footprint'], 3);
 		}
+		\core\Core::log(' ---------------- ');
+		$recipe['footprint'] = round($recipe['footprint'], 3);
 
 		return $recipe;
 	}
