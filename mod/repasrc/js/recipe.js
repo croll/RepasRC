@@ -348,7 +348,11 @@ function showRecipeDetail(id) {
 			onRequest: function() {
 			},
 		onSuccess: function(res) {
-			modalWin.setTitle(res.title).setBody(res.content).show();
+			modalWin.setTitle(res.title).setBody(res.content);
+			var clone = document.getElement('div.form-actions').clone();
+			document.getElement('div.form-actions').dispose();
+			modalWin.setFooter(clone.get('html'));
+			modalWin.show();
 			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
@@ -373,7 +377,11 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 			},
 		onSuccess: function(res,a,b,c) {
 
-			modalWin.setTitle(res.title).setBody(res.content).show();
+			modalWin.setTitle(res.title).setBody(res.content);
+			var clone = document.getElement('div.form-actions').clone();
+			document.getElement('div.form-actions').dispose();
+			modalWin.setFooter(clone.get('html'));
+			modalWin.show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
 			// Form

@@ -189,7 +189,7 @@
 				{/if}
 			</div>
 
-		<div id="popup-actions" class="form-actions" style="margin-top:-16px">
+		<div id="popup-actions" class="form-actions" style="width: 300px;margin:0 auto;">
 			{if (isset($recipe.id))}
 				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
 				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
