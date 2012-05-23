@@ -36,6 +36,7 @@
 
 	<div id="recipe_container">
 		<div class="span6 recipe-list">
+			<div class='alert alert-danger not-found' style='display: none'>Aucune recette ne correspond aux critères de recherche.</div>
 			<ul class="thumbnails">
 			</ul>
 		</div>

@@ -126,7 +126,7 @@ window.addEvent('domready', function() { Locale.use('fr-FR');
 					e.stopPropagation();
 					return;
 				}
-				filterResults(this.get('value'), 'fsname');
+				filterResults(this.get('value'));
 		});
 	}
 
@@ -214,7 +214,7 @@ function filterResults(txt, type) {
 	var found = false;
 	if (els) {
 		els.each(function(el) {
-			if (el.getElement('.'+t).get('rel').indexOf(txt.toUpperCase()) == -1 && el.getElement('.'+t).get('html').indexOf(txt) == -1 ) {
+			if (el.getElement('.'+t).get('rel').toLowerCase().indexOf(txt.toLowerCase()) == -1 && el.getElement('.'+t).get('html').toLowerCase().indexOf(txt.toLowerCase()) == -1 ) {
 				el.setStyle('display', 'none');
 			} else {
 				el.setStyle('display', 'block');
@@ -255,7 +255,9 @@ function buildFoodstuffThumb(fs) {
 			});
 			html += '</div>';
 		}
-		html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd>'+Math.round(fs.footprint,3)+'&nbsp;m²</dd></dl>';
+		if (fs.footprint) {
+			html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd>'+Math.round(fs.footprint,3)+'&nbsp;m²</dd></dl>';
+		}
 		if (fs.synonym && (fs.synonym != fs.label)) {
 			html += '<dl class="alert dl-horizontal"><dt>Basé sur:</dt><dd>'+fs.label+'</dd></dl>';
 		}
@@ -264,6 +266,9 @@ function buildFoodstuffThumb(fs) {
 		}
 		if (fs.production) {
 			html += '<dl class="dl-horizontal"><dt>Mode de production</dt><dd>'+fs.production+'</dd></dl>';
+		}
+		if (!fs.footprint) {
+			html += '<div class="alert alert-danger" style="margin-top:10px">Aucune valeur connue  d\'empreinte écologique foncière</div>';
 		}
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
@@ -308,7 +313,6 @@ function loadRecipes(reset) {
  * @re: recipe object 
  * ---------------------------------------------- */
 function buildRecipeThumb(re) {
-	console.log(re);
 	html = '<li onclick="showRecipeDetail('+re.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';

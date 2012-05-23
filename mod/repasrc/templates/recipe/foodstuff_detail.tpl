@@ -19,9 +19,11 @@
 		</div>
 		<div style="float:left;padding-top:10px">
 			<div>Identifiant: <strong>{$foodstuff.id}</strong></div>
-			<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²/Kg</div>
+				{if !empty($foodstuff.footprint)}
+					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²/Kg</div>
+				{/if}
 			{if isset($foodstuff.synonym)}
-				<div class="alert alert-warn" style="margin-top: 5px;width: 457px">
+				<div class="alert alert-warn" style="width: 457px">
 					Cet aliment est basé sur l'aliment <strong>{$parent.0.label}</strong>
 				</div>
 			{/if}
@@ -72,6 +74,16 @@
 	</div>
 
 	<div id="foodstuff-form-comtainer" style="margin-top:20px">
+
+		{if empty($foodstuff.footprint)}
+			<div class="alert alert-danger">
+				{if empty($foodstuff.comment)}
+					Attention, nous ne connaissons pas aujourd'hui l'empreinte écologique de cet aliment. Nous vous indiquerons la proportion d'aliments de votre recette dont nous ne connaissons pas l'empreinte.
+				{else}
+					{$foodstuff.comment}
+				{/if}
+			</div>
+		{/if}
 
 		<div class="alert alert-info">
 			<a class="close" data-dismiss="alert">×</a>
