@@ -167,11 +167,7 @@ class Recipe {
 		$recipe['price']['in'] = 0;
 		$recipe['price']['out'] = 0;
 
-		$recipe['noData'] = array();
-
 		$recipe['foodstuff'] = array();
-
-		$recipe['fakes'] = array();
 
 		foreach($recipe['foodstuffList'] as $fs) {
 
@@ -184,8 +180,6 @@ class Recipe {
 					$footprint = $footprint*$conservation[$fs['conservation']];
 				}
 				$recipe['footprint'] += $footprint;
-			} else {
-				$recipe['noData'][$fs['foodstuff']['id']] = $fs_label;
 			}
 
 			// Foodstuff families
@@ -204,14 +198,8 @@ class Recipe {
 			// Foodstuff weight (for graphs)
 			$recipe['foodstuffWeight'] += $fs['quantity'];
 
-			// Fakes
-			if ($fs['fake']) {
-				$recipe['fake'][$fs['foodstuff']['id']] = array('label' => $fs_label, 'comment' => $fs['comment']);;
-			}
-
 		}
 		$recipe['footprint'] = round($recipe['footprint'], 3);
-		\core\Core::log($recipe);
 
 		return $recipe;
 	}

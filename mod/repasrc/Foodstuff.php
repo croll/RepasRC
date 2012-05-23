@@ -26,7 +26,7 @@ class Foodstuff {
 				$tmpWhere .= 'AND ('.substr($tmp, 0, -4).') ';
 			}
 		}
-		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint, rrc_fs_seasonality AS seasonality, rrc_fs_fake AS fake, rrc_fs_comment AS comment ";
+		$q = "SELECT DISTINCT rrc_fs_id AS id, rrc_fs_label AS label, rrc_fs_label_caps AS label_caps, rrc_fs_conservation as conservation, rrc_fs_production as production, fa.rrc_fa_label AS family, fa.rrc_fa_id as family_id, fg.rrc_fg_id as family_group_id, fg.rrc_fg_name as family_group, dv.rrc_dv_value as footprint, rrc_fs_seasonality AS seasonality, rrc_fs_fake AS fake, rrc_fs_comment AS comment ";
 		if ($searchSynonyms) {
 			$q .= ', rrc_ss_id AS synonym_id, rrc_ss_label AS synonym, rrc_ss_seasonality AS synonym_seasonality ';
 		}
@@ -39,7 +39,8 @@ class Foodstuff {
 		}
 		$q .= "LEFT JOIN rrc_foodstuff_datavalue AS dv ON fs.rrc_fs_id=dv.rrc_dv_rrc_foodstuff_id ";
 		// Get EE values
-		$w = "WHERE dv.rrc_dv_rrc_foodstuff_datatype_id=1 ";
+		//$w = "WHERE dv.rrc_dv_rrc_foodstuff_datatype_id=1 ";
+		$w = "WHERE 1=1 ";
 		if ($label != NULL) {
 			$params[] = "%$label%";
 			$params[] = "%$label%";
@@ -59,6 +60,7 @@ class Foodstuff {
 		  $o .= ', synonym ASC';
 		}
 		$query = $q.$w.$tmpWhere.$o;
+		\core\Core::log($query);
 
 		// Do not store duplicate foostuff, for example because it's defined with multiple families
 		foreach(\core\Core::$db->fetchAll($query, array_merge($params, $tmpParams)) as $row) {
@@ -71,6 +73,7 @@ class Foodstuff {
 				$tmp = array();
 				$tmp['id'] = $row['id'];
 				$tmp['label'] = $row['label'];
+				$tmp['label_caps'] = $row['label_caps'];
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
 				$tmp['footprint'] = round($row['footprint'], 3);

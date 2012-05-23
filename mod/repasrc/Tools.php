@@ -76,10 +76,9 @@ class Tools {
 		return $colors;
 	}
 
-	public static function getColorsArray($foodstuffList) {
+	public static function getColorsArray($families) {
 		$colors = array();
-		foreach($foodstuffList as $foodstuff) {
-			$familyNum = @array_shift(array_keys($foodstuff['families']));
+		foreach($families as $familyNum) {
 			$done = false;
 			if (!$familyNum) {
 				$colors[] = '#000';
@@ -94,10 +93,6 @@ class Tools {
 			}
 		}
 		return $colors;
-	}
-
-	public static function toGoogleDataTable($array) {
-		return str_replace(array('{','}',':'), array('[',']',','), json_encode($array));
 	}
 
 }

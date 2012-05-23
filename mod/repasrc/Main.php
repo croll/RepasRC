@@ -219,11 +219,11 @@ class Main {
 
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
 
-		$colors = \mod\repasrc\Tools::getColorsArray($recipeDetail['foodstuffList']);
 		$noData = array();
 
 		switch($section) {
 			case 'resume':
+				$noData = $families = array();
 				$gctPie = new \mod\googlecharttools\Main();
 				$gctCol = new \mod\googlecharttools\Main();
 				$gctComp = new \mod\googlecharttools\Main();
@@ -234,17 +234,26 @@ class Main {
 				$gctComp->addColumn('Aliment', 'string');
 				$gctComp->addColumn('Empreinte écologique foncière', 'number');
 				$gctComp->addColumn('Quantité', 'number');
-				foreach($recipeDetail['foodstuffList'] as $foodstuff) {
-					$gctPie->addRow($foodstuff['foodstuff']['label']);
-					$gctPie->addRow($foodstuff['foodstuff']['footprint']*$foodstuff['quantity']);
-					$gctCol->addColumn($foodstuff['foodstuff']['label'], 'number');
-					$gctCol->addRow($foodstuff['foodstuff']['footprint']*($foodstuff['quantity']/$recipeDetail['persons']));
-					$gctComp->addRow($foodstuff['foodstuff']['label']);
-					$gctComp->addRow(round(($foodstuff['foodstuff']['footprint']*($foodstuff['quantity'])*100)/$recipeDetail['footprint'],2));
-					$gctComp->addRow(round(((float)$foodstuff['quantity']*100)/$recipeDetail['foodstuffWeight']),2);
+				foreach($recipeDetail['foodstuffList'] as $fs) {
+				// Foodstuff with no footprint value
+					if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
+						$noData[] = $fs['foodstuff']['label'];
+					} else {
+						$gctPie->addRow($fs['foodstuff']['label']);
+						$gctPie->addRow($fs['foodstuff']['footprint']*$fs['quantity']);
+						$gctCol->addColumn($fs['foodstuff']['label'], 'number');
+						$gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
+						$gctComp->addRow($fs['foodstuff']['label']);
+						$gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
+						$gctComp->addRow(round(((float)$fs['quantity']*100)/$recipeDetail['foodstuffWeight']),2);
+						if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+							$families[] = array_shift(array_keys($fs['families']));
+						}
+					}
 				}
 				$page->smarty->assign(array(
-					'colors' => json_encode($colors),
+					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
+					'noData' => $noData,
 					'dataFootprintPie' => $gctPie->getJSON(),
 					'dataFootprintCol' => $gctCol->getJSON(),
 					'dataFootprintComp' => $gctComp->getJSON()

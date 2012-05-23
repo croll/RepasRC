@@ -31,6 +31,7 @@
 		<div class="span6 foodstuff-list">
 			<ul class="thumbnails">
 			</ul>
+			<div class='alert alert-danger not-found' style='display: none'>Attention, la liste des aliments disponibles n'est pas exhaustive ; elle comprend surtout des aliments bruts, classés par catégorie.</div>
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Composition de la recette</h3>

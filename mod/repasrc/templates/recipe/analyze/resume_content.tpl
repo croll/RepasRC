@@ -46,8 +46,10 @@
 				{if (!empty($fs.production))}
 					<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 				{/if}
-				<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} mètres carrés globaux/Kg</strong></div>
-				<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} mètres carrés globaux</strong></div>
+				{if !empty($fs.foodstuff.footprint)}
+					<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} mètres carrés globaux/Kg</strong></div>
+					<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} mètres carrés globaux</strong></div>
+				{/if}
 				{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 					<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
 				{else if (isset($fs.origin) && !empty($fs.origin.0.location))} 
@@ -65,6 +67,16 @@
 				{/if}
 				{if (isset($fs.price) && !empty($fs.price))}
 					<div>Prix: <strong>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</strong></div>
+				{/if}
+
+				{if empty($fs.foodstuff.footprint)}
+					<div class="alert alert-danger">
+						{if empty($fs.foodstuff.comment)}
+							Attention, nous ne connaissons pas aujourd'hui l'empreinte écologique de cet aliment. Nous vous indiquerons la proportion d'aliments de votre recette dont nous ne connaissons pas l'empreinte.
+						{else}
+							{$fs.foodstuff.comment}
+						{/if}
+					</div>
 				{/if}
 
 				{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
@@ -103,6 +115,18 @@
 	 * Tab graphs
 	 ************************* *}
 		<div class="tab-pane" id="graphs">
+		
+			{if sizeof($noData) > 0}
+				<div class='alert alert-danger'>
+					<h5>Liste des aliments dont on ne connait pas l'empreinte écologique:</h5>
+					<ul style="margin: 5px 0 10px 20px">
+					{foreach $noData as $nd}
+						<li style="font-weight: bold">{$nd}</li>
+					{/foreach}
+					</ul>
+					De fait, ils ne sont pas pris en compte dans les graphiques suivant, pourtant leur impact est bien sûr réel.
+				</div>
+			{/if}
 
 			<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 			<script type="text/javascript">
@@ -116,21 +140,21 @@
 					var dataComp = new google.visualization.DataTable({$dataFootprintComp});
 
 					var optionsPie = { 
-						'title':'Empreinte écologique foncière par aliment',
+						'title':'Empreinte écologique foncière par aliment (Pour {$recipe.persons} personne{if $recipe.persons > 1}s{/if}))',
 						'colors' : {$colors},
 						'width':800,
 						'height':400 
 					};
 
 					var optionsCol = { 
-						'title':'Empreinte écologique foncière par aliment',
+						'title':'Empreinte écologique foncière par aliment (Pour 1 personne)',
 						'colors' : {$colors},
 						'width':800,
 						'height':400 
 					};
 
 					var optionsComp = { 
-						'title':'Relation entre  l\'empreinte écologique foncière et la quantité d\'aliment',
+						'title':'Relation entre  l\'empreinte écologique foncière et la quantité d\'aliment (Pourcentage)',
 						'width':800,
 						'height':400,
 						'isStacked':false
