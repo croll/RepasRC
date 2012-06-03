@@ -30,7 +30,7 @@
 					<thead>
 						<tr>
 							<th>Aliments de saison</th>
-							<th>Aliments hors siason</th>
+							<th>Aliments hors saison</th>
 							<th>Information non disponible</th>
 							<th>Hors contexte</th>
 						</tr>
@@ -68,6 +68,50 @@
 						</tr>
 					</tbody>
 				</table>
+
+
+		{foreach $recipe.foodstuffList as $fs}
+				{foreach $fs.foodstuff.infos as $info}{/foreach}
+					{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
+						{if $fs@index == 1}
+							<h3 style="margin:50px 0 -10px 0">Saisonalité des aliments répertoriés</h3>
+						{/if}
+						{if (isset($fs.foodstuff.synonym))}
+							{assign var='label' value=$fs.foodstuff.synonym}
+						{else}
+							{assign var='label' value=$fs.foodstuff.label}
+						{/if}
+						<h4 style="margin: 25px 0 3px 0">
+							{$label}
+						</h4>
+						<div class="btn-group">
+						{foreach $fs.foodstuff.seasonality as $month=>$s}
+							{if $s == 0}
+								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
+									<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+								{else}
+									<span class="btn btn-danger">{$month}</span>
+								{/if}
+							{else if $s == 1}
+								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
+									<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+								{else}
+									<span class="btn btn-warning">{$month}</span>
+								{/if}
+							{else}
+								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
+									<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+								{else}
+									<span class="btn btn-success">{$month}</span>
+								{/if}
+							{/if}
+						{/foreach}
+						</div>
+					{/if}
+		{/foreach}
+
+
+
 		</div>
 
 	{* *************************

@@ -50,10 +50,12 @@ class Analyze {
 					$precise = true;
 					$markers[$geoInfos['label']][] = $foodstuff['foodstuff'];
 					$lines[$id][] = $geoInfos['label'];
-					$foodstuff['origin'][$i]['location'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
 				} else {
 					$markers[$rcGeo['zonelabel']][] = $foodstuff['foodstuff'];
 				}
+				$foodstuff['origin'][$i]['location_label'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
+				if (!isset($foodstuff['origin'][$i]['location'])) continue;
+				$foodstuff['origin'][$i]['carbon'] = self::getC($foodstuff['origin'][$i]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
 			} 
 			// Add RC as last step
 			if ($precise == true) {
@@ -61,14 +63,52 @@ class Analyze {
 				$foodstuff['origin'][$num]['zonelabel'] = $rcInfos['zonelabel'];
 				$foodstuff['origin'][$num]['x'] = $rcGeo['x'];
 				$foodstuff['origin'][$num]['y'] = $rcGeo['y'];
-				$foodstuff['origin'][$num]['location'] = 'Précise';
+				$foodstuff['origin'][$num]['location'] = 'LETMECHOOSE';
+				$foodstuff['origin'][$num]['location_label'] = 'Précise';
 				$foodstuff['origin'][$num]['distance'] = round($foodstuff['origin'][$num-1]['distance']+\mod\repasrc\Tools::getDistanceAlternate($foodstuff['origin'][$num-1]['x'], $foodstuff['origin'][$num-1]['y'], $rcGeo['x'], $rcGeo['y']));
+				$foodstuff['origin'][$num]['carbon'] = self::getC($foodstuff['origin'][$num]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
 				$lines[$id][] = $rcGeo['zonelabel'];
 			}
 
-			$outp[$foodstuff['foodstuff']['label']] = $foodstuff['origin'];
+			$outp[$foodstuff['foodstuff']['label']] = $foodstuff;
 		}
 		return array('datas' => $outp, 'markers' => $markers, 'lines' => array_values($lines));
+	}
+
+	public static function getC($locationType, $quantity, $distance) {
+		switch($locationType) {
+			case 'LOCAL':
+				$emi = 0.328;
+				$distance = 50;
+				break;
+			case 'REGIONAL':
+				$emi = 0.074;
+				$distance = 150;
+				break;
+			case 'FRANCE':
+				$emi = 0.030;
+				$distance = 500;
+				break;
+			case 'EUROPE':
+				$emi = 0.030;
+				$distance = 2000;
+				break;
+			case 'WORLD':
+				$emi = 0.00108;
+				$distance = 6000;
+				break;
+			case 'LETMECHOOSE':
+				\core\Core::log('ici '.$distance);
+				if ($distance <= 40) {
+					$emi = 0.328;
+				} else if ($distance <= 250) {
+					$emi = 0.074;
+				} else {
+					$emi = 0.03;
+				}
+			break;
+		}
+		return round($quantity*0.001*$distance*0.001*$emi*0.964*10000,3);
 	}
 
 }

@@ -107,7 +107,6 @@ class Main {
 				$recipeId = (int)$_POST['recipeId'];
 				$synonymId = (isset($_POST['synonymId'])) ? (int)$_POST['synonymId'] : null;
 				$steps = array();
-				\core\Core::log($_POST);
 				if (!empty($_POST['origin_steps'])) {
 					$steps = explode(' ', trim($_POST['origin_steps']));
 				}
@@ -262,7 +261,6 @@ class Main {
 				$recipeDetail['transport'] = $analyze['datas'];
 				$recipeDetail['markers'] = $analyze['markers'];
 				$recipeDetail['lines'] = $analyze['lines'];
-				\core\Core::log($recipeDetail['transport']);
 			break;
 		}
 
@@ -277,7 +275,6 @@ class Main {
 			'recipes' => $recipes,
 			'modulesList' => $modules
 		));
-		\core\Core::log($recipeDetail);
     $page->display();
 	}
 

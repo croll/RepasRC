@@ -79,33 +79,6 @@
 						</div>
 					{/if}
 
-					{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
-					<div style="margin-top:10px">Saisonnalité: <span></span></div>
-						<div class="btn-group">
-						{foreach $fs.foodstuff.seasonality as $month=>$s}
-							{if $s == 0}
-								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-									<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-								{else}
-									<span class="btn btn-danger">{$month}</span>
-								{/if}
-							{else if $s == 1}
-								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-									<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-								{else}
-									<span class="btn btn-warning">{$month}</span>
-								{/if}
-							{else}
-								{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-									<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
-								{else}
-									<span class="btn btn-success">{$month}</span>
-								{/if}
-							{/if}
-						{/foreach}
-						</div>
-					{/if}
-
 				</div>
 			</div>
 		{/foreach}
