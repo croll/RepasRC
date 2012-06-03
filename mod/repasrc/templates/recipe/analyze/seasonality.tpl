@@ -5,8 +5,7 @@
 {/block}
 
 {block name='recipe_title'}
-	<h1>{t d='repasrc' m='Composer une recette'}</h1>
-	<p class="lead">{t d='repasrc' m='Sélectionnez les aliments composants votre recette et définissez leur grammage.'}</p>
+	<h1>{t d='repasrc' m='Saisonnalité'}</h1>
 {/block}
 
 {block name='recipe_content'}

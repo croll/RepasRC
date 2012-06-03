@@ -9,16 +9,16 @@
 
 <div class="tab-content">
 	
+	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 {* *************************
  * Tab datas
  ************************* *}
 	<div class="tab-pane active" id="numbers">
 
-		<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 		<div style="margin: 15px 0 20px 0px; font-size: 16px">
 			<div>Composante: <strong>{$recipe.component}</strong></div>
 			<div>Nombre de convives: <strong>{$recipe.persons}</strong></div>
-			<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> gha</div>
+			<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> m²g</div>
 		</div>
 
 		{foreach $recipe.foodstuffList as $fs}
@@ -47,8 +47,8 @@
 						<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 					{/if}
 					{if !empty($fs.foodstuff.footprint)}
-						<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} mètres carrés globaux/Kg</strong></div>
-						<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} mètres carrés globaux</strong></div>
+						<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²g/Kg</strong></div>
+						<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²g</strong></div>
 					{/if}
 					{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 						<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>

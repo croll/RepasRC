@@ -7,3 +7,8 @@ INSERT INTO rrc_foodstuff_family (rrc_ff_rrc_foodstuff_id, rrc_ff_rrc_family_id)
 
 INSERT INTO rrc_foodstuff_datavalue (rrc_dv_value, rrc_dv_rrc_foodstuff_id, rrc_dv_rrc_foodstuff_datatype_id, rrc_dv_creation) VALUES (0, 501, 1, now());
 INSERT INTO rrc_foodstuff_datavalue (rrc_dv_value, rrc_dv_rrc_foodstuff_id, rrc_dv_rrc_foodstuff_datatype_id, rrc_dv_creation) VALUES (0, 502, 1, now());
+
+UPDATE rrc_family SET rrc_fa_rrc_family_group_id=21 WHERE rrc_fa_id=35;
+
+DELETE FROM rrc_foodstuff_family where rrc_ff_rrc_foodstuff_id IN (155,156,154,153,186,119) AND rrc_ff_rrc_family_id=35;
+

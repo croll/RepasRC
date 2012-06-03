@@ -9,6 +9,12 @@
 
 <div style="width:650px;margin: 0 auto">
 
+	<script>
+		function submitForm() {
+				document.id('foodstuffForm').submit();
+		}
+	</script>
+
 	<div style="font-size: 16px">
 		<div style="float:left;width: 100px">
 			{if isset($foodstuff.synonym)}
@@ -20,7 +26,7 @@
 		<div style="float:left;padding-top:10px">
 			<div>Identifiant: <strong>{$foodstuff.id}</strong></div>
 				{if !empty($foodstuff.footprint)}
-					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²/Kg</div>
+					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²g/Kg</div>
 				{/if}
 			{if isset($foodstuff.synonym)}
 				<div class="alert alert-warn" style="width: 457px">
@@ -191,12 +197,6 @@
 
 		<div id="popup-actions" class="form-actions" style="width: 300px;margin:0 auto;">
 			{if (isset($recipe.id))}
-				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
-				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
-				<input type="hidden" name="foodstuffId" value="{$foodstuff.id}"></input>
-				<input type="hidden" name="synonymId" value="{if isset($foodstuff.synonym)}{$foodstuff.synonym_id}{/if}"></input>
-				<input type="hidden" id="origin_steps" name="origin_steps" value="{$steps}"></input>
-				<input type="hidden" name="action" value="{$action}"></input>
 				{if isset($recipeFoodstuffId) && !empty($recipeFoodstuffId)}
 					{$foodstuffForm.submitEdit}
 					{$foodstuffForm.cancel}
@@ -207,6 +207,12 @@
 				{/if}
 			{/if}
 		</div>
+				<input type="hidden" name="recipeId" value="{$recipe.id}"></input>
+				<input type="hidden" id="recipeFoodstuffId" name="recipeFoodstuffId" value="{$recipeFoodstuffId}"></input>
+				<input type="hidden" name="foodstuffId" value="{$foodstuff.id}"></input>
+				<input type="hidden" name="synonymId" value="{if isset($foodstuff.synonym)}{$foodstuff.synonym_id}{/if}"></input>
+				<input type="hidden" id="origin_steps" name="origin_steps" value="{$steps}"></input>
+				<input type="hidden" name="action" value="{$action}"></input>
 		{/form}
 
 	</div>

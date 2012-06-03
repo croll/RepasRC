@@ -1,7 +1,7 @@
 <div style="margin: 0 0 20px 20px; font-size: 16px">
 	<div>Composante: <strong>{$recipe.component}</strong></div>
 	<div>Nombre de convives: <strong>{$recipe.persons}</strong></div>
-	<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> gha</div>
+	<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> m²g</div>
 </div>
 
 {foreach $recipe.foodstuffList as $fs}
@@ -28,8 +28,8 @@
 		{if (!empty($fs.production))}
 			<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 		{/if}
-		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²/Kg</strong></div>
-		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²</strong></div>
+		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²g/Kg</strong></div>
+		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²g</strong></div>
 
 		{if ($fs.foodstuff.infos.0.family_group == 'Fruits' || $fs.foodstuff.infos.0.family_group == 'Légumes') && $fs.foodstuff.seasonality}
 		<div style="margin-top:10px">Saisonnalité: <span></span></div>

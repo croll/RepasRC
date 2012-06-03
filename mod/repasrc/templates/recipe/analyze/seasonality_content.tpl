@@ -19,13 +19,13 @@
 
 	<div class="tab-content">
 		
+	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 	
 	{* *************************
 	 * Tab datas
 	 ************************* *}
 		<div class="tab-pane active" id="numbers">
-			{foreach $recipes as $recipe}
-			<h3>{$recipe.label}</h3>
+				<h3 style="margin:20px 0 10px 0">Répartition des aliments</h3>
 				<table class="table table-bordered">
 					<thead>
 						<tr>
@@ -38,29 +38,36 @@
 					<tbody>
 						<tr>
 							<td>
-								{foreach $recipe.seasonality.ok as $name}
-									- {$name}<br />
-								{/foreach}
+								{if (isset($recipe.seasonality.ok))}
+									{foreach $recipe.seasonality.ok as $name}
+										- {$name}<br />
+									{/foreach}
+								{/if}
 							</td>
 							<td>
-								{foreach $recipe.seasonality.nok as $name}
-									- {$name}<br />
-								{/foreach}
+								{if (isset($recipe.seasonality.nok))}
+									{foreach $recipe.seasonality.nok as $name}
+										- {$name}<br />
+									{/foreach}
+								{/if}
 							</td>
 							<td>
-								{foreach $recipe.seasonality.noinfo as $name}
-									- {$name}<br />
-								{/foreach}
+								{if (isset($recipe.seasonality.noinfo))}
+									{foreach $recipe.seasonality.noinfo as $name}
+										- {$name}<br />
+									{/foreach}
+								{/if}
 							</td>
 							<td>
-								{foreach $recipe.seasonality.out as $name}
-									- {$name}<br />
-								{/foreach}
+								{if (isset($recipe.seasonality.out))}
+									{foreach $recipe.seasonality.out as $name}
+										- {$name}<br />
+									{/foreach}
+								{/if}
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			{/foreach}
 		</div>
 
 	{* *************************

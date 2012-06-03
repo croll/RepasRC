@@ -7,6 +7,7 @@ class Foodstuff {
 	public static $conservation = array('G1' => 'Frais','G2' => 'Conserve','G3' => 'Surgelé','G4' => '4e gamme','G5' => '%e gamme','G6' => 'Déshydraté','G7' => 'G7','G8' => 'Pasteurisé','G9' => 'UHT','G10' => 'Epicerie sèche','G11' => 'Réfrigéré');
 	public static $production = array('Conv' => 'Agriculture conventionnelle', 'AB' => 'Agriculture Bio', 'Dur' => 'Agriculture durable', 'Lab' => 'Label Rouge', 'AOC' => 'AOC', 'IGP' => 'IGP', 'BBC' => 'Bleu blanc coeur', 'COHERENCE' => 'Cohérence', 'COMMERCEEQUITABLE' => 'Commerce équitable');
 	public static $familyColors = array(1 => 'ffb1fa', 2 => '813a28',  3 => '00a650', 4 => '00a650', 5 => '00adef', 6 => 'ed1c24', 7 => 'fcc707', 8 => 'd11fec', 9 => '777');
+	public static $origin = array('LETMECHOOSE' => 'Précise', 'LOCAL' => 'Locale', 'REGIONAL' => 'Régionale', 'FRANCE' => 'France', 'WORLD' => 'Internationale');
 
 	public static function search($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL, $searchSynonyms=true) {
 		$params = $tmpParams = $fs = array();
@@ -60,9 +61,9 @@ class Foodstuff {
 		  $o .= ', synonym ASC';
 		}
 		$query = $q.$w.$tmpWhere.$o;
-		\core\Core::log($query);
 
 		// Do not store duplicate foostuff, for example because it's defined with multiple families
+		$families = array();
 		foreach(\core\Core::$db->fetchAll($query, array_merge($params, $tmpParams)) as $row) {
 			if (isset($row['synonym_id']))
 					$currentId = $row['id'].'-'.$row['synonym_id'];
@@ -99,7 +100,7 @@ class Foodstuff {
 					$fs[$currentId]['infos'][$num]['synonym_id'] = $row['synonym_id'];
 					$fs[$currentId]['infos'][$num]['synonym'] = $row['synonym'];
 				}
-				if (!empty($row['family'])) {
+				if (!empty($row['family']) && !in_array($row['family'], $families)) {
 					$fs[$currentId]['infos'][$num]['family_id'] = $row['family_id'];
 					$fs[$currentId]['infos'][$num]['family'] = $row['family'];
 					$fs[$currentId]['infos'][$num]['family_group_id'] = $row['family_group_id'];
@@ -175,9 +176,9 @@ class Foodstuff {
 		$q .= 'WHERE rf.rrc_rf_id=?';
 		$foodstuff = \core\Core::$db->fetchRow($q, $params);
 		$origin = self::getOriginFromRecipe($recipeFoodstuffId);
+		$foodstuff['origin'] = $origin;
 		if ($origin) {
 			$foodstuff['location'] = $origin[0]['location'];
-			$foodstuff['origin'] = $origin;
 		}
 		return $foodstuff;
 	}
@@ -190,7 +191,7 @@ class Foodstuff {
 		$q = 'SELECT rrc_zv_id AS zoneid, rrc_or_default_location AS location,rrc_zv_label AS zonelabel, rrc_zt_label AS zonetypelabel FROM rrc_origin AS ori ';
 		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
 		$q .= 'LEFT JOIN rrc_geo_zonetype zt ON zv.rrc_zv_rrc_geo_zonetype_id=zt.rrc_zt_id ';
-		$q .= 'WHERE ori.rrc_or_rrc_recipe_foodstuff_id = ? ';
+		$q .= 'WHERE ori.rrc_or_rrc_recipe_foodstuff_id = ? ORDER BY rrc_or_id ASC';
 		return \core\Core::$db->fetchAll($q, array((int)$recipeFoodstuffId));
 	}
 
@@ -229,6 +230,12 @@ class Foodstuff {
 		if (!isset(self::$production[$id]))
 			return $id;
 		return self::$production[$id];
+	}
+
+	public static function getOrigin($id) {
+		if (!isset(self::$origin[$id]))
+			return $id;
+		return self::$origin[$id];
 	}
 
 	public static function getComponent($component) {

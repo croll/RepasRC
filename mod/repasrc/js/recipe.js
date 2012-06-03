@@ -516,3 +516,7 @@ function duplicateRecipe(id) {
 		}
 	}).post({id: id});
 }
+
+function submitFoodstuffForm() {
+	document.id('foodstuffForm').submit();
+}

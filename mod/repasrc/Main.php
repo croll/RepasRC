@@ -191,18 +191,6 @@ class Main {
     $page->display();
 	}
 
-	public static function hook_mod_repasrc_recipe_import($hookname, $userdata, $params) {
-    \mod\user\Main::redirectIfNotLoggedIn();
-    $page = new \mod\webpage\Main();
-		$page->setLayout('repasrc/recipe/import');
-    $page->display();
-	}
-
-	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {
-    \mod\user\Main::redirectIfNotLoggedIn();
-		$section = $params[1];
-	}
-
 	public static function hook_mod_repasrc_recipe_analyze($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
 		if (isset($params[2]))
@@ -264,6 +252,18 @@ class Main {
 				if (empty($recipeDetail['consumptionmonth'])) continue;
 				$recipeDetail['seasonality'] = \mod\repasrc\Analyze::seasonality($recipeDetail);
 			break;
+
+			case 'transport':
+				$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
+				$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
+				$page->smarty->assign('rcGeo', $rcGeo);
+				
+				$analyze =  \mod\repasrc\Analyze::transport($recipeDetail);
+				$recipeDetail['transport'] = $analyze['datas'];
+				$recipeDetail['markers'] = $analyze['markers'];
+				$recipeDetail['lines'] = $analyze['lines'];
+				\core\Core::log($recipeDetail['transport']);
+			break;
 		}
 
 		$recipes = array($recipeDetail);
@@ -277,7 +277,20 @@ class Main {
 			'recipes' => $recipes,
 			'modulesList' => $modules
 		));
+		\core\Core::log($recipeDetail);
     $page->display();
+	}
+
+	public static function hook_mod_repasrc_recipe_import($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+    $page = new \mod\webpage\Main();
+		$page->setLayout('repasrc/recipe/import');
+    $page->display();
+	}
+
+	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+		$section = $params[1];
 	}
 
 	public static function hook_mod_repasrc_menu($hookname, $userdata) {
