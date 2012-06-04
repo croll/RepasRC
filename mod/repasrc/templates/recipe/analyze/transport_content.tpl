@@ -3,6 +3,7 @@
  ************************* *}
 <ul class="nav nav-tabs">
   <li class="active"><a href="#numbers" data-toggle="tab">Informations</a></li>
+  <li><a href="#graphs" data-toggle="tab">Graphiques</a></li>
   <li><a href="#goomap" data-toggle="tab">Cartographie</a></li>
 </ul>
 
@@ -13,6 +14,11 @@
  * Tab datas
  ************************* *}
 	<div class="tab-pane active" id="numbers">
+
+				{if isset($recipe.transport.total.distance) && ($recipe.transport.total.distance > 0)}
+					<h5 style="margin:5px 0 5px 0">Distance totale parcourue par les aliments: {$recipe.transport.total.distance} Km</h5>
+					<h5>Empreinte écologique du transport pour la recette: {$recipe.transport.total.footprint} m²g</h5>
+				{/if}
 
 				<h3 style="margin:20px 0 10px 0">Provenance des aliments</h3>
 				<table class="table table-bordered">
@@ -26,7 +32,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{foreach $recipe.transport as $fsname=>$transport}
+						{foreach $recipe.transport.datas as $fsname=>$transport}
 							{foreach $transport.origin as $tr}
 								<tr>
 									{if $tr@index == 0}
@@ -43,8 +49,8 @@
 										{/if}
 									</td>
 									<td>
-										{if !empty($tr.carbon)}
-											{$tr.carbon} m²g
+										{if !empty($tr.footprint)}
+											{$tr.footprint} m²g
 										{/if}
 									</td>
 									{if ($tr.location == 'LETMECHOOSE' && $tr@index == 0) || ($tr.location != 'LETMECHOOSE')}
@@ -66,6 +72,51 @@
  * Tab graphs 
  ************************* *}
 	<div class="tab-pane" id="graphs">
+			<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+			<script type="text/javascript">
+
+			google.load('visualization', '1.0', { 'packages':['corechart'] } );
+			google.setOnLoadCallback(drawChart);
+
+			function drawChart() {
+					var dataCol1 = new google.visualization.DataTable({$dataFootprintCol1});
+					var dataCol2 = new google.visualization.DataTable({$dataFootprintCol2});
+					var dataComp = new google.visualization.DataTable({$dataFootprintComp});
+
+					var optionsCol1 = { 
+						'title':'Distance parcourue par les aliments en Km',
+						'colors' : {$colors},
+						'width':800,
+						'height':400 
+					};
+
+					var optionsCol2 = { 
+						'title':'Empreinte écologique des transport par aliment',
+						'colors' : {$colors},
+						'width':800,
+						'height':400 
+					};
+
+					var optionsComp = { 
+						'title':'Relation entre la distance parcourue et l\'empreinte écologique des transports',
+						'width':800,
+						'height':400,
+						'isStacked':false
+					};
+
+					var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+					var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+					var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
+
+					chart1.draw(dataCol1, optionsCol1);
+					chart2.draw(dataCol2, optionsCol2);
+					//chart3.draw(dataComp, optionsComp);
+			}
+			</script>
+
+			<div id="chart_div1"></div>
+			<div id="chart_div2"></div>
+			<div id="chart_div3"></div>
 	</div>
 
 {* *************************
@@ -107,7 +158,7 @@
 			
 				$('goomap').addEvent('show', function() {
 				    google.maps.event.trigger(map, 'resize');
-						geocode({$recipe.markers|json_encode}, {$recipe.lines|json_encode});
+						geocode({$recipe.transport.markers|json_encode}, {$recipe.transport.lines|json_encode});
 				});
 
 		});

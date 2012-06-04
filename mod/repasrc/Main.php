@@ -258,9 +258,36 @@ class Main {
 				$page->smarty->assign('rcGeo', $rcGeo);
 				
 				$analyze =  \mod\repasrc\Analyze::transport($recipeDetail);
-				$recipeDetail['transport'] = $analyze['datas'];
-				$recipeDetail['markers'] = $analyze['markers'];
-				$recipeDetail['lines'] = $analyze['lines'];
+				$recipeDetail['transport'] = $analyze;
+				$gctCol1 = new \mod\googlecharttools\Main();
+				$gctCol1->addColumn('Val', 'string');
+				$gctCol1->addRow('Empreinte écologique du transport');
+				$gctCol2 = new \mod\googlecharttools\Main();
+				$gctCol2->addColumn('Val', 'string');
+				$gctCol2->addRow('Empreinte écologique du transport');
+				$gctComp = new \mod\googlecharttools\Main();
+				$gctComp->addColumn('Aliment', 'string');
+				$gctComp->addColumn('Empreinte écologique foncière', 'number');
+				$gctComp->addColumn('Distance', 'number');
+				foreach($recipeDetail['transport']['datas'] as $fs) {
+					\core\Core::log($fs);
+					$gctCol1->addColumn($fs['foodstuff']['label'], 'number');
+					$gctCol1->addRow($fs['transport']['distance']);
+					$gctCol2->addColumn($fs['foodstuff']['label'], 'number');
+					$gctCol2->addRow($fs['transport']['footprint']);
+					$gctComp->addRow($fs['foodstuff']['label']);
+					$gctComp->addRow(round($fs['transport']['distance'],3));
+					$gctComp->addRow(round($fs['transport']['footprint'],3));
+					if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+						$families[] = @array_shift(array_keys($fs['families']));
+					}
+				}
+				$page->smarty->assign(array(
+					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
+					'dataFootprintCol1' => $gctCol1->getJSON(),
+					'dataFootprintCol2' => $gctCol2->getJSON(),
+					'dataFootprintComp' => $gctComp->getJSON()
+				));
 			break;
 		}
 

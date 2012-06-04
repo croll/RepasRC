@@ -29,11 +29,13 @@ class Analyze {
 		$transport = array();
 		$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
 		$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS zonelabel FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
-		$outp = array();
+		$datas = array();
+		$total = array('distance' => 0, 'footprint' => 0);
 		$markers = array();
 		$lines = array();
 		foreach($recipeDetail['foodstuffList'] as $foodstuff) {
 			$id = $foodstuff['recipeFoodstuffId'];
+			$foodstuff['transport'] = array('distance' => 0, 'footprint' => 0);
 			$precise = false;
 			// For each store informations and calculate distance
 			for($i=0; $i<sizeof($foodstuff['origin']);$i++) {
@@ -51,54 +53,61 @@ class Analyze {
 					$markers[$geoInfos['label']][] = $foodstuff['foodstuff'];
 					$lines[$id][] = $geoInfos['label'];
 				} else {
+					$foodstuff['origin'][$i]['distance'] = self::getDistanceFromOrigin($foodstuff['origin'][$i]['location']);
+					$total['distance'] += $foodstuff['transport']['distance'] += $foodstuff['origin'][$i]['distance'];
 					$markers[$rcGeo['zonelabel']][] = $foodstuff['foodstuff'];
 				}
 				$foodstuff['origin'][$i]['location_label'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
 				if (!isset($foodstuff['origin'][$i]['location'])) continue;
-				$foodstuff['origin'][$i]['carbon'] = self::getC($foodstuff['origin'][$i]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
+				$foodstuff['origin'][$i]['footprint'] = self::getC($foodstuff['origin'][$i]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
 			} 
 			// Add RC as last step
+			$num = sizeof($foodstuff['origin']);
 			if ($precise == true) {
-				$num = sizeof($foodstuff['origin']);
 				$foodstuff['origin'][$num]['zonelabel'] = $rcInfos['zonelabel'];
 				$foodstuff['origin'][$num]['x'] = $rcGeo['x'];
 				$foodstuff['origin'][$num]['y'] = $rcGeo['y'];
 				$foodstuff['origin'][$num]['location'] = 'LETMECHOOSE';
 				$foodstuff['origin'][$num]['location_label'] = 'Précise';
 				$foodstuff['origin'][$num]['distance'] = round($foodstuff['origin'][$num-1]['distance']+\mod\repasrc\Tools::getDistanceAlternate($foodstuff['origin'][$num-1]['x'], $foodstuff['origin'][$num-1]['y'], $rcGeo['x'], $rcGeo['y']));
-				$foodstuff['origin'][$num]['carbon'] = self::getC($foodstuff['origin'][$num]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
+
+				$foodstuff['transport']['distance'] += $total['distance'] += $foodstuff['origin'][$num]['distance'];
+				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
+				$foodstuff['transport']['footprint'] += $total['footprint'] += $foodstuff['origin'][$num]['footprint'];
 				$lines[$id][] = $rcGeo['zonelabel'];
+			} else {
+				$total['footprint'] += $foodstuff['origin'][$num-1]['footprint'];
+				$foodstuff['transport']['footprint'] += $foodstuff['origin'][$num-1]['footprint'];
 			}
 
-			$outp[$foodstuff['foodstuff']['label']] = $foodstuff;
+			$datas[$foodstuff['foodstuff']['label']] = $foodstuff;
 		}
-		return array('datas' => $outp, 'markers' => $markers, 'lines' => array_values($lines));
+		return array('datas' => $datas, 'markers' => $markers, 'lines' => array_values($lines), 'total' => $total);
 	}
 
 	public static function getC($locationType, $quantity, $distance) {
 		switch($locationType) {
 			case 'LOCAL':
 				$emi = 0.328;
-				$distance = 50;
+				$distance = self::getDistanceFromOrigin('LOCAL');
 				break;
 			case 'REGIONAL':
 				$emi = 0.074;
-				$distance = 150;
+				$distance = self::getDistanceFromOrigin('REGIONAL');
 				break;
 			case 'FRANCE':
 				$emi = 0.030;
-				$distance = 500;
+				$distance = self::getDistanceFromOrigin('FRANCE');
 				break;
 			case 'EUROPE':
 				$emi = 0.030;
-				$distance = 2000;
+				$distance = self::getDistanceFromOrigin('EUROPE');
 				break;
 			case 'WORLD':
 				$emi = 0.00108;
-				$distance = 6000;
+				$distance = self::getDistanceFromOrigin('WORLD');
 				break;
 			case 'LETMECHOOSE':
-				\core\Core::log('ici '.$distance);
 				if ($distance <= 40) {
 					$emi = 0.328;
 				} else if ($distance <= 250) {
@@ -109,6 +118,28 @@ class Analyze {
 			break;
 		}
 		return round($quantity*0.001*$distance*0.001*$emi*0.964*10000,3);
+	}
+
+	public static function getDistanceFromOrigin($origin) {
+		switch($origin) {
+		case 'LOCAL':
+			return 50;
+			break;
+		case 'REGIONAL':
+			return 150;
+			break;
+		case 'FRANCE':
+			return 500;
+			break;
+		case 'EUROPE':
+			return 2000;
+			break;
+		case 'WORLD':
+			return 6000;
+			break;
+		default:
+			return null;
+		}
 	}
 
 }
