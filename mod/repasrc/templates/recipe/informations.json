@@ -84,7 +84,12 @@
 		},
 		{	"type" : "text",
 			"name" : "price",
-			"style" : "width: 40px"
+			"style" : "width: 40px",
+			"validators" : 
+			[ 
+				"required",
+				"validate-numeric"
+			]
 		},
 		{	"type" : "select",
 			"name" : "vat",

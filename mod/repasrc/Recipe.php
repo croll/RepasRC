@@ -70,8 +70,6 @@ class Recipe {
 		}
 		$o = "ORDER BY label ";
 		$query = $q.$w.$o;
-		//\core\Core::log($params);
-		//\core\Core::log('Query: '.$query);
 
 		return \core\Core::$db->fetchAll($query, $params);
 	}
@@ -93,7 +91,7 @@ class Recipe {
 
 	public static function getInfos($id) {
 		if (empty($id)) return null;
-		 return \core\Core::$db->fetchRow("SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared, TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, TO_CHAR(rrc_re_consumptiondate, 'MM') AS consumptionmonth, rrc_re_type AS \"type\" FROM rrc_recipe WHERE rrc_re_id=?", array($id));
+		 return \core\Core::$db->fetchRow("SELECT rrc_re_id AS id, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_byadmin AS admin, rrc_re_modules AS modules, rrc_re_hash AS hash, rrc_re_comment AS comment, rrc_re_public AS shared, TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, TO_CHAR(rrc_re_consumptiondate, 'MM') AS consumptionmonth, rrc_re_type AS \"type\", rrc_re_price AS price, rrc_re_vat AS vat FROM rrc_recipe WHERE rrc_re_id=?", array($id));
 	}
 
 	public static function getFoodstuffList($id) {
@@ -161,11 +159,9 @@ class Recipe {
 
 		$recipe['footprint'] = 0;
 
-		$recipe['foodstuffWeight'] = 0;
+		$recipe['totalWeight'] = 0;
 
-		$recipe['price'] = array();
-		$recipe['price']['in'] = 0;
-		$recipe['price']['out'] = 0;
+		$recipe['totalPrice'] = array('in' => 0, 'out' => 0);
 
 		$recipe['foodstuff'] = array();
 
@@ -174,7 +170,7 @@ class Recipe {
 			$fs_label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 
 			// Footprint
-			$footprint = $fs['foodstuff']['footprint']*$fs['quantity'];
+			$footprint = ($fs['foodstuff']['footprint']*($fs['quantity']/$recipe['persons']));
 			if (!empty($footprint)) {
 				if ($fs['conservation']) {
 					$footprint = $footprint*$conservation[$fs['conservation']];
@@ -196,7 +192,14 @@ class Recipe {
 			}
 
 			// Foodstuff weight (for graphs)
-			$recipe['foodstuffWeight'] += $fs['quantity'];
+			$recipe['totalWeight'] += $fs['quantity'];
+
+			// Price
+			if (!empty($fs['price']) && $fs['vat']) {
+				$recipe['totalPrice']['vatin'] += $fs['price'];
+			} else {
+				$recipe['totalPrice']['vatout'] += $fs['price'];
+			}
 
 		}
 		$recipe['footprint'] = round($recipe['footprint'], 3);
@@ -260,7 +263,19 @@ class Recipe {
 	}
 
 	public static function getConsumptionDate($recipeId) {
-		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') FROM  rrc_recipe WHERE rrc_re_id=?", array((int)$recipeId));
+		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') FROM rrc_recipe WHERE rrc_re_id=?", array((int)$recipeId));
+	}
+
+	public static function setPrice($recipeId, $price, $vat) {
+		$price = str_replace(',', '.', $price);
+		if (!preg_match("#[0-9]+\.?[0-9]{0,}#", $price)) {
+			throw new \Exception('Invalid price');
+		}
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_price=?, rrc_re_vat=? WHERE rrc_re_id=?', array($price, $vat, (int)$recipeId));
+	}
+
+	public static function getPrice($recipeId) {
+		return \core\Core::$db->fetchRow("SELECT rrc_re_price AS price, rrc_re_vat AS vat FROM rrc_recipe WHERE rrc_re_id=?", array((int)$recipeId));
 	}
 
 	public static function setComments($recipeId, $comments) {

@@ -48,12 +48,22 @@
 					</div>
 				</div>
 				{if $modulesList.seasonality}
-					<h3 style="margin-bottom: 10px">Informations liées au module de saisonnalité</h3>
+					<h3 style="margin-bottom: 10px">Informations liées au module <i>saisonnalité</i></h3>
 					<div class="control-group">
 						<label class="control-label">{t d='repasrc' m="Date prévisionnelle de consommation"}</label>
 						<div class="controls">
 							{$informations.consumptiondate}
 							<p class="help-block">{t d='repasrc' m="Date prévisionnelle à laquelle la recette devrait être consommée. C'est à partir de cette date que sera calculée la saisonnalité des aliments composant la recette."}</p>	
+						</div>
+					</div>
+				{/if}
+				{if $modulesList.price}
+					<h3 style="margin-bottom: 10px">Informations liées au module <i>prix</i></h3>
+					<div class="control-group">
+						<label class="control-label">{t d='repasrc' m="Prix de la recette par personne"}</label>
+						<div class="controls">
+							{$informations.price}
+							{$informations.vat}
 						</div>
 					</div>
 				{/if}

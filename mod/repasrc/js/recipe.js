@@ -491,7 +491,7 @@ function duplicateRecipeModal(id) {
 			onRequest: function() {
 		},
 		onSuccess: function(res,a,b,c) {
-			modalWin.setTitle('Dupliquer la recette').setBody(res.content);
+			modalWin.setTitle('Dupliquer la recette').setBody(res.content).setFooter('');
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();

@@ -246,7 +246,7 @@ CREATE TABLE "rrc_recipe" (
   "rrc_re_modules" INTEGER DEFAULT NULL,
 	"rrc_re_consumptiondate" TIMESTAMP,
 	"rrc_re_type" rrc_re_recipe_type DEFAULT 'STANDARD',
-  "rrc_re_price" INTEGER DEFAULT NULL,
+  "rrc_re_price" FLOAT DEFAULT NULL,
   "rrc_re_vat" INTEGER DEFAULT 1
 );
 CREATE INDEX rrc_rc_rc_idx ON "rrc_recipe" ("rrc_re_rrc_rc_id");

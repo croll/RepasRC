@@ -95,6 +95,9 @@ class Main {
 				if (isset($fields['consumptiondate']) && !empty($fields['consumptiondate'])) {
 					\mod\repasrc\Recipe::setConsumptionDate($id, $fields['consumptiondate']);
 				}
+				if (isset($fields['price']) && !empty($fields['price'])) {
+					\mod\repasrc\Recipe::setPrice($id, $fields['price'], $fields['vat']);
+				}
 			}
 		}
 
@@ -232,7 +235,7 @@ class Main {
 						$gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
 						$gctComp->addRow($fs['foodstuff']['label']);
 						$gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
-						$gctComp->addRow(round(((float)$fs['quantity']*100)/$recipeDetail['foodstuffWeight']),2);
+						$gctComp->addRow(round(((float)$fs['quantity']*100)/($recipeDetail['totalWeight']/$recipeDetail['persons'])),2);
 						if (isset($fs['families']) && sizeof($fs['families']) > 0) {
 							$families[] = array_shift(array_keys($fs['families']));
 						}
@@ -270,7 +273,6 @@ class Main {
 				$gctComp->addColumn('Empreinte écologique foncière', 'number');
 				$gctComp->addColumn('Distance', 'number');
 				foreach($recipeDetail['transport']['datas'] as $fs) {
-					\core\Core::log($fs);
 					$gctCol1->addColumn($fs['foodstuff']['label'], 'number');
 					$gctCol1->addRow($fs['transport']['distance']);
 					$gctCol2->addColumn($fs['foodstuff']['label'], 'number');
@@ -288,6 +290,51 @@ class Main {
 					'dataFootprintCol2' => $gctCol2->getJSON(),
 					'dataFootprintComp' => $gctComp->getJSON()
 				));
+			break;
+
+			case 'prix':
+				if (empty($recipeDetail['totalPrice']['vatin']) && empty($recipeDetail['totalPrice']['vatin'])) {
+					$page->smarty->assign('noprice', true);
+				} else {
+					if (!empty($recipeDetail['totalPrice']['vatin'])) {
+						$families = array();
+						$gctCol1 = new \mod\googlecharttools\Main();
+						$gctCol1->addColumn('Val', 'string');
+						$gctCol1->addRow('Prix des aliments HT');
+						foreach($recipeDetail['foodstuffList'] as $fs) {
+							if ($fs['vat'] && !empty($fs['price'])) {
+								$gctCol1->addColumn($fs['foodstuff']['label'], 'number');
+								$gctCol1->addRow($fs['price']);
+								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+									$families[] = @array_shift(array_keys($fs['families']));
+								}
+							}
+						}
+						$page->smarty->assign(array(
+							'dataFootprintCol1' => $gctCol1->getJSON(),
+							'colors1' => json_encode(\mod\repasrc\Tools::getColorsArray($families))
+						));
+					}
+					if (!empty($recipeDetail['totalPrice']['vatout'])) {
+						$families = array();
+						$gctCol2 = new \mod\googlecharttools\Main();
+						$gctCol2->addColumn('Val', 'string');
+						$gctCol2->addRow('Prix des aliments TTC');
+						foreach($recipeDetail['foodstuffList'] as $fs) {
+							if (!$fs['vat'] && !empty($fs['price'])) {
+								$gctCol2->addColumn($fs['foodstuff']['label'], 'number');
+								$gctCol2->addRow($fs['price']);
+								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+									$families[] = @array_shift(array_keys($fs['families']));
+								}
+							}
+						}
+						$page->smarty->assign(array(
+							'dataFootprintCol2' => $gctCol2->getJSON(),
+							'colors2' => json_encode(\mod\repasrc\Tools::getColorsArray($families))
+						));
+					}
+				}
 			break;
 		}
 

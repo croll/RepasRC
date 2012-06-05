@@ -18,7 +18,8 @@
 		<div style="margin: 15px 0 20px 0px; font-size: 16px">
 			<div>Composante: <strong>{$recipe.component}</strong></div>
 			<div>Nombre de convives: <strong>{$recipe.persons}</strong></div>
-			<div>Empreinte écologique foncière: <strong>{$recipe.footprint}</strong> m²g</div>
+			<div>Empreinte écologique foncière pour une personne: <strong>{$recipe.footprint}</strong> m²g</div>
+			<div>Empreinte écologique foncière pour {$recipe.persons} personne{if $recipe.persons > 1}s{/if}: <strong>{math equation="x * y" x=$recipe.persons y=$recipe.footprint}</strong> m²g</div>
 		</div>
 
 		{foreach $recipe.foodstuffList as $fs}
@@ -47,8 +48,8 @@
 						<div>Mode de production: <strong>{$fs.production_label}</strong></div>
 					{/if}
 					{if !empty($fs.foodstuff.footprint)}
-						<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint} m²g/Kg</strong></div>
-						<div>Empreinte écologique foncière pour la recette: <strong>{math equation="x * y" x=$fs.foodstuff.footprint y=$fs.quantity} m²g</strong></div>
+						<div>Empreinte écologique foncière pour un kilo: <strong>{$fs.foodstuff.footprint|round:3} m²g/Kg</strong></div>
+						<div>Empreinte écologique foncière pour une personne: <strong>{math equation="round(x * (y/z),3)" x=$fs.foodstuff.footprint y=$fs.quantity z=$recipe.persons|round:3} m²g</strong></div>
 					{/if}
 					{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
 						<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
@@ -105,7 +106,7 @@
 						<li style="font-weight: bold">{$nd}</li>
 					{/foreach}
 					</ul>
-					De fait, ils ne sont pas pris en compte dans les graphiques suivant, pourtant leur impact est bien sûr réel.
+					De fait, ils ne sont pas pris en compte dans les graphiques ci-dessous, pourtant leur impact est bien sûr réel.
 				</div>
 			{/if}
 
@@ -138,7 +139,7 @@
 						'title':'Relation entre  l\'empreinte écologique foncière et la quantité d\'aliment (Pourcentage)',
 						'width':800,
 						'height':400,
-						'isStacked':false
+						'isStacked': true
 					};
 
 					var chart = new google.visualization.PieChart(document.getElementById('chart_div'));

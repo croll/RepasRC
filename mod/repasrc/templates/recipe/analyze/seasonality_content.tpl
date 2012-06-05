@@ -73,7 +73,7 @@
 		{foreach $recipe.foodstuffList as $fs}
 				{foreach $fs.foodstuff.infos as $info}{/foreach}
 					{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
-						{if $fs@index == 1}
+						{if $fs@index == 0}
 							<h3 style="margin:50px 0 -10px 0">Saisonalité des aliments répertoriés</h3>
 						{/if}
 						{if (isset($fs.foodstuff.synonym))}

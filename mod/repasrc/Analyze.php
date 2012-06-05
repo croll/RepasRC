@@ -27,6 +27,7 @@ class Analyze {
 
 	public static function transport($recipeDetail) {
 		$transport = array();
+		\core\Core::log($recipeDetail);
 		$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
 		$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS zonelabel FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
 		$datas = array();
@@ -59,7 +60,7 @@ class Analyze {
 				}
 				$foodstuff['origin'][$i]['location_label'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
 				if (!isset($foodstuff['origin'][$i]['location'])) continue;
-				$foodstuff['origin'][$i]['footprint'] = self::getC($foodstuff['origin'][$i]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
+				$foodstuff['origin'][$i]['footprint'] = self::getC($foodstuff['origin'][$i]['location'], ($foodstuff['quantity']/$recipeDetail['persons']), ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
 			} 
 			// Add RC as last step
 			$num = sizeof($foodstuff['origin']);
@@ -72,7 +73,7 @@ class Analyze {
 				$foodstuff['origin'][$num]['distance'] = round($foodstuff['origin'][$num-1]['distance']+\mod\repasrc\Tools::getDistanceAlternate($foodstuff['origin'][$num-1]['x'], $foodstuff['origin'][$num-1]['y'], $rcGeo['x'], $rcGeo['y']));
 
 				$foodstuff['transport']['distance'] += $total['distance'] += $foodstuff['origin'][$num]['distance'];
-				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
+				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], ($foodstuff['quantity']/$recipeDetail['persons']), ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
 				$foodstuff['transport']['footprint'] += $total['footprint'] += $foodstuff['origin'][$num]['footprint'];
 				$lines[$id][] = $rcGeo['zonelabel'];
 			} else {
@@ -117,7 +118,7 @@ class Analyze {
 				}
 			break;
 		}
-		return round($quantity*0.001*$distance*0.001*$emi*0.964*10000,3);
+		return round($quantity*0.001*$distance*0.001*$emi*0.964*10000,6);
 	}
 
 	public static function getDistanceFromOrigin($origin) {

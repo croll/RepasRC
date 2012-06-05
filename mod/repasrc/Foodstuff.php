@@ -77,7 +77,7 @@ class Foodstuff {
 				$tmp['label_caps'] = $row['label_caps'];
 				$tmp['conservation'] = $row['conservation'];
 				$tmp['production'] = $row['production'];
-				$tmp['footprint'] = round($row['footprint'], 3);
+				$tmp['footprint'] = round($row['footprint'], 6);
 				$tmp['fake'] = (int)$row['fake'];
 				$tmp['comment'] = $row['fscomment'];
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {

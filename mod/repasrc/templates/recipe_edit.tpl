@@ -46,7 +46,7 @@
 							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/recette/analyse/transport/{$recipe.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.prodcons == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/recette/analyse/mode/{$recipe.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.price == 1)}<li{if ($section == 'prix')} class="active"{/if}><a href="/recette/analyse/prix/{$recipe.id}"><i class="icon-barcode"></i>{t d='repasrc' m='Prix'}</a></li>{/if}
-							<li{if ($section == 'comparer')} class="active"{/if}><a href="/recette/analyse/comparer/{$recipe.id}"><i class="icon-retweet"></i>{t d='repasrc' m='Comparer'}</a></li>
+							<li{if ($section == 'comparer')} class="active"{/if}><a href="/recette/liste/add/{$recipe.id}"><i class="icon-retweet"></i>{t d='repasrc' m='Comparer'}</a></li>
 						{else}
 							<div style="font-size: 11px">La recette ne comporte aucun aliment.</div>
 						{/if}

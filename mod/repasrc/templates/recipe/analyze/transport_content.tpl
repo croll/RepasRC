@@ -53,7 +53,7 @@
 											{$tr.footprint} m²g
 										{/if}
 									</td>
-									{if ($tr.location == 'LETMECHOOSE' && $tr@index == 0) || ($tr.location != 'LETMECHOOSE')}
+									{if ($tr.location == 'LETMECHOOSE' && empty($tr@index)) || ($tr.location != 'LETMECHOOSE')}
 										<td rowspan="{$transport.origin|sizeof}">
 										{$tr.location_label}
 										</td>
