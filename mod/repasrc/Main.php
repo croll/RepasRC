@@ -8,8 +8,14 @@ class Main {
 		if (\mod\user\Main::userIsLoggedIn() && (!isset($_SESSION['rc']) || empty($_SESSION['rc']))) {
 			$uid = \mod\user\Main::getUserId($_SESSION['login']);
 			$_SESSION['rc'] = \mod\repasrc\RC::getUserRC($uid);
+			if (!isset($_SESSION['recipe']))
+				$_SESSION['recipe'] = array();
+			if (!isset($_SESSION['menu']))
+				$_SESSION['menu'] = array();
 			if (!isset($_SESSION['recipe']['comp']))
 				$_SESSION['recipe']['comp'] = array();
+			if (!isset($_SESSION['menu']['comp']))
+				$_SESSION['menu']['comp'] = array();
 		}
 	}
 
@@ -22,7 +28,9 @@ class Main {
   }
 
 	public static function hook_mod_repasrc_recipe_list($hookname, $userdata, $params) {
+
     \mod\user\Main::redirectIfNotLoggedIn();
+
 		// Add recipe for comparison
 		$rid = (isset($params[1])) ? $params[1] : null;
 		if (strstr($params[0], 'add') && !empty($rid)) {
@@ -364,13 +372,67 @@ class Main {
 		$section = $params[1];
 	}
 
-	public static function hook_mod_repasrc_menu($hookname, $userdata) {
+	/* ************* */
+	/*     MENUS     */
+	/* ************* */
+
+	public static function hook_mod_repasrc_menu_list($hookname, $userdata, $params) {
+
+    \mod\user\Main::redirectIfNotLoggedIn();
+
+		// Add menu for comparison
+		$mid = (isset($params[1])) ? $params[1] : null;
+		if (strstr($params[0], 'add') && !empty($mid)) {
+			if (isset($mid) && !in_array($mid, $_SESSION['menu']['comp'])) {
+				$_SESSION['menu']['comp'][] = (int)$mid;
+			}
+		}
+		// Remove recipe from comparison list
+		if (strstr($params[0], 'del') && !empty($mid)) {
+			if (isset($_SESSION['menu']['comp']) && is_array($_SESSION['menu']['comp'])) {
+				$tmp = array();
+				foreach($_SESSION['menu']['comp'] as $tmpid) {
+					if ($tmpid != $mid)
+						$tmp[] = (int)$tmpid;
+				}
+				$_SESSION['menu']['comp'] = $tmp;
+			}
+		}
+		// Display
+		$menus = NULL;
+    $page = new \mod\webpage\Main();
+		$page->smarty->assign(array('menuList' => $_SESSION['menu']['comp']));
+		$page->setLayout('repasrc/menu/list');
+    $page->display();
+	}
+
+	public static function hook_mod_repasrc_menu_edit($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
 		$action = $params[1];
 		if (isset($params[2]) && !empty($params[2])) {
 			$num = $params[2];
 		}
 	}
+
+	public static function hook_mod_repasrc_menu_compare($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+		$action = $params[1];
+		if (isset($params[2]) && !empty($params[2])) {
+			$num = $params[2];
+		}
+	}
+
+	public static function hook_mod_repasrc_menu_analyze($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+		$action = $params[1];
+		if (isset($params[2]) && !empty($params[2])) {
+			$num = $params[2];
+		}
+	}
+
+	/* ************* */
+	/*     MENUS     */
+	/* ************  */
 
 	public static function hook_mod_repasrc_foodplan($hookname, $userdata) {
     \mod\user\Main::redirectIfNotLoggedIn();

@@ -120,9 +120,11 @@ class Recipe {
 			$tmp['origin'] = \mod\repasrc\Foodstuff::getOriginFromRecipe($tmp['recipeFoodstuffId']);
 
 			$families = array();
-			foreach($infos[0]['infos'] as $info) {
-				if (isset($info['family_group']))
-					$families[$info['family_group_id']] = $info['family_group'];
+			if (isset($infos[0]['infos'])) {
+				foreach($infos[0]['infos'] as $info) {
+					if (isset($info['family_group']))
+						$families[$info['family_group_id']] = $info['family_group'];
+				}
 			}
 			$tmp['families'] = $families;
 			$fs[] = $tmp;
@@ -147,6 +149,10 @@ class Recipe {
 
 		$recipe = self::getInfos($id);
 
+		// Recipe does not exist
+		if (!is_array($recipe))
+			return null;
+
 		$recipe['families'] = array();
 
 		$recipe['component'] = \mod\repasrc\Foodstuff::getComponent($recipe['component']);
@@ -161,7 +167,7 @@ class Recipe {
 
 		$recipe['totalWeight'] = 0;
 
-		$recipe['totalPrice'] = array('in' => 0, 'out' => 0);
+		$recipe['totalPrice'] = array('vatin' => 0, 'vatout' => 0);
 
 		$recipe['foodstuff'] = array();
 
@@ -173,7 +179,9 @@ class Recipe {
 			$footprint = ($fs['foodstuff']['footprint']*($fs['quantity']/$recipe['persons']));
 			if (!empty($footprint)) {
 				if ($fs['conservation']) {
-					$footprint = $footprint*$conservation[$fs['conservation']];
+					if (isset($conservation[$fs['conservation']])) {
+						$footprint = $footprint*$conservation[$fs['conservation']];
+					}
 				}
 				$recipe['footprint'] += $footprint;
 			}

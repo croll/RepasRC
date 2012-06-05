@@ -26,7 +26,7 @@
 		<div style="float:left;padding-top:10px">
 			<div>Identifiant: <strong>{$foodstuff.id}</strong></div>
 				{if !empty($foodstuff.footprint)}
-					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint}</strong> m²g/Kg</div>
+					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint|round:3}</strong> m²g/Kg</div>
 				{/if}
 			{if isset($foodstuff.synonym)}
 				<div class="alert alert-warn" style="width: 457px">

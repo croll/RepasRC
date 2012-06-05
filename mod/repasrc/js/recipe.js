@@ -4,13 +4,16 @@
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
-window.addEvent('domready', function() { Locale.use('fr-FR');
-
-	modalWin = new Modal.Base(document.body, {
-		header: "",
-		body: "Chargement...",
-		limitHeight: false
-	});
+window.addEvent('domready', function() { 
+	
+	// Informations
+	if (typeOf(document.id('informations_container')) == 'element') {
+		var myMooDatePicker = new MooDatePicker(document.getElement('input[name=consumptiondate]'), {
+			onPick: function(date){
+				this.element.set('value', date.format('%e/%m/%Y'));
+			}
+		});
+	}
 
 	// Modules 
 	if (typeOf(document.id('modules_container')) == 'element') {
@@ -39,15 +42,6 @@ window.addEvent('domready', function() { Locale.use('fr-FR');
 					el.toggleClass('checked').tween('background-color','#87C6DB','#FFF');
 				}
 			});
-		});
-	}
-
-	// Informations
-	if (typeOf(document.id('informations_container')) == 'element') {
-		var myMooDatePicker = new MooDatePicker(document.getElement('input[name=consumptiondate]'), {
-			onPick: function(date){
-				this.element.set('value', date.format('%e/%m/%Y'));
-			}
 		});
 	}
 

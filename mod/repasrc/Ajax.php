@@ -52,7 +52,6 @@ class Ajax {
 
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
-		$foodstuffList = \mod\repasrc\Recipe::getFoodstuffList($id);
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
     $page = new \mod\webpage\Main();
 		$page->smarty->assign(
@@ -89,9 +88,38 @@ class Ajax {
 
 	public static function duplicateRecipeModal($params) {
     $page = new \mod\webpage\Main();
-		\core\Core::log('REEEEEECIPE ID '.$params['id']);
 		$page->smarty->assign('recipeId', (int)$params['id']);
 		return array('content' => $page->smarty->fetch('repasrc/recipe/duplicate'));
+	}
+
+	/* MENU */
+
+	public static function searchMenu($params) {
+		$label = (!empty($params['label'])) ? $params['label'] : NULL;
+		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
+		$ret = \mod\repasrc\Menu::searchComputed($_SESSION['rc'], $label, 1, $typeId);
+		return $ret;
+	}
+
+	public static function showMenuDetail($params) {
+		$id = $params['id'];
+		$menuDetail = \mod\repasrc\Menu::getDetail($id);
+    $page = new \mod\webpage\Main();
+		$page->smarty->assign(
+			array(
+				'menu' => $menuDetail,
+			)
+		);
+		return array('title' => $menuDetail['label'], 'content' => $page->smarty->fetch('repasrc/menu/detail'));
+	}
+
+	public static function deleteMenu($params) {
+		if (isset($params['id'])) {
+			\mod\repasrc\Menu::delete((int)$params['id']);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

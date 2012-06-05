@@ -21,8 +21,14 @@ class ModuleDefinition extends \core\ModuleDefinition {
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/comparer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_compare');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/importer/?([a-z-]*)/?$#', 'mod_repasrc_recipe_import');
 		\mod\regroute\Main::registerRoute($this->id, '#^/recette/analyse/?([a-z]*)/?([0-9]*)$#', 'mod_repasrc_recipe_analyze');
+		\mod\regroute\Main::registerRoute($this->id, '#^/menu/edition/?([a-z]*)/?([0-9]*)/?$#', 'mod_repasrc_menu_edit');
+		\mod\regroute\Main::registerRoute($this->id, '#^/menu/liste/?a?d?d?d?e?l?/?([0-9]*)$#', 'mod_repasrc_menu_list');
+		\mod\regroute\Main::registerRoute($this->id, '#^/menu/comparer/?([a-z-]*)/?$#', 'mod_repasrc_menu_compare');
+		\mod\regroute\Main::registerRoute($this->id, '#^/menu/analyse/?([a-z]*)/?([0-9]*)$#', 'mod_repasrc_menu_analyze');
 		\mod\user\Main::addRight("Import RepasRC datas", "User can import datas");			
 		\mod\user\Main::assignRight('View page', 'Anonymous');
+		\mod\user\Main::assignRight('View page', 'Admin');
+		\mod\user\Main::assignRight('View page', 'Registered');
 	}
 
 	function uninstall() {

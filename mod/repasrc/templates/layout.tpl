@@ -54,7 +54,6 @@
 								<ul class="dropdown-menu">
 									<li><a class="top-btn" href="/menu/liste"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Lister les menus'}</a></li>
 									<li><a class="top-btn" href="/menu/creer"><i class="icon-plus glyph-white"></i>  {t d='repasrc' m='Composer un menu'}</a></li>
-									<li><a class="top-btn" href="/menu/comparer"><i class="icon-retweet glyph-white"></i>  {t d='repasrc' m='Comparer des menus'}</a></li>
 								</ul>
 							</li>
 							{* plan alimentaire *}
