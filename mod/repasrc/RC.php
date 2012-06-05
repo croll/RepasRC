@@ -21,11 +21,11 @@ class RC {
 	}
 
 	public static function isRecipeOwner($recipe_id) {
-		return (\core\Core::$db->exec('SELECT rrc_re_id FROM rrc_recipe WHERE rrc_re_id=? AND rrc_re_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
+		return (\core\Core::$db->fetchOne('SELECT rrc_re_id FROM rrc_recipe WHERE rrc_re_id=? AND rrc_re_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
 	}
 
 	public static function isMenuOwner($menu_id) {
-		return (\core\Core::$db->exec('SELECT rrc_me_id FROM rrc_menu WHERE rrc_me_id=? AND rrc_me_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
+		return (\core\Core::$db->fetchOne('SELECT rrc_me_id FROM rrc_menu WHERE rrc_me_id=? AND rrc_me_rrc_rc_id=?', array((int)$recipe_id, (int)$_SESSION['rc']))) ? true : false;
 	}
 
 }

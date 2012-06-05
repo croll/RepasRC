@@ -27,7 +27,6 @@ class Analyze {
 
 	public static function transport($recipeDetail) {
 		$transport = array();
-		\core\Core::log($recipeDetail);
 		$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
 		$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS zonelabel FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
 		$datas = array();
@@ -38,13 +37,15 @@ class Analyze {
 			$id = $foodstuff['recipeFoodstuffId'];
 			$foodstuff['transport'] = array('distance' => 0, 'footprint' => 0);
 			$precise = false;
-			// For each store informations and calculate distance
+			// For each, store informations and calculate distance
 			for($i=0; $i<sizeof($foodstuff['origin']);$i++) {
 				if (!empty($foodstuff['origin'][$i]['zoneid'])) {
+					\core\Core::log($foodstuff['origin']);
+					\core\Core::log($foodstuff['origin']);
 					$q = 'SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?';
 					$geoInfos = \core\Core::$db->fetchRow($q, array($foodstuff['origin'][$i]['zoneid']));
 					$foodstuff['origin'][$i]['x'] = $geoInfos['x'];
-					$foodstuff['origin'][$i]['y'] = $geoInfos['y'];
+				 	$foodstuff['origin'][$i]['y'] = $geoInfos['y'];
 					if ($i == 0) {
 						$foodstuff['origin'][$i]['distance'] = 0;
 					} else {
@@ -57,6 +58,7 @@ class Analyze {
 					$foodstuff['origin'][$i]['distance'] = self::getDistanceFromOrigin($foodstuff['origin'][$i]['location']);
 					$total['distance'] += $foodstuff['transport']['distance'] += $foodstuff['origin'][$i]['distance'];
 					$markers[$rcGeo['zonelabel']][] = $foodstuff['foodstuff'];
+					\core\Core::log($rcGeo);
 				}
 				$foodstuff['origin'][$i]['location_label'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
 				if (!isset($foodstuff['origin'][$i]['location'])) continue;
@@ -75,11 +77,13 @@ class Analyze {
 				$foodstuff['transport']['distance'] += $total['distance'] += $foodstuff['origin'][$num]['distance'];
 				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], ($foodstuff['quantity']/$recipeDetail['persons']), ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
 				$foodstuff['transport']['footprint'] += $total['footprint'] += $foodstuff['origin'][$num]['footprint'];
-				$lines[$id][] = $rcGeo['zonelabel'];
-			} else {
+				$markers[$rcGeo['zonelabel']][] = $foodstuff['foodstuff'];
+			} else if ($num) {
 				$total['footprint'] += $foodstuff['origin'][$num-1]['footprint'];
 				$foodstuff['transport']['footprint'] += $foodstuff['origin'][$num-1]['footprint'];
 			}
+			if (isset($lines[$id]) && sizeof($lines[$id]))
+				$lines[$id][] = $rcGeo['zonelabel'];
 
 			$datas[$foodstuff['foodstuff']['label']] = $foodstuff;
 		}

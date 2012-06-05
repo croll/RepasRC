@@ -47,7 +47,6 @@ class Ajax {
 		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
 		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
 		$ret = \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
-		\core\Core::log($ret);
 		return $ret;
 	}
 

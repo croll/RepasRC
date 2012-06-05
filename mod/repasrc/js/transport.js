@@ -12,6 +12,7 @@ function geocode(datas, l) {
 		geocoder.geocode({address: name}, function(result, status) {
 			--numTodo;
 			if (status == google.maps.GeocoderStatus.OK) {
+				console.log('NO Fail '+name);
 				markers[name] = {
 					'location': result[0].geometry.location,
 					'fsList' : fsList
@@ -54,7 +55,8 @@ function drawLines() {
 	lines.each(function(line) {
 		var coords = [];
 		line.each(function(cityName) {
-			coords.push(markers[cityName].location);
+			if (typeOf(markers[cityName]) == 'object')
+				coords.push(markers[cityName].location);
 		});
 		var lPath = new google.maps.Polyline({
 			path: coords,
