@@ -87,7 +87,6 @@
 			"style" : "width: 40px",
 			"validators" : 
 			[ 
-				"required",
 				"validate-numeric"
 			]
 		},

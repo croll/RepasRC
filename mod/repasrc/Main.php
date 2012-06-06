@@ -106,6 +106,8 @@ class Main {
 				if (isset($fields['price']) && !empty($fields['price'])) {
 					\mod\repasrc\Recipe::setPrice($id, $fields['price'], $fields['vat']);
 				}
+			} else {
+				\core\Core::log($form->getValidationErrors());
 			}
 		}
 

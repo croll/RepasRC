@@ -40,7 +40,8 @@ class Ajax {
 		if (isset($params['recipeFoodstuffId'])) 
 			$page->smarty->assign('recipeFoodstuffId', (int)$params['recipeFoodstuffId']);
 		$label = (isset($foodstuff[0]['synonym'])) ? $foodstuff[0]['synonym'] : $foodstuff[0]['label'];
-		return array('title' => $label, 'content' => $page->smarty->fetch('repasrc/recipe/foodstuff_detail'));
+		$ret = array('title' => $label, 'content' => $page->smarty->fetch('repasrc/recipe/foodstuff_detail'));
+		return $ret;
 	}
 
 	public static function searchRecipe($params) {
