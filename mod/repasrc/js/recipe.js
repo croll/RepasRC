@@ -355,7 +355,6 @@ function showRecipeDetail(id, hideCompareButton) {
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
-			console.log(clone.get('html'));
 			modalWin.setFooter(clone.get('html'));
 			if (hCB == true) {
 				document.getElement('a.analyzeButton').setStyle('margin-left', '180px');

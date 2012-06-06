@@ -12,7 +12,6 @@ function geocode(datas, l) {
 		geocoder.geocode({address: name}, function(result, status) {
 			--numTodo;
 			if (status == google.maps.GeocoderStatus.OK) {
-				console.log('NO Fail '+name);
 				markers[name] = {
 					'location': result[0].geometry.location,
 					'fsList' : fsList
