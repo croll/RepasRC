@@ -293,9 +293,13 @@ function loadRecipes(reset) {
 				container.set('html', '');
 				var html = '';
 				// for each recipe 
-				Object.each(res, function(re) {
-					html += buildRecipeThumb(re);
-				});
+				if (res.length > 0) {
+					Object.each(res, function(re) {
+						html += buildRecipeThumb(re);
+					});
+				} else {
+						html += '<div style="width: 540px;padding: 10px" class="alert alert-danger">Aucune recette ne correspond à vos critères de recherche</div>';
+				}
 				container.set('html', html);
 			}
   }).post({typeId: typeId, componentId: componentId});
@@ -312,12 +316,17 @@ function buildRecipeThumb(re) {
 	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
 	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
 	html+= '<div><h3 class="name" rel="xyz">'+re.label+'</h3></div>';
-	if (typeOf(re.families) == 'array') {
-		html += '<div>';
-		re.families.each(function(fam) {
+	if (typeOf(re.families) == 'object') {
+		html += '<div style="max-width:380px">';
+		var i = 0;
+		Object.each(re.families, function(fam, famId) {
 			info = fam.split('_');
-
-			html += '<span class="badge fam'+info[0]+'" style="margin: 0px 5px 0 0">'+info[1]+'</span>';
+			html += '<span class="badge fam'+famId+'" style="margin: 0px 5px 0 0">'+info[1]+'</span>';
+			if (i>1) {
+				html += '<br/>';
+				i=0;
+			}
+			i+=1;
 		});
 		html += '</div>';
 	}
@@ -334,7 +343,8 @@ function buildRecipeThumb(re) {
  * Open a modal window and disply recipe infos  
  * @id: Recipe id 
  * ---------------------------------------------- */
-function showRecipeDetail(id) {
+function showRecipeDetail(id, hideCompareButton) {
+	var hCB = hideCompareButton || false;
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showRecipeDetail',
 		'evalScripts' : true,
@@ -345,7 +355,12 @@ function showRecipeDetail(id) {
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
+			console.log(clone.get('html'));
 			modalWin.setFooter(clone.get('html'));
+			if (hCB == true) {
+				document.getElement('a.analyzeButton').setStyle('margin-left', '180px');
+				document.getElement('a.compareButton').setStyle('display', 'none');
+			}
 			modalWin.show();
 			CaptainHook.Bootstrap.initAlerts();
 		},

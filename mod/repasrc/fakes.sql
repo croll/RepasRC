@@ -12,3 +12,4 @@ UPDATE rrc_family SET rrc_fa_rrc_family_group_id=21 WHERE rrc_fa_id=35;
 
 DELETE FROM rrc_foodstuff_family where rrc_ff_rrc_foodstuff_id IN (155,156,154,153,186,119) AND rrc_ff_rrc_family_id=35;
 
+update rrc_geo_zonevalue SET rrc_zv_lon=-2.4333330, rrc_zv_geom=ST_GeomFromText('POINT(47.3333330 -2.4333330)', 4326) WHERE rrc_zv_label_caps='GUERANDE';

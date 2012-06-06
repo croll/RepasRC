@@ -268,8 +268,9 @@ class Main {
 				$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
 				$page->smarty->assign('rcGeo', $rcGeo);
 				
-				$analyze =  \mod\repasrc\Analyze::transport($recipeDetail);
-				$recipeDetail['transport'] = $analyze;
+				$recipeDetail['transport'] =  \mod\repasrc\Analyze::transport($recipeDetail);
+				\core\Core::log($recipeDetail['transport']);
+
 				$gctCol1 = new \mod\googlecharttools\Main();
 				$gctCol1->addColumn('Val', 'string');
 				$gctCol1->addRow('Empreinte écologique du transport');
@@ -369,7 +370,58 @@ class Main {
 
 	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
-		$section = $params[1];
+
+    $page = new \mod\webpage\Main();
+
+		// Remove recipe from comparison list
+		$rid = (isset($params[1])) ? $params[1] : null;
+		if (strstr($params[0], 'del') && !empty($rid)) {
+			if (isset($_SESSION['recipe']['comp']) && is_array($_SESSION['recipe']['comp'])) {
+				$tmp = array();
+				foreach($_SESSION['recipe']['comp'] as $tmpid) {
+					if ($tmpid != $rid)
+						$tmp[] = (int)$tmpid;
+				}
+				$_SESSION['recipe']['comp'] = $tmp;
+			}
+		}
+
+		$recipes = array();
+		foreach($_SESSION['recipe']['comp'] as $rid) {
+			$recipeDetail = \mod\repasrc\Recipe::getDetail($rid);
+			$recipeDetail['transport'] =  \mod\repasrc\Analyze::transport($recipeDetail);
+			$recipes[] = $recipeDetail;
+		}
+
+		$noData = $families = array();
+
+		$gctFootprintCol = new \mod\googlecharttools\Main();
+		$gctPriceCol = new \mod\googlecharttools\Main();
+		$gctTransportCol = new \mod\googlecharttools\Main();
+		$gctFootprintCol->addColumn('Val', 'string');
+		$gctFootprintCol->addRow('Empreinte écologique foncière des aliments');
+		$gctTransportCol->addColumn('Val', 'string');
+		$gctTransportCol->addRow('Empreinte écologique foncière des transports');
+		foreach($recipes as $recipe) {
+			// Foodstuff with no footprint value
+			$gctFootprintCol->addColumn($recipe['label'], 'number');
+			$gctFootprintCol->addRow($recipe['footprint']);
+			$gctTransportCol->addColumn($recipe['label'], 'number');
+			$gctTransportCol->addRow($recipe['transport']['total']['footprint']);
+			if (isset($recipe['families']) && sizeof($recipe['families']) > 0) {
+				$families[] = array_shift(array_keys($recipe['families']));
+			}
+		}
+		$page->smarty->assign(array(
+			'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
+			'noData' => $noData,
+			'dataFootprintCol' => $gctFootprintCol->getJSON(),
+			'dataTransportCol' => $gctTransportCol->getJSON(),
+			'recipeList' => $recipes,
+			'recipeCompareList' => $_SESSION['recipe']['comp']
+		));
+		$page->setLayout('repasrc/recipe/compare');
+    $page->display();
 	}
 
 	/* ************* */
@@ -416,10 +468,6 @@ class Main {
 
 	public static function hook_mod_repasrc_menu_compare($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
-		$action = $params[1];
-		if (isset($params[2]) && !empty($params[2])) {
-			$num = $params[2];
-		}
 	}
 
 	public static function hook_mod_repasrc_menu_analyze($hookname, $userdata, $params) {

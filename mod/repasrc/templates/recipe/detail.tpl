@@ -62,8 +62,8 @@
 </div>
 {/foreach}
 <div class="form-actions" style="margin-top:30px">
-	<a class="btn" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
-	<a class="btn" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
+	<a class="btn analyzeButton" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
+	<a class="btn compareButton" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
 	<div style="text-align:center;margin-top:10px">
 		{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id})}

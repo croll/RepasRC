@@ -59,8 +59,14 @@
 								</span>
 							</a>
 						</li>
+						{if $rid@index == 1}
+							{assign var="showCompareButton" value="true"}
+						{/if}
 					{/foreach}
 				</ul>
+				{if isset($showCompareButton) && $showCompareButton}
+					<a style="margin-left:40px" href="/recette/comparer" class="btn btn-primary">Comparer les recettes</a>
+				{/if}
 			{/if}
 		</div>
 	</div>

@@ -76,6 +76,7 @@ class Recipe {
 
 	public static function searchComputed($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL) {
 
+		$result = array();
 		$recipes = self::search($rc_id, $owner, $component, $label, $foodstuff, $shared, true);
 		foreach ($recipes as $recipe) {
 			$result[] = self::getDetail($recipe['id']);
@@ -190,7 +191,7 @@ class Recipe {
 			if (isset($fs['foodstuff']['infos'])) {
 				$fam = $fs['foodstuff']['infos'][0]['family_group_id'].'_'.str_replace('_', ' ', $fs['foodstuff']['infos'][0]['family_group']);
 				if (!in_array($fam, $recipe['families'])) {
-					$recipe['families'][] = $fam;  
+					$recipe['families'][$fs['foodstuff']['infos'][0]['family_group_id']] = $fam;  
 				}
 			}
 
