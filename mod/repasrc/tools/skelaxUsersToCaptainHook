@@ -1,0 +1,70 @@
+#!/usr/bin/php -q
+<?php  //  -*- mode:php; tab-width:2; c-basic-offset:2; -*-
+
+
+$CAPTAINHOOK_PATH = getenv('CAPTAINHOOK_PATH');
+if ($CAPTAINHOOK_PATH === false) {
+  if (is_file(getcwd().'/conf/general.conf')) $CAPTAINHOOK_PATH=getcwd();
+  else $CAPTAINHOOK_PATH = "/home/web/dev/captainhook_repasrc/";
+}
+
+echo $CAPTAINHOOK_PATH;
+
+function _readline($prompt = '') {
+  echo $prompt;
+  return rtrim(fgets(STDIN), "\n");
+}
+
+$scriptDir = dirname(__FILE__);
+
+if (!is_dir($CAPTAINHOOK_PATH)) {
+	echo "Captainhook core not found, please edit me and set \$CAPTAINHOOK_PATH variable.\n";
+	exit;
+}
+
+if (!is_file($CAPTAINHOOK_PATH.'/conf/general.conf') || !is_readable($CAPTAINHOOK_PATH.'/conf/general.conf')) {
+	echo "Captainhook config file not found.\n";
+	exit;
+}
+
+require($CAPTAINHOOK_PATH.'/core/Core.php');
+\core\Core::init();
+
+
+// Mysql connexion:
+//
+$conn = mysql_connect('localhost', 'skelax', 'sk3l4x') or die ('Unable to connect to mysql database');
+if (!mysql_select_db('skelax_repasrc2', $conn)) {
+	die('Unable to selecd mysql database');
+}
+$res = mysql_query('SELECT us_id, us_login, us_password, us_mail, us_desc, us_active FROM users');
+
+while ($row = mysql_fetch_assoc($res)) {
+	// Not the admin
+	if ($row['us_id'] == 1) continue;
+	// for each user check if he is admin
+	$isAdmin = 0;
+	$newUserId = 0;
+	$adminQuery = mysql_query('SELECT count(*) as isadmin from usersGroups WHERE ug_id_groups=2 AND ug_id_users='.(int)$row['us_id']);
+	$isAdmin = mysql_result($adminQuery, 0);
+	$newUserQuery = 'INSERT INTO ch_user (uid, full_name, login, pass, email, status) VALUES (?,?,?,?,?,?)';
+	$args0 = array($row['us_id'], utf8_encode($row['us_desc']), $row['us_login'], $row['us_password'], $row['us_mail'], $row['us_active']);
+	$newUserId = \core\Core::$db->exec_returning($newUserQuery, $args0, 'uid');
+	//echo $newUserQuery."\n";
+	//print_r($args0);
+	if (!empty($newUserId)) {
+		$userGroupQuery = 'INSERT INTO ch_user_group (uid, gid) VALUES (?,?)';
+		$args1 = array($newUserId, 2);
+		\core\Core::$db->exec($userGroupQuery, $args1);
+		//echo $userGroupQuery."\n";
+		//print_r($args1);
+		if ($isAdmin) {
+			$userGroupQuery2 = 'INSERT INTO ch_user_group (uid, gid) VALUES (?,?)';
+			$args2 = array($newUserId, 1);
+			\core\Core::$db->exec($userGroupQuery2, $args2);
+			//echo $userGroupQuery2."\n";
+			//print_r($args2);
+		}
+	}
+}
+exit;

@@ -274,3 +274,10 @@ CREATE TABLE "rrc_recipe_foodstuff" (
 CREATE INDEX rrc_rf_fs_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_id");
 CREATE INDEX rrc_rf_fss_idx ON "rrc_recipe_foodstuff" ("rrc_rf_rrc_foodstuff_synonym_id");
 ALTER SEQUENCE rrc_recipe_foodstuff_rrc_rf_id_seq RESTART WITH 3000; 
+
+--
+-- We sync users from old tool so auto increment from 1000 user and user_group tables
+--
+
+ALTER SEQUENCE ch_user_uid_seq  RESTART WITH 1000;
+ALTER SEQUENCE ch_user_group_ugid_seq RESTART WITH 1000;
