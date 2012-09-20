@@ -53,11 +53,15 @@ class Ajax {
 
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
+		$menuId = (isset($params['menuId'])) ? $params['menuId'] : null;
+		$menuRecipeId = (isset($params['menuRecipeId'])) ? $params['menuRecipeId'] : null;
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
-    $page = new \mod\webpage\Main();
+ 	   $page = new \mod\webpage\Main();
 		$page->smarty->assign(
 			array(
 				'recipe' => $recipeDetail,
+				'menuId' => $menuId,
+				'menuRecipeId' => $menuRecipeId
 			)
 		);
 		return array('title' => $recipeDetail['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
@@ -105,7 +109,7 @@ class Ajax {
 	public static function showMenuDetail($params) {
 		$id = $params['id'];
 		$menuDetail = \mod\repasrc\Menu::getDetail($id);
-    $page = new \mod\webpage\Main();
+    	$page = new \mod\webpage\Main();
 		$page->smarty->assign(
 			array(
 				'menu' => $menuDetail,
@@ -117,6 +121,15 @@ class Ajax {
 	public static function deleteMenu($params) {
 		if (isset($params['id'])) {
 			\mod\repasrc\Menu::delete((int)$params['id']);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function deleteMenuRecipe($params) {
+		if (isset($params['id'])) {
+			\mod\repasrc\Menu::deleteRecipe((int)$params['id']);
 			return true;
 		} else {
 			return false;

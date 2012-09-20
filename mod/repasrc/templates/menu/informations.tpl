@@ -1,6 +1,6 @@
-{extends tplextends('repasrc/recipe_edit')}
+{extends tplextends('repasrc/menu_edit')}
 
-{block name='recipe_title'}
+{block name='menu_title'}
 	<h1>{t d='repasrc' m='Composer un menu'}</h1>
 	<p class="lead">{t d='repasrc' m='Indiquez les informations de qualification de votre menu.'}</p>
 {/block}
@@ -23,8 +23,8 @@
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Nombre de convives"}</label>
 					<div class="controls">
-						{$informations.persons}
-						<p class="help-block">{t d='repasrc' m="Nombre de personnes prévues pour la recette."}</p>	
+						{$informations.eaters}
+						<p class="help-block">{t d='repasrc' m="Nombre de personnes prévues pour la menu."}</p>	
 					</div>
 				</div>
 				<div class="control-group">
@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">{t d='repasrc' m="Type de recette"}</label>
+					<label class="control-label">{t d='repasrc' m="Type de menu"}</label>
 					<div class="controls">
 						{$informations.type}
 					</div>
@@ -46,7 +46,7 @@
 						<label class="control-label">{t d='repasrc' m="Date prévisionnelle de consommation"}</label>
 						<div class="controls">
 							{$informations.consumptiondate}
-							<p class="help-block">{t d='repasrc' m="Date prévisionnelle à laquelle le menu devrait être consommé. C'est à partir de cette date que sera calculée la saisonnalité des aliments composant les recettes du menu."}</p>	
+							<p class="help-block">{t d='repasrc' m="Date prévisionnelle à laquelle le menu devrait être consommé. C'est à partir de cette date que sera calculée la saisonnalité des aliments composant les menus du menu."}</p>	
 						</div>
 					</div>
 				{/if}
@@ -64,7 +64,7 @@
 						{$informations.submit}
 						{$informations.cancel}
 				</div>
-				<input type="hidden" name="recipeId" value="{$recipe.id}" />
+				<input type="hidden" name="menuId" value="{$menu.id}" />
 			</fieldset>
 			{/form}
 		</div>

@@ -1,7 +1,7 @@
 {
 	"method" : "post",
 	"id" : "comments",
-	"action" : "/menu/edition/recette",
+	"action" : "/menu/edition/recettes",
 	"class" : "form-horizontal",
 	"elements" : 
 	[

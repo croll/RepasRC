@@ -19,19 +19,19 @@ Vous avez le choix de sélectionner ou non chacune de ces fonctionnalités du ca
 	</div> 
 	<div id="modules_container">
 		<ul class="nav nav-tabs nav-stacked">
-			<li id="seasonality" class="row select{if (isset($modulesList) && $modulesList.seasonality == 1)} checked{/if}">
+			<li id="seasonality" class="row select{if (isset($modulesList) && isset($modulesList.seasonality) && $modulesList.seasonality == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module saisonnalité'}</h3></div>
 				<div class="hint">Le module Saisonnalité offre une aide pour savoir si la période de consommation du produit est adapté. Diverses informations vous seront données pour vous aider dans vos choix.</div>
 			</li>
-			<li id="production"  class="row select{if (isset($modulesList) && $modulesList.production == 1)} checked{/if}">
+			<li id="production"  class="row select{if (isset($modulesList) && isset($modulesList.production) &&  $modulesList.production == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module Production'}</h3></div>
 				<div class="hint">Ce module vous permet de définir les modes de conservation et de production des aliments.</div>
 			</li>
-			<li id="transport" class="row select{if (isset($modulesList) && $modulesList.transport == 1)} checked{/if}">
+			<li id="transport" class="row select{if (isset($modulesList) && isset($modulesList.transport) &&  $modulesList.transport == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module transport'}</h3></div>
 				<div class="hint">Si vous avez la possibilité d'indiquer la provenance des aliments pour pourrez bénéficier d'une analyse sur l'impact des transports.</div>
 			</li>
-			<li id="price" class="row select{if (isset($modulesList) && $modulesList.price == 1)} checked{/if}">
+			<li id="price" class="row select{if (isset($modulesList) && isset($modulesList.price) &&  $modulesList.price == 1)} checked{/if}">
 				<div class="title"><h3>{t d='repasrc' m='Module prix'}</h3></div>
 				<div class="hint">En indiquant le prix des aliments, un calcul du prix par recette, menu ou plan alimentaire vous sera proposé.</div>
 			</li>

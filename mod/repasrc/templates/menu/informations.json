@@ -1,7 +1,7 @@
 {
 	"method" : "post",
 	"id" : "informations",
-	"action" : "/menu/edition/pouet",
+	"action" : "/menu/edition/informations",
 	"class" : "form-horizontal",
 	"elements" : 
 	[
@@ -13,7 +13,7 @@
 			]
 		},
 		{	"type" : "text",
-			"name" : "persons",
+			"name" : "eaters",
 			"value" : 100,
 			"validators" : 
 			[ 
@@ -91,7 +91,7 @@
 		{	"type" : "button",
 			"name" : "cancel",
 			"class" : "btn",
-			"value" : "Annuler la création de la recette"
+			"value" : "Annuler la création du menu"
 		}
 	]
 }

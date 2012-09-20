@@ -63,8 +63,17 @@
 {/foreach}
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn analyzeButton" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
+	{if !isset($menuId)}
 	<a class="btn compareButton" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
+	{else}
+		{if empty($menuRecipeId)}
+			<a class="btn btn-primary" href="javascript:void(0)" onclick="addRecipeToMenu({$menuId}, {$recipe.id})">Ajouter la recette</a>
+		{else}
+			<a class="btn btn-danger" href="javascript:void(0)" onclick="deleteMenuRecipe({$menuRecipeId})">Supprimer la recette de ce menu</a>
+		{/if}
+	{/if}
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
+	{if !isset($menuId)}
 	<div style="text-align:center;margin-top:10px">
 		{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isRecipeOwner({$recipe.id})}
 			<a class="btn" href="/recette/edition/aliments/{$recipe.id}">Modifier la recette</a>
@@ -74,4 +83,5 @@
 			<a class="btn btn-danger" href="javascript:void(0)" onclick="deleteRecipe({$recipe.id})">Effacer la recette</a>
 		{/if}
 	</div>
+	{/if}
 </div>

@@ -61,7 +61,7 @@ class Main {
 
     \mod\user\Main::redirectIfNotLoggedIn();
 		$section = NULL;
-    	$page = new \mod\webpage\Main();
+    $page = new \mod\webpage\Main();
 
 		if (isset($_REQUEST['recipeId']) && !empty($_REQUEST['recipeId'])) {
 			$id = $_REQUEST['recipeId'];
@@ -558,14 +558,14 @@ class Main {
       case 'commentaires':
         $page->smarty->assign('formDefaultValues', array('comment' => \mod\repasrc\Menu::getComments($id)));
       break;
-      case 'aliments':
+      case 'recettes':
       if (!empty($id)) {
         $page->smarty->assign('menuRecipeList', \mod\repasrc\Menu::getRecipeList($id));
       }
       break;
     }
 
-    $tplTrans = array('recettes' => 'recipe', 'commentaires' => 'comments');
+    $tplTrans = array('recettes' => 'recipes', 'commentaires' => 'comments');
     $tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
     $page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
       if (!empty($id)) {
@@ -597,9 +597,9 @@ class Main {
 		}
 	}
 
-	/* ************* */
-	/*     MENUS     */
-	/* ************  */
+	/* ************** */
+	/*    FOODPLAN    */
+	/* *************  */
 
 	public static function hook_mod_repasrc_foodplan($hookname, $userdata) {
     \mod\user\Main::redirectIfNotLoggedIn();

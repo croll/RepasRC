@@ -12,6 +12,11 @@ class Menu {
 		return \core\Core::$db->fetchOne('SELECT count(*) as nb FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id=?', array((int)$menuId));
 	}
 
+	public static function getInfos($id) {
+		if (empty($id)) return null;
+		 return \core\Core::$db->fetchRow("SELECT rrc_me_id AS id, rrc_me_label AS label, rrc_me_eaters AS eaters, rrc_me_modules AS modules, rrc_me_comment AS comment, rrc_me_public AS shared, TO_CHAR(rrc_me_consumptiondate, 'DD/MM/YYYY') AS consumptiondate, TO_CHAR(rrc_me_consumptiondate, 'MM') AS consumptionmonth, rrc_me_type AS \"type\", rrc_me_price AS price, rrc_me_vat AS vat FROM rrc_menu WHERE rrc_me_id=?", array($id));
+	}
+
 	public static function getDetail($menuId) {
 		$menuInfos = \core\Core::$db->fetchRow('SELECT rrc_me_id AS "id", rrc_me_label AS "label", rrc_me_public AS shared, rrc_me_eaters AS "eaters", rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification, rrc_me_price AS price, rrc_me_vat AS vat, rrc_me_consumptiondate AS consumptiondate FROM rrc_menu WHERE rrc_me_id=?', array($menuId));
 		$menuInfos['recipes'] = array();
@@ -24,6 +29,7 @@ class Menu {
 			if (is_null($recipeInfos)) {
 				continue;
 			}
+			$recipeInfos['menuRecipeId'] = self::getMenuRecipeId($menuId, $infos['recipeid']);
 			$recipeInfos['portions'] = $infos['portions'];
 			if (isset($recipeInfos['footprint']) && !empty($recipeInfos['footprint'])) { 
 				$menuInfos['footprint'] += $recipeInfos['footprint'];
@@ -44,7 +50,7 @@ class Menu {
 	}
 
 	public static function update($menuId, $label, $shared, $eaters, $type) {
-		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_label=?, rrc_me_public=?, rrc_me_eaters=?, rrc_me_modification=now(), rrc_me_type=? WHERE rrc_me_id=?', array((int)$menuId, $label, $shared, $eaters, $type));
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_label=?, rrc_me_public=?, rrc_me_eaters=?, rrc_me_modification=now(), rrc_me_type=? WHERE rrc_me_id=?', array($label, $shared, $eaters, $type, (int)$menuId));
 	}
 	
 	public static function delete($menuId) {
@@ -130,15 +136,15 @@ class Menu {
 			throw new \Exception('Invalid date');
 		}
 		$d = "$m[3] $m[2] $m[1] 00:00:00";
-		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_consumptiondate=? WHERE rrc_re_id=?', array($d, (int)$menuId));
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_consumptiondate=? WHERE rrc_me_id=?', array($d, (int)$menuId));
 	}
 
 	public static function getConsumptionDate($menuId) {
-		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') FROM rrc_recipe WHERE rrc_re_id=?", array((int)$menuId));
+		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_me_consumptiondate, 'DD/MM/YYYY') FROM rrc_menu WHERE rrc_me_id=?", array((int)$menuId));
 	}
 
 	public static function updateModules($menuId, $modules) {
-		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_re_modules=? WHERE rrc_re_id=?', array(\mod\repasrc\Tools::getBitsFromModulesList($modules), (int)$menuId));
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_modules=? WHERE rrc_me_id=?', array(\mod\repasrc\Tools::getBitsFromModulesList($modules), (int)$menuId));
 	}
 
 	public static function getModulesList($menuId) {
@@ -148,11 +154,15 @@ class Menu {
 	}
 
 	public static function checkIfExists($menuId) {
-		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_menu WHERE rrc_menu_id = ?', array($menuId))) ? true : false;
+		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_menu WHERE rrc_me_id = ?', array($menuId))) ? true : false;
 	}
 
 	public static function getRecipeList($menuId) {
-		return \core\Core::$db->fetchAll("SELECT rrc_mr_id, rrc_mr_rrc_recipe_id AS recipeid, rrc_mr_portions AS portions FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id = ?", array($menuId));
+		return \core\Core::$db->fetchAll("SELECT rrc_mr_id AS menurecipeid, rrc_mr_rrc_recipe_id AS recipeid, rrc_mr_portions AS portions FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id = ?", array($menuId));
+	}
+
+	public static function getMenuRecipeId($menuId, $recipeId) {
+		return \core\Core::$db->fetchOne('SELECT rrc_mr_id FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id = ? AND rrc_mr_rrc_recipe_id = ?', array((int)$menuId, (int)$recipeId));
 	}
 
 }

@@ -30,25 +30,25 @@
 			<div class="well" style="padding: 8px 0;">
 				<ul class="nav nav-list">
 					{if empty($menu.id) || (\mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isMenuOwner({$menu.id}))}
-						<li class="nav-header">{t d='repasrc' m='Recette'}</li>
-						<li{if ($section == 'modules')} class="active"{/if}><a href="/recette/edition/modules/{$menu.id}"><i class="icon-th"></i>{t d='repasrc' m='Choix des modules'}</a></li>
-						<li{if ($section == 'informations')} class="active"{/if}><a href="/recette/edition/informations/{$menu.id}"><i class="icon-info-sign"></i>{t d='repasrc' m='Informations'}</a>
+						<li class="nav-header">{t d='repasrc' m='Menu'}</li>
+						<li{if ($section == 'modules')} class="active"{/if}><a href="/menu/edition/modules/{$menu.id}"><i class="icon-th"></i>{t d='repasrc' m='Choix des modules'}</a></li>
+						<li{if ($section == 'informations')} class="active"{/if}><a href="/menu/edition/informations/{$menu.id}"><i class="icon-info-sign"></i>{t d='repasrc' m='Informations'}</a>
 					{/if}
 					{if isset($menu.id)}
 						{if \mod\user\Main::userBelongsToGroup('admin') || \mod\repasrc\RC::isMenuOwner({$menu.id})}
-							<li{if ($section == 'aliments')} class="active"{/if}><a href="/recette/edition/aliments/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Aliments'}</a></li>
-							<li{if ($section == 'commentaires')} class="active"{/if}><a href="/recette/edition/commentaires/{$menu.id}"><i class="icon-pencil"></i>{t d='repasrc' m='Commentaires'}</a></li>
+							<li{if ($section == 'recettes')} class="active"{/if}><a href="/menu/edition/recettes/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Recettes'}</a></li>
+							<li{if ($section == 'commentaires')} class="active"{/if}><a href="/menu/edition/commentaires/{$menu.id}"><i class="icon-pencil"></i>{t d='repasrc' m='Commentaires'}</a></li>
 						{/if}
 						<li class="nav-header">{t d='repasrc' m='Analyse'}</li>
 						{if \mod\repasrc\Menu::hasRecipe($menu.id)}
-							<li{if ($section == 'resume')} class="active"{/if}><a href="/recette/analyse/resume/{$menu.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résumé'}</a></li>
-							{if (isset($modulesList) && $modulesList.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/recette/analyse/saisonnalite/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}
-							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/recette/analyse/transport/{$menu.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
-							{if (isset($modulesList) && $modulesList.prodcons == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/recette/analyse/mode/{$menu.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}
-							{if (isset($modulesList) && $modulesList.price == 1)}<li{if ($section == 'prix')} class="active"{/if}><a href="/recette/analyse/prix/{$menu.id}"><i class="icon-barcode"></i>{t d='repasrc' m='Prix'}</a></li>{/if}
-							<li{if ($section == 'comparer')} class="active"{/if}><a href="/recette/liste/add/{$menu.id}"><i class="icon-retweet"></i>{t d='repasrc' m='Comparer'}</a></li>
+							<li{if ($section == 'resume')} class="active"{/if}><a href="/menu/analyse/resume/{$menu.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résumé'}</a></li>
+							{if (isset($modulesList) && $modulesList.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/menu/analyse/saisonnalite/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}
+							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/menu/analyse/transport/{$menu.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
+							{if (isset($modulesList) && $modulesList.prodcons == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/menu/analyse/mode/{$menu.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}
+							{if (isset($modulesList) && $modulesList.price == 1)}<li{if ($section == 'prix')} class="active"{/if}><a href="/menu/analyse/prix/{$menu.id}"><i class="icon-barcode"></i>{t d='repasrc' m='Prix'}</a></li>{/if}
+							<li{if ($section == 'comparer')} class="active"{/if}><a href="/menu/liste/add/{$menu.id}"><i class="icon-retweet"></i>{t d='repasrc' m='Comparer'}</a></li>
 						{else}
-							<div style="font-size: 11px">La recette ne comporte aucun aliment.</div>
+							<div style="font-size: 11px">Le menu ne comporte aucune recette.</div>
 						{/if}
 					{/if}
 				</ul>

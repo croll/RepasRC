@@ -46,7 +46,7 @@ window.addEvent('domready', function() {
 	}
 
 	// Menu list
-	if (typeOf(document.id('menu_container')) == 'element') {
+	if (typeOf(document.id('menu_container')) == 'element' && top.document.location.href.match('menu/liste')) {
 
 		loadMenus();
 
@@ -72,13 +72,13 @@ window.addEvent('domready', function() {
 	// Recipe list in menu creation section
 	if (typeOf(document.id('menu_search_form')) == 'element') {
 
-		loadMenus();
+		loadRecipes();
 
 		document.id('type').addEvent('change', function() {
 			document.id('label').set('value', '');
 			var val = this.get('value');
 			if (val != '') {
-				loadMenus();
+				loadRecipes();
 			}
 		});
 
@@ -95,8 +95,7 @@ window.addEvent('domready', function() {
 });
 
 /* ----------------------------------------------
- * Retrieve a list of recipes
- * @reset: Reset families and sub families selects
+ * Retrieve a list of menus 
  * ---------------------------------------------- */
 
 function loadMenus() {
@@ -162,7 +161,7 @@ function buildMenuThumb(me) {
 	if (me.eaters) {
 		html += '<dl class="dl-horizontal"><dt>Nombre de convives:</dt><dd>'+me.eaters+'</dd></dl>';
 	}
-	if (me.footprint) {
+	if (me.footprint != 0) {
 		html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd>'+Math.round(me.footprint,3)+'&nbsp;m²g</dd></dl>';
 	}
 	html+= '</li>';
@@ -173,8 +172,20 @@ function buildMenuThumb(me) {
 
 /* ----------------------------------------------
  * Remotely get list of recipes 
+ * @reset: reset filter search select
  * ---------------------------------------------- */
-function loadRecipes() {
+function loadRecipes(reset) {
+	var typeId = componentId = null;
+	if (reset != true) {
+		var typeSelected = document.id('type').getElement('option:selected');
+		if (typeOf(typeSelected) == 'element') {
+			typeId = typeSelected.get('value');
+		}
+		var componentSelected = document.id('component').getElement('option:selected');
+		if (typeOf(componentSelected) == 'element') {
+			componentId = componentSelected.get('value');
+		}
+	}
 	var recipeList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchRecipe',
 			'onSuccess': function(res) {
@@ -182,12 +193,16 @@ function loadRecipes() {
 				container.set('html', '');
 				var html = '';
 				// for each recipe 
-				Object.each(res, function(re) {
-					html += buildRecipeThumb(re);
-				});
+				if (res.length > 0) {
+					Object.each(res, function(re) {
+						html += buildRecipeThumb(re);
+					});
+				} else {
+						html += '<div style="width: 540px;padding: 10px" class="alert alert-danger">Aucune recette ne correspond à vos critères de recherche</div>';
+				}
 				container.set('html', html);
 			}
-  }).post({typeId: typeId});
+  }).post({typeId: typeId, componentId: componentId});
 }
 
 /* -------------------------------------------------
@@ -201,9 +216,9 @@ function buildRecipeThumb(re) {
 	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
 	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
 	html+= '<div><h3 class="name" rel="xyz">'+re.label+'</h3></div>';
-  html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
+  	html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
 	html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;m²</dd></dl>';
-  html += '<dl class="dl-horizontal"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuffList.length+'</dd></dl>';
+  	html += '<dl class="dl-horizontal"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuffList.length+'</dd></dl>';
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
 	html += '</ul></div></li>';
@@ -271,8 +286,7 @@ function showRecipeDetail(id, menuRecipeId) {
  * and close modal window  
  * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
-function deleteMenuRecipe() {
-	id = $('menuRecipeId').get('value');
+function deleteMenuRecipe(id) {
 	if (!id) {
 		alert('Erreur lors de la suppression de la recette');
 		return;
@@ -306,6 +320,10 @@ function deleteMenu(id) {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
+}
+
+function addRecipeToMenu(menuId, recipeId) {
+	alert(menuId+' '+recipeId)	
 }
 
 function submitRecipeForm() {

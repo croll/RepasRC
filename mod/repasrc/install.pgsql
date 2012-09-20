@@ -167,6 +167,7 @@ CREATE TABLE "rrc_menu" (
   "rrc_me_type" rrc_me_menu_type DEFAULT 'STANDARD',
   "rrc_me_public" INTEGER DEFAULT NULL,
   "rrc_me_modules" INTEGER DEFAULT NULL,
+  "rrc_me_comment" TEXT,
 	"rrc_me_consumptiondate" TIMESTAMP
 );
 CREATE INDEX rrc_menu_rid_idx ON "rrc_menu" ("rrc_me_rrc_rc_id");
