@@ -95,4 +95,24 @@ class Tools {
 		return $colors;
 	}
 
+	public static function getBitsFromModulesList($modules) {
+		$num = 0;
+		$val = array('seasonality' => 1, 'production' => 2, 'transport' => 4, 'price' => 8);
+		foreach($val as $k=>$v) {
+			if ($modules[$k] == 1)
+				$num+=$v;
+		}
+		return $num;
+	}
+
+	public static function getModulesListFromBits($num) {
+		$modules = array();
+		$val = array(1 => 'seasonality', 2 => 'production', 4 => 'transport', 8 => 'price');
+		foreach($val as $k=>$v) {
+			if ($k & $num)
+				$modules[$v] = 1;
+		}
+		return $modules;
+	}
+
 }

@@ -61,7 +61,7 @@ class Main {
 
     \mod\user\Main::redirectIfNotLoggedIn();
 		$section = NULL;
-    $page = new \mod\webpage\Main();
+    	$page = new \mod\webpage\Main();
 
 		if (isset($_REQUEST['recipeId']) && !empty($_REQUEST['recipeId'])) {
 			$id = $_REQUEST['recipeId'];
@@ -454,18 +454,135 @@ class Main {
 		}
 		// Display
 		$menus = NULL;
-    $page = new \mod\webpage\Main();
+    	$page = new \mod\webpage\Main();
 		$page->smarty->assign(array('menuList' => $_SESSION['menu']['comp']));
 		$page->setLayout('repasrc/menu/list');
-    $page->display();
+    	$page->display();
 	}
 
 	public static function hook_mod_repasrc_menu_edit($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
-		$action = $params[1];
-		if (isset($params[2]) && !empty($params[2])) {
-			$num = $params[2];
-		}
+    $section = NULL;
+    $page = new \mod\webpage\Main();
+
+    if (isset($_REQUEST['menuId']) && !empty($_REQUEST['menuId'])) {
+      $id = $_REQUEST['menuId'];
+    } else if (isset($params[2]) && !empty($params[2])) {
+      $id = $params[2];
+    } else {
+      $id = null;
+    }
+
+    /* Menu modules */
+    if (isset($_POST['modules'])) {
+      // Module selection posted, we store it in session
+      $modules = array();
+      foreach(explode(' ',$_POST['modules']) as $mod) {
+        $modules[$mod] = 1;
+      }
+      $_SESSION['menu']['modules'] = $modules;
+      \mod\repasrc\Recipe::updateModules($id, $modules);
+    } else {
+      // If we got an recipe id, we take modules from recipe
+      if (!empty($id)) {
+        $modules = \mod\repasrc\Menu::getModulesList($id);
+      } else {
+        // Otherwise we get modules defined in session
+        $modules = (isset($_SESSION['menu']['modules'])) ? $_SESSION['menu']['modules'] : 0;
+      }
+    }
+
+    /* Menu informations */
+    if (isset($_POST['eaters'])) {
+      $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/informations.json'));
+      if ($form->validate()) {
+        $fields = $form->getFieldValues();
+        if (empty($id)) {
+          $id = \mod\repasrc\Menu::add($_SESSION['rc'], $fields['label'], $fields['shared'], $fields['eaters'], $fields['type']);
+        } else {
+          \mod\repasrc\Menu::update($id, $fields['label'], $fields['shared'], $fields['eaters'], $fields['type']);
+        }
+        if (isset($fields['consumptiondate']) && !empty($fields['consumptiondate'])) {
+          \mod\repasrc\Menu::setConsumptionDate($id, $fields['consumptiondate']);
+        }
+        if (isset($fields['price']) && !empty($fields['price'])) {
+          \mod\repasrc\Menu::setPrice($id, $fields['price'], $fields['vat']);
+        }
+      } else {
+        \core\Core::log($form->getValidationErrors());
+      }
+    }
+
+    /* Menu recipes */
+    if (isset($_POST['quantity'])) {
+      $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/recipe.json'));
+      if ($form->validate()) {
+        $fields = $form->getFieldValues();
+        $fields = $form->getFieldValues();
+        if (isset($_POST['menuId']) && !empty($_POST['menuId'])) {
+          \mod\repasrc\Menu::updateRecipe($fields['recipeId'], $fields['menuId'], $fields['quantity']);
+        } else {
+          \mod\repasrc\Menu::addRecipe($fields['recipeId'], $fields['menuId'], $fields['quantity']);
+        }
+      }
+    }
+
+    /* Recipe comments */
+    if (isset($_POST['comment'])) {
+      $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/comments.json'));
+      if ($form->validate()) {
+        $fields = $form->getFieldValues();
+          \mod\repasrc\Menu::setComments($id, $fields['comment']);
+      }
+    }
+
+    /* Recipe copy */
+    if (isset($_POST['action']) && $_POST['action'] == 'duplicate') {
+      $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/duplicate.json'));
+      if ($form->validate()) {
+        $fields = $form->getFieldValues();
+        \mod\repasrc\Menu::duplicate($id, $fields['label']);
+        $section = 'informations';
+      }
+    }
+
+    // POST Treatment ok
+    // Now check if recipe ID is valid
+    if (!empty($_POST) && !is_null($id)) {
+      $id = (\mod\repasrc\Menu::checkIfExists($id)) ? $id : null;
+    }
+    
+    if (is_null($section)) $section = $params[1];
+
+    switch($section) {
+      case 'commentaires':
+        $page->smarty->assign('formDefaultValues', array('comment' => \mod\repasrc\Menu::getComments($id)));
+      break;
+      case 'aliments':
+      if (!empty($id)) {
+        $page->smarty->assign('menuRecipeList', \mod\repasrc\Menu::getRecipeList($id));
+      }
+      break;
+    }
+
+    $tplTrans = array('recettes' => 'recipe', 'commentaires' => 'comments');
+    $tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
+    $page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
+      if (!empty($id)) {
+        $modules = \mod\repasrc\Menu::getModulesList($id);
+      } else {
+        // Otherwise we get modules defined in session
+        $modules = (isset($_SESSION['menu']['modules'])) ? $_SESSION['menu']['modules'] : 0;
+      }
+    $me = \mod\repasrc\Menu::getDetail($id);
+    if (isset($me) && !empty($me)) {
+      $menu = $me;
+    } else {
+      $menu = array('id' => $id);
+    }
+    $page->smarty->assign('menu', $menu);
+    $page->setLayout('repasrc/menu/'.$tpl);
+    $page->display();
 	}
 
 	public static function hook_mod_repasrc_menu_compare($hookname, $userdata, $params) {

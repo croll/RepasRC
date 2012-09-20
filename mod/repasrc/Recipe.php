@@ -260,7 +260,7 @@ class Recipe {
 	}
 
 	public static function updateModules($recipeId, $modules) {
-		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_modules=? WHERE rrc_re_id=?', array(self::getBitsFromModulesList($modules), (int)$recipeId));
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_modules=? WHERE rrc_re_id=?', array(\mod\repasrc\Tools::getBitsFromModulesList($modules), (int)$recipeId));
 	}
 
 	public static function setConsumptionDate($recipeId, $date) {
@@ -304,30 +304,10 @@ class Recipe {
 		\core\Core::$db->exec('DELETE FROM rrc_menu_recipe where rrc_mr_rrc_recipe_id=?', $params);
 	}
 
-	public static function getBitsFromModulesList($modules) {
-		$num = 0;
-		$val = array('seasonality' => 1, 'production' => 2, 'transport' => 4, 'price' => 8);
-		foreach($val as $k=>$v) {
-			if ($modules[$k] == 1)
-				$num+=$v;
-		}
-		return $num;
-	}
-
-	public static function getModulesListFromBits($num) {
-		$modules = array();
-		$val = array(1 => 'seasonality', 2 => 'production', 4 => 'transport', 8 => 'price');
-		foreach($val as $k=>$v) {
-			if ($k & $num)
-				$modules[$v] = 1;
-		}
-		return $modules;
-	}
-
 	public static function getModulesList($recipeId) {
 		$num = \core\Core::$db->fetchOne('SELECT rrc_re_modules FROM rrc_recipe WHERE rrc_re_id = ?', array($recipeId));
 		$val = (is_null($num)) ? 15 : $num;
-		return self::getModulesListFromBits($val);
+		return \mod\repasrc\Tools::getModulesListFromBits($val);
 	}
 
 	public static function checkIfExists($recipeId) {

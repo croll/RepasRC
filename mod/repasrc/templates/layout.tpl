@@ -53,15 +53,15 @@
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{t d='repasrc' m='Menus'}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li><a class="top-btn" href="/menu/liste"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Lister les menus'}</a></li>
-									<li><a class="top-btn" href="/menu/creer"><i class="icon-plus glyph-white"></i>  {t d='repasrc' m='Composer un menu'}</a></li>
+									<li><a class="top-btn" href="/menu/edition/modules"><i class="icon-plus glyph-white"></i>  {t d='repasrc' m='Composer un menu'}</a></li>
 								</ul>
 							</li>
 							{* plan alimentaire *}
 							<li class="dropdown" onclick="this.toggleClass('open');">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">{t d='repasrc' m='Plan alimentaire'}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a class="top-btn" href="/planalimentaire/lister/"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Lister les plans alimentaires'}</a></li>
-									<li><a class="top-btn" href="/planalimentaire/creer/"><i class="icon-retweet glyph-white"></i>  {t d='repasrc' m='Créer un plan alimentaire'}</a></li>
+									<li><a class="top-btn" href="/planalimentaire/lister"><i class="icon-th-list glyph-white"></i>  {t d='repasrc' m='Lister les plans alimentaires'}</a></li>
+									<li><a class="top-btn" href="/planalimentaire/edition"><i class="icon-retweet glyph-white"></i>  {t d='repasrc' m='Créer un plan alimentaire'}</a></li>
 								</ul>
 							</li>
 							{/if}

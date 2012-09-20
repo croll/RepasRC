@@ -1,0 +1,26 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/menu/edition/duplicate",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "label",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Dupliquer le menu"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Abandonner la duplication"
+		}
+	]
+}

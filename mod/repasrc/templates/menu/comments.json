@@ -1,0 +1,18 @@
+{
+	"method" : "post",
+	"id" : "comments",
+	"action" : "/menu/edition/commentaires",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "textarea",
+			"name" : "comment",
+			"class" : "comment-textarea"
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Enregistrer les commentaires"
+		}
+	]
+}

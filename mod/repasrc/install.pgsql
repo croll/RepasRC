@@ -154,6 +154,7 @@ ALTER SEQUENCE rrc_geo_zonevalue_rrc_zv_id_seq RESTART WITH 50000;
 -- Table structure for table "rrc_menu"
 --
 
+CREATE TYPE "rrc_me_menu_type" AS ENUM ('STANDARD','LIGHTFOOTPRINT','ADMIN','STALLION');
 CREATE TABLE "rrc_menu" (
   "rrc_me_id" SERIAL PRIMARY KEY,
   "rrc_me_eaters" INTEGER DEFAULT NULL,
@@ -163,7 +164,9 @@ CREATE TABLE "rrc_menu" (
   "rrc_me_vat" INTEGER DEFAULT 1,
   "rrc_me_creation" TIMESTAMP NOT NULL,
   "rrc_me_modification" TIMESTAMP,
+  "rrc_me_type" rrc_me_menu_type DEFAULT 'STANDARD',
   "rrc_me_public" INTEGER DEFAULT NULL,
+  "rrc_me_modules" INTEGER DEFAULT NULL,
 	"rrc_me_consumptiondate" TIMESTAMP
 );
 CREATE INDEX rrc_menu_rid_idx ON "rrc_menu" ("rrc_me_rrc_rc_id");

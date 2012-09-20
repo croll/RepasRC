@@ -1,0 +1,97 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/menu/edition/pouet",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "label",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "text",
+			"name" : "persons",
+			"value" : 100,
+			"validators" : 
+			[ 
+				"required",
+				"validate-integer"
+			]
+		},
+		{	"type" : "select",
+			"name" : "type",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "STANDARD",
+					"label" : "Menu standard"
+				},
+				{ "type" : "option",
+					"value" : "LIGHTFOOTPRINT",
+					"label" : "Menu pied léger"
+				},
+				{ "type" : "option",
+					"value" : "ADMIN",
+					"label" : "Menu proposé par les administrateurs"
+				},
+				{ "type" : "option",
+					"value" : "STALLION",
+					"label" : "Menu étalon"
+				}
+			]	
+		},
+		{	"type" : "select",
+			"name" : "shared",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : "1",
+					"label" : "Partager"
+				},
+				{ "type" : "option",
+					"value" : "0",
+					"label" : "Ne pas partager"
+				}
+			]	
+		},
+		{	"type" : "text",
+			"name" : "consumptiondate"
+		},
+		{	"type" : "text",
+			"name" : "price",
+			"style" : "width: 40px",
+			"validators" : 
+			[ 
+				"validate-numeric"
+			]
+		},
+		{	"type" : "select",
+			"name" : "vat",
+			"style" : "width: 60px",
+			"children" :
+			[
+				{ "type" : "option",
+					"value" : 0,
+					"label" : "HT"
+				},
+				{ "type" : "option",
+					"value" : 1,
+					"label" : "TTC"
+				}
+			]	
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Enregistrer les informations et passer à l'étape suivante"
+		},
+		{	"type" : "button",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Annuler la création de la recette"
+		}
+	]
+}

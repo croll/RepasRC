@@ -8,7 +8,7 @@ class Menu {
 		return \core\Core::$db->fetchOne('SELECT rrc_me_label FROM rrc_menu WHERE rrc_me_id=?', array($menuId));
 	}
 
-	public static function menuHasRecipe($menuId) {
+	public static function hasRecipe($menuId) {
 		return \core\Core::$db->fetchOne('SELECT count(*) as nb FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id=?', array((int)$menuId));
 	}
 
@@ -39,12 +39,12 @@ class Menu {
 		return $menuInfos;
 	}
 
-	public static function add($label, $shared, $eaters) {
-		return \core\Core::$db->exec_returning('INSERT INTO rrc_menu (rrc_me_rrc_rc_id, rrc_me_label, rrc_me_public, rrc_me_eaters, rrc_me_creation) VALUES (?,?,?,?,now()) ', array($_SESSION['rc'], $label, $shared, $eaters), 'rrc_me_id');
+	public static function add($rcId, $label, $shared, $eaters, $type) {
+		return \core\Core::$db->exec_returning('INSERT INTO rrc_menu (rrc_me_rrc_rc_id, rrc_me_label, rrc_me_public, rrc_me_eaters, rrc_me_creation, rrc_me_type) VALUES (?,?,?,?,now(),?) ', array($rcId, $label, $shared, $eaters, $type), 'rrc_me_id');
 	}
 
-	public static function update($menuId, $label, $shared, $eaters) {
-		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_label=?, rrc_me_public=?, rrc_me_eaters=?, rrc_me_modification=now() WHERE rrc_me_id=?', array((int)$menuId, $label, $shared, $eaters));
+	public static function update($menuId, $label, $shared, $eaters, $type) {
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_label=?, rrc_me_public=?, rrc_me_eaters=?, rrc_me_modification=now(), rrc_me_type=? WHERE rrc_me_id=?', array((int)$menuId, $label, $shared, $eaters, $type));
 	}
 	
 	public static function delete($menuId) {
@@ -122,8 +122,37 @@ class Menu {
 	}
 
 	public static function getComments($menuId) {
-		return \core\Core::$db->fetchOne("SELECT rrc_me_comment AS comment FROM  rrc_menu WHERE rrc_me_id=?", array((int)$menuId));
+		return \core\Core::$db->fetchOne("SELECT rrc_me_comment AS comment FROM rrc_menu WHERE rrc_me_id=?", array((int)$menuId));
 	}
-	
+
+	public static function setConsumptionDate($menuId, $date) {
+		if (!preg_match("#([0-9]+)/([0-9]+)/([0-9]+)#", $date, $m)) {
+			throw new \Exception('Invalid date');
+		}
+		$d = "$m[3] $m[2] $m[1] 00:00:00";
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_me_consumptiondate=? WHERE rrc_re_id=?', array($d, (int)$menuId));
+	}
+
+	public static function getConsumptionDate($menuId) {
+		return \core\Core::$db->fetchOne("SELECT TO_CHAR(rrc_re_consumptiondate, 'DD/MM/YYYY') FROM rrc_recipe WHERE rrc_re_id=?", array((int)$menuId));
+	}
+
+	public static function updateModules($menuId, $modules) {
+		\core\Core::$db->exec('UPDATE rrc_menu SET rrc_re_modules=? WHERE rrc_re_id=?', array(\mod\repasrc\Tools::getBitsFromModulesList($modules), (int)$menuId));
+	}
+
+	public static function getModulesList($menuId) {
+		$num = \core\Core::$db->fetchOne('SELECT rrc_me_modules FROM rrc_menu WHERE rrc_me_id = ?', array($menuId));
+		$val = (is_null($num)) ? 15 : $num;
+		return \mod\repasrc\Tools::getModulesListFromBits($val);
+	}
+
+	public static function checkIfExists($menuId) {
+		return (\core\Core::$db->fetchOne('SELECT count(*) FROM rrc_menu WHERE rrc_menu_id = ?', array($menuId))) ? true : false;
+	}
+
+	public static function getRecipeList($menuId) {
+		return \core\Core::$db->fetchAll("SELECT rrc_mr_id, rrc_mr_rrc_recipe_id AS recipeid, rrc_mr_portions AS portions FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id = ?", array($menuId));
+	}
 
 }

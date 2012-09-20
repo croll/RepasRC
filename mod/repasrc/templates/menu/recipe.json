@@ -1,0 +1,18 @@
+{
+	"method" : "post",
+	"id" : "comments",
+	"action" : "/menu/edition/recette",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"name" : "quantity",
+			"class" : ""
+		},
+		{	"type" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Enregistrer"
+		}
+	]
+}
