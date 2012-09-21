@@ -24,7 +24,9 @@
 
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn" href="/menu/analyse/resume/{$menu.id}">Analyser le menu</a>
-	<a class="btn" href="/menu/liste/add/{$menu.id}">Sélectionner le menu pour comparaison</a>
+	{if $comparison != false}
+		<a class="btn" href="/menu/liste/add/{$menu.id}">Sélectionner le menu pour comparaison</a>
+	{/if}
 	<a class="btn btn-inverse" href="javascript:void(0)" onclick="modalWin.hide()">Fermer</a>
 	<div style="text-align:center;margin-top:10px">
 		{if \mod\user\Main::userBelongsToGroup('Admin') || \mod\repasrc\RC::isMenuOwner({$menu.id})}

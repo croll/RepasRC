@@ -28,10 +28,10 @@
 			</ul>
 		</div>
 		<div class="span3" style="margin: 0">
-			<h3 style="margin-bottom:10px">Menus sélectionnées</h3>
+			<h3 style="margin-bottom:10px">Menus sélectionnés</h3>
 			{if (!is_array($menuList) || sizeof($menuList) < 1)}
 			<div class="alert alert-error">
-				Aucune recette.
+				Aucun menu.
 			</div>
 			{else}
 				<ul class="nav nav-tabs nav-stacked">
@@ -39,15 +39,21 @@
 						<li class="clearfix" style="cursor:pointer;width:270px">
 							<a href="javascript:void(0)">
 								<span>
-									<strong onclick="showMenuDetail({$mid})">
+									<strong onclick="showMenuDetail({$mid}, true)">
 										{\mod\repasrc\Menu::getNameFromId($mid)}
 									</strong>
-									<span style="margin-left:5px"><i onclick="window.document.location.href='/menu/liste/del/{$rid}'" class="icon icon-remove"></i></span>
+									<span style="margin-left:5px"><i onclick="window.document.location.href='/menu/liste/del/{$mid}'" class="icon icon-remove"></i></span>
 								</span>
 							</a>
 						</li>
+						{if $mid@index == 1}
+							{assign var="showCompareButton" value="true"}
+						{/if}
 					{/foreach}
 				</ul>
+				{if isset($showCompareButton) && $showCompareButton}
+					<a style="margin-left:40px" href="/menu/comparer" class="btn btn-primary">Comparer les menus</a>
+				{/if}
 			{/if}
 		</div>
 	</div>

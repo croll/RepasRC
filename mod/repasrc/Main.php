@@ -453,11 +453,10 @@ class Main {
 			}
 		}
 		// Display
-		$menus = NULL;
-    	$page = new \mod\webpage\Main();
+    $page = new \mod\webpage\Main();
 		$page->smarty->assign(array('menuList' => $_SESSION['menu']['comp']));
 		$page->setLayout('repasrc/menu/list');
-    	$page->display();
+    $page->display();
 	}
 
 	public static function hook_mod_repasrc_menu_edit($hookname, $userdata, $params) {
@@ -493,7 +492,7 @@ class Main {
     }
 
     /* Menu informations */
-    if (isset($_POST['eaters'])) {
+    if (isset($_POST['setMenuInformations'])) {
       $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/informations.json'));
       if ($form->validate()) {
         $fields = $form->getFieldValues();

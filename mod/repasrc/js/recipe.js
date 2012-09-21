@@ -343,30 +343,26 @@ function buildRecipeThumb(re) {
  * Open a modal window and disply recipe infos  
  * @id: Recipe id 
  * ---------------------------------------------- */
-function showRecipeDetail(id, hideCompareButton) {
-	var hCB = hideCompareButton || false;
+function showRecipeDetail(id, c) {
+	var comp = c || false;
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showRecipeDetail',
 		'evalScripts' : true,
 		'evalResponse' : true,
-			onRequest: function() {
-			},
+		onRequest: function() {
+		},
 		onSuccess: function(res) {
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
 			modalWin.setFooter(clone.get('html'));
-			if (hCB == true) {
-				document.getElement('a.analyzeButton').setStyle('margin-left', '180px');
-				document.getElement('a.compareButton').setStyle('display', 'none');
-			}
 			modalWin.show();
 			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id});
+	}).post({id: id, comparison: comp});
 }
 
 /* -------------------------------------------------

@@ -52,7 +52,7 @@
 						<li class="clearfix" style="cursor:pointer;width:270px">
 							<a href="javascript:void(0)">
 								<span>
-									<strong onclick="showRecipeDetail({$rid})">
+									<strong onclick="showRecipeDetail({$rid}, true)">
 										{\mod\repasrc\Recipe::getNameFromId($rid)}
 									</strong>
 									<span style="margin-left:5px"><i onclick="window.document.location.href='/recette/liste/del/{$rid}'" class="icon icon-remove"></i></span>

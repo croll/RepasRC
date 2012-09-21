@@ -92,6 +92,10 @@
 			"name" : "cancel",
 			"class" : "btn",
 			"value" : "Annuler la création du menu"
+		},
+		{	"type" : "hidden",
+			"name" : "action",
+			"value": "setMenuInformations"
 		}
 	]
 }

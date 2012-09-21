@@ -1,0 +1,29 @@
+{
+	"method" : "post",
+	"id" : "informations",
+	"action" : "/menu/edition/recettes",
+	"class" : "form-horizontal",
+	"elements" : 
+	[
+		{	"type" : "text",
+			"id" : "eaters",
+			"name" : "eaters",
+			"validators" : 
+			[ 
+				"required"
+			]
+		},
+		{	"type" : "submit",
+			"id" : "submit",
+			"name" : "submit",
+			"class" : "btn btn-primary",
+			"value" : "Ajouter la recette"
+		},
+		{	"type" : "button",
+			"id" : "cancel",
+			"name" : "cancel",
+			"class" : "btn",
+			"value" : "Abandonner l'ajout"
+		}
+	]
+}

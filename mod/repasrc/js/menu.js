@@ -229,7 +229,8 @@ function buildRecipeThumb(re) {
  * Open a modal window and disply recipe infos  
  * @id: Recipe id 
  * ---------------------------------------------- */
-function showMenuDetail(id) {
+function showMenuDetail(id, c) {
+	var comp = c || false;
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/showMenuDetail',
 		'evalScripts' : true,
@@ -247,7 +248,7 @@ function showMenuDetail(id) {
 		onFailure: function() {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id});
+	}).post({id: id, comparison: comp});
 }
 
 /* -------------------------------------------------
@@ -322,8 +323,46 @@ function deleteMenu(id) {
 	}).post({id: id});
 }
 
-function addRecipeToMenu(menuId, recipeId) {
-	alert(menuId+' '+recipeId)	
+function showAddRecipeToMenuModal(menuId, recipeId) {
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/addRecipeToMenuModal',
+		onRequest: function() {
+		},
+		onSuccess: function(res,a,b,c) {
+			modalWin.setTitle('Choisir la recette').setBody(res.content).setFooter('');
+			// Form
+			var chForm_recipeForm=document.id('informations:window');
+			var chForm_recipeFormValidator = new Form.Validator.Inline(chForm_recipeForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
+
+			document.id('cancel').addEvent('click', function() {
+				modalWin.hide();
+			});
+
+			document.id('submit').addEvent('click', function(e) {
+				e.stop();
+				e.stopPropagation();
+				addRecipeToMenu(menuId, recipeId, document.id('eaters').value)
+			});
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({menuId: menuId, recipeId: recipeId});
+
+}
+
+function addRecipeToMenu(menuId, recipeId, eaters) {
+	new Request.JSON({
+		'url': '/ajax/call/repasrc/addRecipeToMenu',
+			onRequest: function() {
+		},
+		onSuccess: function(res,a,b,c) {
+			top.document.location.href=top.document.location.href;
+		},
+		onFailure: function() {
+			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
+		}
+	}).post({menuId: menuId, recipeId: recipeId, eaters: eaters});
 }
 
 function submitRecipeForm() {

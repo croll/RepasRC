@@ -63,11 +63,11 @@
 {/foreach}
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn analyzeButton" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
-	{if !isset($menuId)}
+	{if !isset($menuId) && $comparison != false}
 	<a class="btn compareButton" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
 	{else}
 		{if empty($menuRecipeId)}
-			<a class="btn btn-primary" href="javascript:void(0)" onclick="addRecipeToMenu({$menuId}, {$recipe.id})">Ajouter la recette</a>
+			<a class="btn btn-primary" href="javascript:void(0)" onclick="showAddRecipeToMenuModal({$menuId}, {$recipe.id})">Ajouter la recette</a>
 		{else}
 			<a class="btn btn-danger" href="javascript:void(0)" onclick="deleteMenuRecipe({$menuRecipeId})">Supprimer la recette de ce menu</a>
 		{/if}

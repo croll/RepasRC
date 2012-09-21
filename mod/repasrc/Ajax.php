@@ -53,6 +53,7 @@ class Ajax {
 
 	public static function showRecipeDetail($params) {
 		$id = $params['id'];
+		$comp = (isset($params['comparison'])) ? $params['comparison'] : false;
 		$menuId = (isset($params['menuId'])) ? $params['menuId'] : null;
 		$menuRecipeId = (isset($params['menuRecipeId'])) ? $params['menuRecipeId'] : null;
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
@@ -61,7 +62,8 @@ class Ajax {
 			array(
 				'recipe' => $recipeDetail,
 				'menuId' => $menuId,
-				'menuRecipeId' => $menuRecipeId
+				'menuRecipeId' => $menuRecipeId,
+				'comparison' => $comp
 			)
 		);
 		return array('title' => $recipeDetail['label'], 'content' => $page->smarty->fetch('repasrc/recipe/detail'));
@@ -108,11 +110,13 @@ class Ajax {
 
 	public static function showMenuDetail($params) {
 		$id = $params['id'];
+		$comp = (isset($params['comparison'])) ? $params['comparison'] : false;
 		$menuDetail = \mod\repasrc\Menu::getDetail($id);
     	$page = new \mod\webpage\Main();
 		$page->smarty->assign(
 			array(
 				'menu' => $menuDetail,
+				'comparison' => $comp
 			)
 		);
 		return array('title' => $menuDetail['label'], 'content' => $page->smarty->fetch('repasrc/menu/detail'));
@@ -134,6 +138,23 @@ class Ajax {
 		} else {
 			return false;
 		}
+	}
+
+	public static function addRecipeToMenuModal($params) {
+    $page = new \mod\webpage\Main();
+		$page->smarty->assign('recipeId', (int)$params['id']);
+		return array('content' => $page->smarty->fetch('repasrc/menu/addRecipeToMenu'));
+	}
+
+	public static function addRecipeToMenu($params) {
+		$menuId = $params['menuId'];
+		$recipeId = $params['recipeId'];
+		$eaters = $params['eaters'];
+		error_log(' ---------------------------- ');
+		error_log("$menuId $recipeId $eaters");
+		error_log(' ---------------------------- ');
+		\mod\repasrc\Menu::addRecipe($recipeId, $menuId, $eaters);
+		return true;
 	}
 
 }
