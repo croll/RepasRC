@@ -61,6 +61,7 @@
 					</div>
 				{/if}
 				<div class="form-actions">
+						{$informations.action}
 						{$informations.submit}
 						{$informations.cancel}
 				</div>

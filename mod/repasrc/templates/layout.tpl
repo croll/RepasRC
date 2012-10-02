@@ -10,6 +10,7 @@
 	{js file="/mod/cssjs/js/messageclass.js"}
 	{js file="/mod/cssjs/js/message.js"}
 	{js file="/mod/cssjs/js/chbootstrap.js"}
+	{js file="/mod/cssjs/js/spin.js"}
 	{js file="/mod/repasrc/js/repasrc.js"}
 	{js file="/mod/page/js/page.js"}
 	{js file="/mod/repasrc/ext/MooDatePicker/js/MooDatePicker.js"}
@@ -30,6 +31,7 @@
 			<div class="navbar-inner">
 				<div class="container-fluid">
 					<div class="container">
+						<span id="spinnercontainer"></span>
 						<a class="brand" href="#">REPAS-RC</a>
 						<ul class="nav">
 							{if !\mod\user\Main::userIsLoggedIn()}

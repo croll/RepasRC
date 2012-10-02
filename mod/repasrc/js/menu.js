@@ -46,7 +46,7 @@ window.addEvent('domready', function() {
 	}
 
 	// Menu list
-	if (typeOf(document.id('menu_container')) == 'element' && top.document.location.href.match('menu/liste')) {
+	if (typeOf(document.id('menu_container')) == 'element' && (document.location.href.indexOf('menu/liste') != -1)) {
 
 		loadMenus();
 
@@ -70,7 +70,7 @@ window.addEvent('domready', function() {
 	}
 
 	// Recipe list in menu creation section
-	if (typeOf(document.id('menu_search_form')) == 'element') {
+	if (document.location.href.indexOf('/edition/recettes') != -1) {
 
 		loadRecipes();
 
@@ -83,7 +83,7 @@ window.addEvent('domready', function() {
 		});
 
 		document.id('label').addEvent('keyup', function(e) {
-			if (e.key == 'enter') {
+		if (e.key == 'enter') {
 				e.stop();
 				e.stopPropagation();
 				return;
@@ -104,9 +104,11 @@ function loadMenus() {
 	if (typeOf(typeSelected) == 'element') {
 		typeId = typeSelected.get('value');
 	}
+	showSpinner();
 	var menuList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchMenu',
 			'onSuccess': function(res) {
+				hideSpinner();
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
@@ -186,9 +188,14 @@ function loadRecipes(reset) {
 			componentId = componentSelected.get('value');
 		}
 	}
+	showSpinner();
 	var recipeList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchRecipe',
+			onRequest: function() {
+				showSpinner();
+			},
 			'onSuccess': function(res) {
+				hideSpinner();
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
@@ -235,9 +242,11 @@ function showMenuDetail(id, c) {
 		'url': '/ajax/call/repasrc/showMenuDetail',
 		'evalScripts' : true,
 		'evalResponse' : true,
-			onRequest: function() {
-			},
+		onRequest: function() {
+			showSpinner();
+		},
 		onSuccess: function(res) {
+			hideSpinner();
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
@@ -246,6 +255,7 @@ function showMenuDetail(id, c) {
 			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id, comparison: comp});
@@ -261,10 +271,11 @@ function showRecipeDetail(id, menuRecipeId) {
 		'url': '/ajax/call/repasrc/showRecipeDetail',
 		'evalScripts' : true,
 		'evalResponse' : true,
-			onRequest: function() {
-			},
+		onRequest: function() {
+			showSpinner();
+		},
 		onSuccess: function(res,a,b,c) {
-
+			hideSpinner();
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
@@ -277,6 +288,7 @@ function showRecipeDetail(id, menuRecipeId) {
 			var chForm_recipeFormValidator = new Form.Validator.Inline(chForm_recipeForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id, menuId: menuId, modulesList: modulesList, menuRecipeId: menuRecipeId});
@@ -312,12 +324,15 @@ function deleteMenuRecipe(id) {
 function deleteMenu(id) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/deleteMenu',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			top.document.location.href=top.document.location.href;
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
@@ -327,8 +342,10 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/addRecipeToMenuModal',
 		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			modalWin.setTitle('Choisir la recette').setBody(res.content).setFooter('');
 			// Form
 			var chForm_recipeForm=document.id('informations:window');
@@ -345,6 +362,7 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 			});
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({menuId: menuId, recipeId: recipeId});
@@ -354,12 +372,15 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 function addRecipeToMenu(menuId, recipeId, eaters) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/addRecipeToMenu',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			top.document.location.href=top.document.location.href;
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({menuId: menuId, recipeId: recipeId, eaters: eaters});

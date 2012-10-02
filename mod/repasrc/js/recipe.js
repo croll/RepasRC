@@ -137,7 +137,11 @@ function loadFamilies() {
 	}
 	var userList = new Request.JSON({
 			'url': '/ajax/call/repasrc/getFamilies',
+			onRequest: function() {
+				showSpinner();
+			},
 			'onSuccess': function(res) {
+				hideSpinner();
 				select = $('family');
 				select.empty();
 				select.adopt(new Element('option').set('value', '').set('html', 'Famille de produit'));
@@ -156,7 +160,11 @@ function loadSubFamilies(num) {
 	if (num == undefined) num = null;
 	var userList = new Request.JSON({
 			'url': '/ajax/call/repasrc/getSubFamilies',
+			onRequest: function() {
+				showSpinner();
+			},
 			'onSuccess': function(res) {
+				hideSpinner();
 				res.each(function(f) {
 					document.id('subfamily').adopt(new Element('option').set('value', f.id).set('html', f.label));
 				});
@@ -182,7 +190,11 @@ function loadFoodstuff(reset) {
 	}
 	var foodstuffList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchFoodstuff',
+			onRequest: function() {
+				showSpinner();
+			},
 			'onSuccess': function(res) {
+				hideSpinner();
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
@@ -288,7 +300,11 @@ function loadRecipes(reset) {
 	}
 	var foodstuffList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchRecipe',
+			onRequest: function() {
+				showSpinner();
+			},
 			'onSuccess': function(res) {
+				hideSpinner();
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
@@ -350,8 +366,10 @@ function showRecipeDetail(id, c) {
 		'evalScripts' : true,
 		'evalResponse' : true,
 		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res) {
+			hideSpinner();
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
@@ -360,6 +378,7 @@ function showRecipeDetail(id, c) {
 			CaptainHook.Bootstrap.initAlerts();
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id, comparison: comp});
@@ -377,10 +396,11 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 		'url': '/ajax/call/repasrc/showFoodstuffDetail',
 		'evalScripts' : true,
 		'evalResponse' : true,
-			onRequest: function() {
-			},
+		onRequest: function() {
+			showSpinner();
+		},
 		onSuccess: function(res,a,b,c) {
-
+			hideSpinner();
 			modalWin.setTitle(res.title).setBody(res.content);
 			var clone = document.getElement('div.form-actions').clone();
 			document.getElement('div.form-actions').dispose();
@@ -424,6 +444,7 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 			});
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id, synonymId: synonymId, recipeId: recipeId, modulesList: modulesList, recipeFoodstuffId: recipeFoodstuffId});
@@ -456,12 +477,15 @@ function deleteRecipeFoodstuff() {
 	}
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/deleteRecipeFoodstuff',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			top.document.location.href=top.document.location.href;
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
@@ -474,12 +498,15 @@ function deleteRecipeFoodstuff() {
 function deleteRecipe(id) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/deleteRecipe',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			top.document.location.href=top.document.location.href;
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
@@ -492,12 +519,15 @@ function deleteRecipe(id) {
 function duplicateRecipeModal(id) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/duplicateRecipeModal',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			modalWin.setTitle('Dupliquer la recette').setBody(res.content).setFooter('');
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});
@@ -510,12 +540,15 @@ function duplicateRecipeModal(id) {
 function duplicateRecipe(id) {
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/duplicateRecipe',
-			onRequest: function() {
+		onRequest: function() {
+			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
+			hideSpinner();
 			top.document.location.href='/recette/edition/informations/'+id;
 		},
 		onFailure: function() {
+			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({id: id});

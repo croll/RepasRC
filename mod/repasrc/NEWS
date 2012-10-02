@@ -1,0 +1,3 @@
+# 2012/01/10
+
+- Témoin de chargement: permet de savoir quand on a envoyé une requette au serveur et qu'elle est en cours de traitement.

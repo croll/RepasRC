@@ -178,7 +178,8 @@ class Main {
 				// Otherwise we get modules defined in session
 				$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
 			}
-		$re = \mod\repasrc\Recipe::getDetail($id);
+	    if (isset($id) && !empty($id))
+			$re = \mod\repasrc\Recipe::getDetail($id);
 		if (isset($re) && !empty($re)) {
 			$recipe = $re;
 		} else {
@@ -492,7 +493,7 @@ class Main {
     }
 
     /* Menu informations */
-    if (isset($_POST['setMenuInformations'])) {
+    if (isset($_POST['action']) && $_POST['action'] == 'setMenuInformations') {
       $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/informations.json'));
       if ($form->validate()) {
         $fields = $form->getFieldValues();
@@ -517,7 +518,6 @@ class Main {
       $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/recipe.json'));
       if ($form->validate()) {
         $fields = $form->getFieldValues();
-        $fields = $form->getFieldValues();
         if (isset($_POST['menuId']) && !empty($_POST['menuId'])) {
           \mod\repasrc\Menu::updateRecipe($fields['recipeId'], $fields['menuId'], $fields['quantity']);
         } else {
@@ -526,7 +526,7 @@ class Main {
       }
     }
 
-    /* Recipe comments */
+    /* Menu comments */
     if (isset($_POST['comment'])) {
       $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/comments.json'));
       if ($form->validate()) {
@@ -535,7 +535,7 @@ class Main {
       }
     }
 
-    /* Recipe copy */
+    /* Menu copy */
     if (isset($_POST['action']) && $_POST['action'] == 'duplicate') {
       $form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/menu/duplicate.json'));
       if ($form->validate()) {
@@ -564,7 +564,7 @@ class Main {
       break;
     }
 
-    $tplTrans = array('recettes' => 'recipes', 'commentaires' => 'comments');
+    $tplTrans = array('recettes' => 'recipe', 'commentaires' => 'comments');
     $tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
     $page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
       if (!empty($id)) {
@@ -573,7 +573,8 @@ class Main {
         // Otherwise we get modules defined in session
         $modules = (isset($_SESSION['menu']['modules'])) ? $_SESSION['menu']['modules'] : 0;
       }
-    $me = \mod\repasrc\Menu::getDetail($id);
+    if (isset($id) && !empty($id))
+    	$me = \mod\repasrc\Menu::getDetail($id);
     if (isset($me) && !empty($me)) {
       $menu = $me;
     } else {
