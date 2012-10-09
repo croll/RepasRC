@@ -1,4 +1,14 @@
-# 2012/01/10
+### 2012/01/10
 
-- Témoin de chargement: permet de savoir quand on a envoyé une requette au serveur et qu'elle est en cours de traitement.
+- Témoin de chargement: permet de savoir quand on a envoyé une requette au serveur et qu'elle est en cours de traitement. (Apparait à gauche du sigle REPAS-RC)
 - Nouveau moteur de gestion des formulaires.
+
+# Section "Menus"
+- Lors de la modification d'un menu, le nombre de portions de chaque recette composant le menu est affichée sur le droite.
+- Possibilité d'ajouter une recette à la composition d'un menu.
+- Possibilité de modifier l'assignation d'une recette à un menu.
+- Possibilité de supprimer l'assignation d'une recette à un menu.
+- Possibilité d'ajouter et de modifier les commentaires d'un menu.
+
+# Section "Recettes"
+- Lors de l'ajout d'un aliment à la recette, un message d'erreur est affiché si aucun grammage n'est saisi.

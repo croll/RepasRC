@@ -149,12 +149,15 @@ class Ajax {
 	public static function addRecipeToMenu($params) {
 		$menuId = $params['menuId'];
 		$recipeId = $params['recipeId'];
-		$eaters = $params['eaters'];
-		error_log(' ---------------------------- ');
-		error_log("$menuId $recipeId $eaters");
-		error_log(' ---------------------------- ');
-		\mod\repasrc\Menu::addRecipe($recipeId, $menuId, $eaters);
+		$portions = (int)$params['portions'];
+		\mod\repasrc\Menu::addRecipe($recipeId, $menuId, $portions);
 		return true;
+	}
+
+	public static function updateMenuRecipe($params) {
+		$menuRecipeId = (int)$params['menuRecipeId'];
+		$portions = (int)$params['portions'];
+		\mod\repasrc\Menu::updateRecipe($menuRecipeId, $portions);
 	}
 
 }

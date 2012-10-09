@@ -10,14 +10,21 @@
 			"name" : "eaters",
 			"validators" : 
 			[ 
-				"required"
+				"required",
+				"validate-numeric"
 			]
 		},
 		{	"type" : "submit",
-			"id" : "submit",
-			"name" : "submit",
+			"id" : "addRecipe",
+			"name" : "addRecipe",
 			"class" : "btn btn-primary",
 			"value" : "Ajouter la recette"
+		},
+		{	"type" : "submit",
+			"id" : "updatePortions",
+			"name" : "updatePortions",
+			"class" : "btn btn-primary",
+			"value" : "Modifier le nombre de portions"
 		},
 		{	"type" : "button",
 			"id" : "cancel",

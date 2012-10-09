@@ -69,6 +69,7 @@
 		{if empty($menuRecipeId)}
 			<a class="btn btn-primary" href="javascript:void(0)" onclick="showAddRecipeToMenuModal({$menuId}, {$recipe.id})">Ajouter la recette</a>
 		{else}
+			<a class="btn btn-primary" href="javascript:void(0)" onclick="updateMenuRecipe({$menuRecipeId})">Changer le nombre de portions</a>
 			<a class="btn btn-danger" href="javascript:void(0)" onclick="deleteMenuRecipe({$menuRecipeId})">Supprimer la recette de ce menu</a>
 		{/if}
 	{/if}

@@ -1,10 +1,10 @@
 /* ------------------------------------------------------
- * Action triggered on page load 
- * Things done are differents between 
+ * Action triggered on page load
+ * Things done are differents between
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
-window.addEvent('domready', function() { 
+window.addEvent('domready', function() {
 
 	// Informations
 	if (typeOf(document.id('informations_container')) == 'element') {
@@ -15,7 +15,7 @@ window.addEvent('domready', function() {
 		});
 	}
 
-	// Modules 
+	// Modules
 	if (typeOf(document.id('modules_container')) == 'element') {
 
 		document.id('cancel').addEvent('click', function() {
@@ -53,7 +53,7 @@ window.addEvent('domready', function() {
 		document.id('type').addEvent('change', function() {
 			document.id('label').set('value', '');
 			var val = this.get('value');
-			if (val != '') {
+			if (val !== '') {
 				loadMenus();
 			}
 		});
@@ -77,7 +77,7 @@ window.addEvent('domready', function() {
 		document.id('type').addEvent('change', function() {
 			document.id('label').set('value', '');
 			var val = this.get('value');
-			if (val != '') {
+			if (val !== '') {
 				loadRecipes();
 			}
 		});
@@ -95,7 +95,7 @@ window.addEvent('domready', function() {
 });
 
 /* ----------------------------------------------
- * Retrieve a list of menus 
+ * Retrieve a list of menus
  * ---------------------------------------------- */
 
 function loadMenus() {
@@ -142,17 +142,17 @@ function filterResults(txt, type) {
 			}
 		});
 	}
-	if (found == false) {
+	if (found === false) {
 		if (notfoundEl) {
 			notfoundEl.setStyle('display', 'block');
 		}
-	} 
+	}
 }
 
 /* -------------------------------------------------
- * Build foodstuff tiny block with image, fs name, etc  
+ * Build foodstuff tiny block with image, fs name, etc
  * multiple occurences build the foodstuff list
- * @fs: foodstuff object 
+ * @fs: foodstuff object
  * ---------------------------------------------- */
 function buildMenuThumb(me) {
 	html = '<li onclick="showMenuDetail('+me.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
@@ -163,7 +163,7 @@ function buildMenuThumb(me) {
 	if (me.eaters) {
 		html += '<dl class="dl-horizontal"><dt>Nombre de convives:</dt><dd>'+me.eaters+'</dd></dl>';
 	}
-	if (me.footprint != 0) {
+	if (me.footprint !== 0) {
 		html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd>'+Math.round(me.footprint,3)+'&nbsp;m²g</dd></dl>';
 	}
 	html+= '</li>';
@@ -173,12 +173,13 @@ function buildMenuThumb(me) {
 }
 
 /* ----------------------------------------------
- * Remotely get list of recipes 
+ * Remotely get list of recipes
  * @reset: reset filter search select
  * ---------------------------------------------- */
 function loadRecipes(reset) {
-	var typeId = componentId = null;
-	if (reset != true) {
+	var typeId = null;
+	var componentId = null;
+	if (reset !== true) {
 		var typeSelected = document.id('type').getElement('option:selected');
 		if (typeOf(typeSelected) == 'element') {
 			typeId = typeSelected.get('value');
@@ -199,7 +200,7 @@ function loadRecipes(reset) {
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
-				// for each recipe 
+				// for each recipe
 				if (res.length > 0) {
 					Object.each(res, function(re) {
 						html += buildRecipeThumb(re);
@@ -213,9 +214,9 @@ function loadRecipes(reset) {
 }
 
 /* -------------------------------------------------
- * Build recipe tiny block with image, name, etc  
+ * Build recipe tiny block with image, name, etc
  * multiple occurences build the recipe list
- * @re: recipe object 
+ * @re: recipe object
  * ---------------------------------------------- */
 function buildRecipeThumb(re) {
 	html = '<li onclick="showRecipeDetail('+re.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
@@ -223,9 +224,9 @@ function buildRecipeThumb(re) {
 	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
 	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
 	html+= '<div><h3 class="name" rel="xyz">'+re.label+'</h3></div>';
-  	html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
+  html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
 	html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;m²</dd></dl>';
-  	html += '<dl class="dl-horizontal"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuffList.length+'</dd></dl>';
+  html += '<dl class="dl-horizontal"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuffList.length+'</dd></dl>';
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
 	html += '</ul></div></li>';
@@ -233,8 +234,8 @@ function buildRecipeThumb(re) {
 }
 
 /* -------------------------------------------------
- * Open a modal window and disply recipe infos  
- * @id: Recipe id 
+ * Open a modal window and disply recipe infos
+ * @id: Recipe id
  * ---------------------------------------------- */
 function showMenuDetail(id, c) {
 	var comp = c || false;
@@ -262,9 +263,9 @@ function showMenuDetail(id, c) {
 }
 
 /* -------------------------------------------------
- * Open a modal window and disply recipe infos  
- * @id:r recipe id 
- * @menuRecipeId: recipe id for this menu 
+ * Open a modal window and disply recipe infos
+ * @id:r recipe id
+ * @menuRecipeId: recipe id for this menu
  * ---------------------------------------------- */
 function showRecipeDetail(id, menuRecipeId) {
 	new Request.JSON({
@@ -281,11 +282,6 @@ function showRecipeDetail(id, menuRecipeId) {
 			document.getElement('div.form-actions').dispose();
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
-			CaptainHook.Bootstrap.initTabs('quantity');
-			CaptainHook.Bootstrap.initAlerts();
-			// Form
-			var chForm_recipeForm=document.id('recipeForm');
-			var chForm_recipeFormValidator = new Form.Validator.Inline(chForm_recipeForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 		},
 		onFailure: function() {
 			hideSpinner();
@@ -296,7 +292,7 @@ function showRecipeDetail(id, menuRecipeId) {
 
 /* -------------------------------------------------
  * Send ajax request to delete foodstuff from recipe
- * and close modal window  
+ * and close modal window
  * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
 function deleteMenuRecipe(id) {
@@ -318,7 +314,7 @@ function deleteMenuRecipe(id) {
 }
 
 /* -------------------------------------------------
- * Send ajax request to delete menu 
+ * Send ajax request to delete menu
  * @recipeId: id of the recipe
  * ---------------------------------------------- */
 function deleteMenu(id) {
@@ -346,9 +342,11 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 		},
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
-			modalWin.setTitle('Choisir la recette').setBody(res.content).setFooter('');
+			modalWin.setTitle('AJouter la recette au menu').setBody(res.content).setFooter('');
+			$(document.body).getElement('div.modal-content').setStyles({'min-height' : '20px', 'height': '120px'});
+			console.log($(document.body).getElement('div.modal-content'));
 			// Form
-			var chForm_recipeForm=document.id('informations:window');
+			var chForm_recipeForm=document.id('informations');
 			var chForm_recipeFormValidator = new Form.Validator.Inline(chForm_recipeForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 
 			document.id('cancel').addEvent('click', function() {
@@ -357,8 +355,9 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 
 			document.id('submit').addEvent('click', function(e) {
 				e.stop();
-				e.stopPropagation();
-				addRecipeToMenu(menuId, recipeId, document.id('eaters').value)
+				if (chForm_recipeForm.validate()) {
+					addRecipeToMenu(menuId, recipeId, document.id('eaters').value);
+				}
 			});
 		},
 		onFailure: function() {
@@ -384,6 +383,10 @@ function addRecipeToMenu(menuId, recipeId, eaters) {
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
 	}).post({menuId: menuId, recipeId: recipeId, eaters: eaters});
+}
+
+function updateMenuRecipe(menuRecipeId) {
+
 }
 
 function submitRecipeForm() {

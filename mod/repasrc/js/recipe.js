@@ -408,9 +408,6 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 			modalWin.show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
-			// Form
-			var chForm_foodstuffForm=document.id('foodstuffForm');
-			var chForm_foodstuffFormValidator = new Form.Validator.Inline(chForm_foodstuffForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 			// JS for location
 			document.body.getElement('select[name=location]').addEvent('change', function() {
 				if (this.getSelected().get('value') == 'LETMECHOOSE') {
@@ -555,5 +552,10 @@ function duplicateRecipe(id) {
 }
 
 function submitFoodstuffForm() {
-	document.id('foodstuffForm').submit();
+	// Form
+	var chForm_foodstuffForm=document.id('foodstuffForm');
+	var chForm_foodstuffFormValidator = new Form.Validator.Inline(chForm_foodstuffForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
+	if(chForm_foodstuffForm.validate()) {
+		document.id('foodstuffForm').submit();
+	}
 }

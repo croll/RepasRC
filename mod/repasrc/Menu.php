@@ -61,18 +61,18 @@ class Menu {
 	}
 
 	public static function addRecipe($recipeId, $menuId, $portions) {
-		return $this->getDb()->exec_returning('INSERT INTO rrc_menu_recipe (rrc_mr_rrc_recipe_id, rrc_mr_rrc_menu_id, rrc_mr_portions) VALUES (?,?,?)', array((int)$recipeId, (int)$menuId, $portions), 'rrc_mr_id');
+		return \core\Core::$db->exec_returning('INSERT INTO rrc_menu_recipe (rrc_mr_rrc_recipe_id, rrc_mr_rrc_menu_id, rrc_mr_portions) VALUES (?,?,?)', array((int)$recipeId, (int)$menuId, $portions), 'rrc_mr_id');
 	}
 
 	public static function updateRecipe($menuRecipeId, $portions) {
-		$this->getDb()->execute('UPDATE rrc_menu_recipe SET rrc_mr_portions=? WHERE rrc_mr_id=?', array($portions, $menuRecipeId));
+		return \core\Core::$db->exec('UPDATE rrc_menu_recipe SET rrc_mr_portions=? WHERE rrc_mr_id=?', array($portions, $menuRecipeId));
 	}
 
 	public static function deleteRecipe($menuId) {
 		\core\Core::$db->exec('DELETE FROM rrc_menu_recipe WHERE rrc_mr_id=?', array($menuId));
 	}
 
-	public static function search($rcId='', $label='', $shared='', $owner='') {
+	public static function search($rcId='', $label='', $shared='', $owner='', $limit='ALL', $offset=0) {
 		$params = array();
 		$q = 'SELECT DISTINCT rrc_me_id AS id, rrc_me_public AS shared, rrc_me_label AS label, rrc_me_eaters AS eaters, rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification FROM rrc_menu AS me';
 		$w = ' WHERE 1=1';
@@ -99,6 +99,7 @@ class Menu {
 			}
 		}
 		$o = " ORDER BY label";
+		$o = "LIMIT $limit OFFSET $offset";
 		$query = $q.$w.$o;
 		return \core\Core::$db->fetchAll($query, $params);
 	}
