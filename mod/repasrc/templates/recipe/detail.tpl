@@ -30,7 +30,6 @@
 		{/if}
 		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint|round:3} m²g/Kg</strong></div>
 		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="round(x * y,3)" x=$fs.foodstuff.footprint y=$fs.quantity} m²g</strong></div>
-
 		{if ($fs.foodstuff.infos.0.family_group == 'Fruits' || $fs.foodstuff.infos.0.family_group == 'Légumes') && $fs.foodstuff.seasonality}
 		<div style="margin-top:10px">Saisonnalité: <span></span></div>
 			<div class="btn-group">
@@ -67,9 +66,9 @@
 	<a class="btn compareButton" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
 	{else}
 		{if empty($menuRecipeId)}
-			<a class="btn btn-primary" href="javascript:void(0)" onclick="showAddRecipeToMenuModal({$menuId}, {$recipe.id})">Ajouter la recette</a>
+			<a class="btn btn-primary" href="javascript:void(0)" onclick="showUpdateMenuRecipeModal({$menuId}, {$recipe.id}, null)">Ajouter la recette</a>
 		{else}
-			<a class="btn btn-primary" href="javascript:void(0)" onclick="updateMenuRecipe({$menuRecipeId})">Changer le nombre de portions</a>
+			<a class="btn btn-primary" href="javascript:void(0)" onclick="showUpdateMenuRecipeModal(null, null, {$menuRecipeId})">Changer le nombre de portions</a>
 			<a class="btn btn-danger" href="javascript:void(0)" onclick="deleteMenuRecipe({$menuRecipeId})">Supprimer la recette de ce menu</a>
 		{/if}
 	{/if}

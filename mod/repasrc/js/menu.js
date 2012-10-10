@@ -334,17 +334,18 @@ function deleteMenu(id) {
 	}).post({id: id});
 }
 
-function showAddRecipeToMenuModal(menuId, recipeId) {
+function showUpdateMenuRecipeModal(menuId, recipeId, menuRecipeId) {
 	new Request.JSON({
-		'url': '/ajax/call/repasrc/addRecipeToMenuModal',
+		'url': '/ajax/call/repasrc/getMenuRecipeModal',
 		onRequest: function() {
 			showSpinner();
 		},
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
 			modalWin.setTitle('AJouter la recette au menu').setBody(res.content).setFooter('');
-			$(document.body).getElement('div.modal-content').setStyles({'min-height' : '20px', 'height': '120px'});
-			console.log($(document.body).getElement('div.modal-content'));
+			var modw = $(document.body).getElement('div.modal-content');
+			modw.setStyles({'min-height' : '20px', 'height': '140px'});
+
 			// Form
 			var chForm_recipeForm=document.id('informations');
 			var chForm_recipeFormValidator = new Form.Validator.Inline(chForm_recipeForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
@@ -353,10 +354,11 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 				modalWin.hide();
 			});
 
-			document.id('submit').addEvent('click', function(e) {
+			modw.getElement('input[type=submit]').addEvent('click', function(e) {
 				e.stop();
 				if (chForm_recipeForm.validate()) {
-					addRecipeToMenu(menuId, recipeId, document.id('eaters').value);
+					console.log(menuId+' '+recipeId+' '+menuRecipeId);
+					updateMenuRecipe(menuId, recipeId, menuRecipeId, document.id('portions').value);
 				}
 			});
 		},
@@ -364,13 +366,13 @@ function showAddRecipeToMenuModal(menuId, recipeId) {
 			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({menuId: menuId, recipeId: recipeId});
+	}).post({menuId: menuId, recipeId: recipeId, menuRecipeId: menuRecipeId});
 
 }
 
-function addRecipeToMenu(menuId, recipeId, eaters) {
+function updateMenuRecipe(menuId, recipeId, menuRecipeId, portions) {
 	new Request.JSON({
-		'url': '/ajax/call/repasrc/addRecipeToMenu',
+		'url': '/ajax/call/repasrc/updateMenuRecipe',
 		onRequest: function() {
 			showSpinner();
 		},
@@ -382,11 +384,7 @@ function addRecipeToMenu(menuId, recipeId, eaters) {
 			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({menuId: menuId, recipeId: recipeId, eaters: eaters});
-}
-
-function updateMenuRecipe(menuRecipeId) {
-
+	}).post({menuId: menuId, recipeId: recipeId, menuRecipeId: menuRecipeId, portions: portions});
 }
 
 function submitRecipeForm() {

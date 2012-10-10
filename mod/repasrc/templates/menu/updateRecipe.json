@@ -6,8 +6,8 @@
 	"elements" : 
 	[
 		{	"type" : "text",
-			"id" : "eaters",
-			"name" : "eaters",
+			"id" : "portions",
+			"name" : "portions",
 			"validators" : 
 			[ 
 				"required",
@@ -21,8 +21,8 @@
 			"value" : "Ajouter la recette"
 		},
 		{	"type" : "submit",
-			"id" : "updatePortions",
-			"name" : "updatePortions",
+			"id" : "updateRecipePortions",
+			"name" : "updateRecipePortions",
 			"class" : "btn btn-primary",
 			"value" : "Modifier le nombre de portions"
 		},

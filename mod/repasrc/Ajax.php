@@ -140,24 +140,30 @@ class Ajax {
 		}
 	}
 
-	public static function addRecipeToMenuModal($params) {
+	public static function getMenuRecipeModal($params) {
+		$menuId = (isset($params['menuId']) && !empty($params['menuId'])) ? (int)$params['menuId'] : NULL;
+		$recipeId = (isset($params['recipeId']) && !empty($params['recipeId'])) ? (int)$params['recipeId'] : NULL;
+		$menuRecipeId = (isset($params['menuRecipeId']) && !empty($params['menuRecipeId'])) ? (int)$params['menuRecipeId'] : NULL;
     $page = new \mod\webpage\Main();
-		$page->smarty->assign('recipeId', (int)$params['id']);
-		return array('content' => $page->smarty->fetch('repasrc/menu/addRecipeToMenu'));
-	}
-
-	public static function addRecipeToMenu($params) {
-		$menuId = $params['menuId'];
-		$recipeId = $params['recipeId'];
-		$portions = (int)$params['portions'];
-		\mod\repasrc\Menu::addRecipe($recipeId, $menuId, $portions);
-		return true;
+		$page->smarty->assign(array(
+			'recipeId' => $recipeId,
+			'menuId' => $menuId,
+			'menuRecipeId' => $menuRecipeId
+		));
+		return array('content' => $page->smarty->fetch('repasrc/menu/updateRecipe'));
 	}
 
 	public static function updateMenuRecipe($params) {
-		$menuRecipeId = (int)$params['menuRecipeId'];
+		$menuId = (isset($params['menuId']) && !empty($params['menuId'])) ? (int)$params['menuId'] : NULL;
+		$recipeId = (isset($params['recipeId']) && !empty($params['recipeId'])) ? (int)$params['recipeId'] : NULL;
+		$menuRecipeId = (isset($params['menuRecipeId']) && !empty($params['menuRecipeId'])) ? (int)$params['menuRecipeId'] : NULL;
 		$portions = (int)$params['portions'];
-		\mod\repasrc\Menu::updateRecipe($menuRecipeId, $portions);
+		if ($recipeId) {
+			\mod\repasrc\Menu::addRecipe($recipeId, $menuId, $portions);
+		} else {
+			\mod\repasrc\Menu::updateRecipe($menuRecipeId, $portions);
+		}
+		return true;
 	}
 
 }
