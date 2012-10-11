@@ -42,11 +42,13 @@
 						<li class="nav-header">{t d='repasrc' m='Analyse'}</li>
 						{if \mod\repasrc\Menu::hasRecipe($menu.id)}
 							<li{if ($section == 'resume')} class="active"{/if}><a href="/menu/analyse/resume/{$menu.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résumé'}</a></li>
+							{*
 							{if (isset($modulesList) && $modulesList.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/menu/analyse/saisonnalite/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/menu/analyse/transport/{$menu.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.production == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/menu/analyse/mode/{$menu.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.price == 1)}<li{if ($section == 'prix')} class="active"{/if}><a href="/menu/analyse/prix/{$menu.id}"><i class="icon-barcode"></i>{t d='repasrc' m='Prix'}</a></li>{/if}
 							<li{if ($section == 'comparer')} class="active"{/if}><a href="/menu/liste/add/{$menu.id}"><i class="icon-retweet"></i>{t d='repasrc' m='Comparer'}</a></li>
+							*}
 						{else}
 							<div style="font-size: 11px">Le menu ne comporte aucune recette.</div>
 						{/if}

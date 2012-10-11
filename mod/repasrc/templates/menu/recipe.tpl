@@ -47,13 +47,13 @@
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Composition du menu</h3>
-			{if (!isset($menu.recipeList) || empty($menu.recipeList))}
+			{if (!isset($menu.recipesList) || empty($menu.recipesList))}
 			<div class="alert alert-error">
 				Aucune recette.
 			</div>
 			{else}
 				<ul class="nav nav-tabs nav-stacked">
-					{foreach $menu.recipeList as $recipe}
+					{foreach $menu.recipesList as $recipe}
 						<li class="clearfix" style="cursor:pointer">
 							<a href="javascript:showRecipeDetail({$recipe.id}, {$recipe.menuRecipeId})" style="color: #000;font-size:12px">
 								<div style="float:left;font-weight:bold;font-size:12px;margin-right:5px;color: #0088CC">{$recipe.portions}</div>

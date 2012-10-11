@@ -438,7 +438,7 @@ class Main {
         $modules[$mod] = 1;
       }
       $_SESSION['menu']['modules'] = $modules;
-      \mod\repasrc\Recipe::updateModules($id, $modules);
+      \mod\repasrc\Menu::updateModules($id, $modules);
     } else {
       // If we got an recipe id, we take modules from recipe
       if (!empty($id)) {
