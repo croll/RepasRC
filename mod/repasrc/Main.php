@@ -255,7 +255,7 @@ class Main {
 				$graph = \mod\repasrc\Graph::recipeProductionConservation($recipeDetail);
 				$page->smarty->assign(array(
 						'dataConservation' => $graph['pie1']->getJSON(),
-						'dataProduction' => $graph['pie2']->getJSON(),
+						'dataProduction' => $graph['pie2']->getJSON()
 					));
 			break;
 
@@ -557,10 +557,10 @@ class Main {
 		if (!empty($id)) {
 			$modules = \mod\repasrc\Recipe::getModulesList($id);
 		} else {
-			$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
+			$modules = (isset($_SESSION['menu']['modules'])) ? $_SESSION['menu']['modules'] : 0;
 		}
 
-		$recipeDetail = \mod\repasrc\Menu::getDetail($id);
+		$menuDetail = \mod\repasrc\Menu::getDetail($id);
 
 		$noData = array();
 
@@ -569,43 +569,31 @@ class Main {
 				$noData = $families = array();
 				$gctPie = new \mod\googlecharttools\Main();
 				$gctCol = new \mod\googlecharttools\Main();
-				$gctComp = new \mod\googlecharttools\Main();
 				$gctPie->addColumn('Aliment', 'string');
-				$gctPie->addColumn('Empreinte écologique foncière pour la recette', 'number');
+				$gctPie->addColumn('Empreinte écologique foncière pour le menu', 'number');
 				$gctCol->addColumn('Val', 'string');
-				$gctCol->addRow('Empreinte écologique foncière pour une personne');
-				$gctComp->addColumn('Aliment', 'string');
-				$gctComp->addColumn('Empreinte écologique foncière', 'number');
-				$gctComp->addColumn('Quantité', 'number');
-				if (isset($recipeDetail['foodstuffList']) && !empty($recipeDetail['foodstuffList'])) {
-					foreach($recipeDetail['foodstuffList'] as $fs) {
-					$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
-					// Foodstuff with no footprint value
-						if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
-							$noData[] = $label;
-						} else {
-							$gctPie->addRow($label);
-							$gctPie->addRow($fs['foodstuff']['footprint']*$fs['quantity']);
-							$gctCol->addColumn($label, 'number');
-							$gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
-							$gctComp->addRow($label);
-							$gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
-							$gctComp->addRow(round(((float)$fs['quantity']*100)/($recipeDetail['totalWeight']/$recipeDetail['persons'])),2);
-							if (isset($fs['families']) && sizeof($fs['families']) > 0) {
-								$families[] = array_shift(array_keys($fs['families']));
-							}
-						}
-					}
+				$gctCol->addRow('Empreinte écologique foncière pour le menu');
+				foreach ($menuDetail['recipesList'] as $recipe) {
+					$gctPie->addRow($recipe['label']);
+					$gctPie->addRow($recipe['footprint']);
+					$gctCol->addColumn($recipe['label'], 'number');
+					$gctCol->addRow($recipe['footprint']);
 				}
 				$page->smarty->assign(array(
-					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
-					'noData' => $noData,
 					'dataFootprintPie' => $gctPie->getJSON(),
-					'dataFootprintCol' => $gctCol->getJSON(),
-					'dataFootprintComp' => $gctComp->getJSON()
+					'dataFootprintCol' => $gctCol->getJSON()
 				));
 			break;
 		}
+
+		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'transport',  'prix' => 'price');
+		$tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
+		$page->setLayout('repasrc/menu/analyze/'.$tpl);
+		$page->smarty->assign(array(
+			'section' => $section,
+			'menu' => $menuDetail
+		));
+		$page->display();
 	}
 
 	/* ************** */

@@ -5,7 +5,7 @@
 	{/if}
 </div>
 
-{foreach $menu.recipeList as $re}
+{foreach $menu.recipesList as $re}
 <div style="margin: 0 0 20px 20px">
 	<div style="font-size: 18px">
 		{$re.portions} portion{if $re.portions > 1}s{/if} de
@@ -14,9 +14,8 @@
 		</strong>
 	</div>
 	<div style="font-size: 14px">
-		<div>Empreinte écologique foncière pour une portion: <strong>{$re.footprint|round:3} m²g/Kg</strong></div>
+		<div>Empreinte écologique foncière du menu: <strong>{math equation="round(x / y,3)" x=$me.footprint y=$me.eaters} m²g/Kg</strong></div>
 		{if $me.footprint > 0}
-			<div>Empreinte écologique foncière pour le menu: <strong>{math equation="round(x * y,3)" x=$re.footprint y=$re.portions} m²g</strong></div>
 		{/if}
 	</div>
 </div>
