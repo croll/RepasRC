@@ -1,7 +1,9 @@
 ### 2012/01/10
 
 - Témoin de chargement: permet de savoir quand on a envoyé une requette au serveur et qu'elle est en cours de traitement. (Apparait à gauche du sigle REPAS-RC)
-- Nouveau moteur de gestion des formulaires.
+- Nouveau moteur de recherche des recette, beaucoup plus rapide.
+- Nouveau moteur d'analyze des résultats, beaucoup plus rapide.
+- Nouveau moteur de gestion des formulaires qui permettra à terme un retour d'info sous forme de messages. Ex: "Recette modifiée", "Aliment ajouté à la recette", etc
 
 # Section "Menus"
 - Lors de la modification d'un menu, le nombre de portions de chaque recette composant le menu est affichée sur le droite.
@@ -11,4 +13,8 @@
 - Possibilité d'ajouter et de modifier les commentaires d'un menu.
 
 # Section "Recettes"
+- Section "Analyse" : Ajout de l'analyse des modes de conservation et de production.
 - Lors de l'ajout d'un aliment à la recette, un message d'erreur est affiché si aucun grammage n'est saisi.
+
+# Correction de bug
+- Il y avait une confusion entre le nom de l'aliment ou son synonyme dans l'analyze des résultats.

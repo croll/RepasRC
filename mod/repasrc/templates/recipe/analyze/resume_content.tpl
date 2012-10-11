@@ -156,3 +156,5 @@
 			<div id="chart_div3"></div>
 
 		</div>
+
+</div>

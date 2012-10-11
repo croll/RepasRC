@@ -8,18 +8,19 @@ class Analyze {
 		$seasonality = array();
 		$month = \mod\repasrc\Tools::getMonthLabel($recipeDetail['consumptionmonth']);
 		foreach($recipeDetail['foodstuffList'] as $foodstuff) {
+			$label = (isset($foodstuff['foodstuff']['synonym'])) ? $foodstuff['foodstuff']['synonym'] : $foodstuff['foodstuff']['label'];
 			if (($foodstuff['conservation'] == 'Frais' || $foodstuff['conservation'] == '') && (in_array('Légumes', $foodstuff['families']) || in_array('Fruits', $foodstuff['families']))) {
 				if (empty($foodstuff['foodstuff']['seasonality'])) {
-					$seasonality['noinfo'][] = $foodstuff['foodstuff']['label'];
+					$seasonality['noinfo'][] = $label;
 				} else {
 					if ($foodstuff['foodstuff']['seasonality'][$month] > 0) {
-						$seasonality['ok'][] = $foodstuff['foodstuff']['label'];
+						$seasonality['ok'][] = $label;
 					} else {
-						$seasonality['nok'][] = $foodstuff['foodstuff']['label'];
+						$seasonality['nok'][] = $label;
 					}
 				}
 			} else {
-				$seasonality['out'][] = $foodstuff['foodstuff']['label'];
+				$seasonality['out'][] = $label;
 			}
 		}
 		return $seasonality;

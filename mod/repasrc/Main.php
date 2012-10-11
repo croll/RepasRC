@@ -1,4 +1,4 @@
-<?php  //  -*- mode:php; tab-width:2; c-basic-offset:2; -*-
+<?php  //  -*- mode:php; tab-width:; c-basic-offset:2; -*-
 
 namespace mod\repasrc;
 
@@ -220,44 +220,15 @@ class Main {
 
 		$recipeDetail = \mod\repasrc\Recipe::getDetail($id);
 
-		$noData = array();
-
 		switch($section) {
 			case 'resume':
-				$noData = $families = array();
-				$gctPie = new \mod\googlecharttools\Main();
-				$gctCol = new \mod\googlecharttools\Main();
-				$gctComp = new \mod\googlecharttools\Main();
-				$gctPie->addColumn('Aliment', 'string');
-				$gctPie->addColumn('Empreinte écologique foncière pour la recette', 'number');
-				$gctCol->addColumn('Val', 'string');
-				$gctCol->addRow('Empreinte écologique foncière pour une personne');
-				$gctComp->addColumn('Aliment', 'string');
-				$gctComp->addColumn('Empreinte écologique foncière', 'number');
-				$gctComp->addColumn('Quantité', 'number');
-				foreach($recipeDetail['foodstuffList'] as $fs) {
-				// Foodstuff with no footprint value
-					if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
-						$noData[] = $fs['foodstuff']['label'];
-					} else {
-						$gctPie->addRow($fs['foodstuff']['label']);
-						$gctPie->addRow($fs['foodstuff']['footprint']*$fs['quantity']);
-						$gctCol->addColumn($fs['foodstuff']['label'], 'number');
-						$gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
-						$gctComp->addRow($fs['foodstuff']['label']);
-						$gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
-						$gctComp->addRow(round(((float)$fs['quantity']*100)/($recipeDetail['totalWeight']/$recipeDetail['persons'])),2);
-						if (isset($fs['families']) && sizeof($fs['families']) > 0) {
-							$families[] = array_shift(array_keys($fs['families']));
-						}
-					}
-				}
+				$graph = \mod\repasrc\Graph::recipeResume($recipeDetail);
 				$page->smarty->assign(array(
-					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
-					'noData' => $noData,
-					'dataFootprintPie' => $gctPie->getJSON(),
-					'dataFootprintCol' => $gctCol->getJSON(),
-					'dataFootprintComp' => $gctComp->getJSON()
+					'colors' => $graph['colors'],
+					'noData' => $graph['noData'],
+					'dataFootprintPie' => $graph['pie']->getJSON(),
+					'dataFootprintCol' => $graph['col']->getJSON(),
+					'dataFootprintComp' => $graph['comp']->getJSON()
 				));
 			break;
 
@@ -270,38 +241,22 @@ class Main {
 				$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
 				$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
 				$page->smarty->assign('rcGeo', $rcGeo);
-				
-				$recipeDetail['transport'] =  \mod\repasrc\Analyze::transport($recipeDetail);
-				\core\Core::log($recipeDetail['transport']);
 
-				$gctCol1 = new \mod\googlecharttools\Main();
-				$gctCol1->addColumn('Val', 'string');
-				$gctCol1->addRow('Empreinte écologique du transport');
-				$gctCol2 = new \mod\googlecharttools\Main();
-				$gctCol2->addColumn('Val', 'string');
-				$gctCol2->addRow('Empreinte écologique du transport');
-				$gctComp = new \mod\googlecharttools\Main();
-				$gctComp->addColumn('Aliment', 'string');
-				$gctComp->addColumn('Empreinte écologique foncière', 'number');
-				$gctComp->addColumn('Distance', 'number');
-				foreach($recipeDetail['transport']['datas'] as $fs) {
-					$gctCol1->addColumn($fs['foodstuff']['label'], 'number');
-					$gctCol1->addRow($fs['transport']['distance']);
-					$gctCol2->addColumn($fs['foodstuff']['label'], 'number');
-					$gctCol2->addRow($fs['transport']['footprint']);
-					$gctComp->addRow($fs['foodstuff']['label']);
-					$gctComp->addRow(round($fs['transport']['distance'],3));
-					$gctComp->addRow(round($fs['transport']['footprint'],3));
-					if (isset($fs['families']) && sizeof($fs['families']) > 0) {
-						$families[] = @array_shift(array_keys($fs['families']));
-					}
-				}
+				$graph = \mod\repasrc\Graph::recipeTransport($recipeDetail);
 				$page->smarty->assign(array(
-					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
-					'dataFootprintCol1' => $gctCol1->getJSON(),
-					'dataFootprintCol2' => $gctCol2->getJSON(),
-					'dataFootprintComp' => $gctComp->getJSON()
+					'colors' => $graph['colors'],
+					'dataFootprintCol1' => $graph['col1']->getJSON(),
+					'dataFootprintCol2' => $graph['col2']->getJSON(),
+					'dataFootprintPie' => $graph['comp']->getJSON()
 				));
+			break;
+
+			case 'mode':
+				$graph = \mod\repasrc\Graph::recipeProductionConservation($recipeDetail);
+				$page->smarty->assign(array(
+						'dataConservation' => $graph['pie1']->getJSON(),
+						'dataProduction' => $graph['pie2']->getJSON(),
+					));
 			break;
 
 			case 'prix':
@@ -314,8 +269,9 @@ class Main {
 						$gctCol1->addColumn('Val', 'string');
 						$gctCol1->addRow('Prix des aliments HT');
 						foreach($recipeDetail['foodstuffList'] as $fs) {
+							$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 							if ($fs['vat'] && !empty($fs['price'])) {
-								$gctCol1->addColumn($fs['foodstuff']['label'], 'number');
+								$gctCol1->addColumn($label, 'number');
 								$gctCol1->addRow($fs['price']);
 								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
 									$families[] = @array_shift(array_keys($fs['families']));
@@ -333,8 +289,9 @@ class Main {
 						$gctCol2->addColumn('Val', 'string');
 						$gctCol2->addRow('Prix des aliments TTC');
 						foreach($recipeDetail['foodstuffList'] as $fs) {
+							$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
 							if (!$fs['vat'] && !empty($fs['price'])) {
-								$gctCol2->addColumn($fs['foodstuff']['label'], 'number');
+								$gctCol2->addColumn($label, 'number');
 								$gctCol2->addRow($fs['price']);
 								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
 									$families[] = @array_shift(array_keys($fs['families']));
@@ -591,9 +548,63 @@ class Main {
 
 	public static function hook_mod_repasrc_menu_analyze($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
-		$action = $params[1];
-		if (isset($params[2]) && !empty($params[2])) {
-			$num = $params[2];
+		if (isset($params[2]))
+			$id = $params[2];
+    $page = new \mod\webpage\Main();
+		
+		if (!isset($section) || is_null($section)) $section = $params[1];
+
+		if (!empty($id)) {
+			$modules = \mod\repasrc\Recipe::getModulesList($id);
+		} else {
+			$modules = (isset($_SESSION['recipe']['modules'])) ? $_SESSION['recipe']['modules'] : 0;
+		}
+
+		$recipeDetail = \mod\repasrc\Menu::getDetail($id);
+
+		$noData = array();
+
+		switch($section) {
+			case 'resume':
+				$noData = $families = array();
+				$gctPie = new \mod\googlecharttools\Main();
+				$gctCol = new \mod\googlecharttools\Main();
+				$gctComp = new \mod\googlecharttools\Main();
+				$gctPie->addColumn('Aliment', 'string');
+				$gctPie->addColumn('Empreinte écologique foncière pour la recette', 'number');
+				$gctCol->addColumn('Val', 'string');
+				$gctCol->addRow('Empreinte écologique foncière pour une personne');
+				$gctComp->addColumn('Aliment', 'string');
+				$gctComp->addColumn('Empreinte écologique foncière', 'number');
+				$gctComp->addColumn('Quantité', 'number');
+				if (isset($recipeDetail['foodstuffList']) && !empty($recipeDetail['foodstuffList'])) {
+					foreach($recipeDetail['foodstuffList'] as $fs) {
+					$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+					// Foodstuff with no footprint value
+						if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
+							$noData[] = $label;
+						} else {
+							$gctPie->addRow($label);
+							$gctPie->addRow($fs['foodstuff']['footprint']*$fs['quantity']);
+							$gctCol->addColumn($label, 'number');
+							$gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
+							$gctComp->addRow($label);
+							$gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
+							$gctComp->addRow(round(((float)$fs['quantity']*100)/($recipeDetail['totalWeight']/$recipeDetail['persons'])),2);
+							if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+								$families[] = array_shift(array_keys($fs['families']));
+							}
+						}
+					}
+				}
+				$page->smarty->assign(array(
+					'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)),
+					'noData' => $noData,
+					'dataFootprintPie' => $gctPie->getJSON(),
+					'dataFootprintCol' => $gctCol->getJSON(),
+					'dataFootprintComp' => $gctComp->getJSON()
+				));
+			break;
 		}
 	}
 

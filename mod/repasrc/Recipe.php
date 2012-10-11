@@ -68,7 +68,6 @@ class Recipe {
 				break;
 			}
 		}
-		$limit = 1;
 		$o = "ORDER BY label ";
 		$o = "LIMIT $limit OFFSET $offset";
 		$query = $q.$w.$o;
@@ -135,7 +134,18 @@ class Recipe {
 		return $fs;
 	}
 
-	public static function getDetail($id) {
+	public static function getDetail($id, $nocache=false) {
+
+		if ($nocache === false) {
+			$hash = self::decodeRecipeHash($id);
+			if (!is_null($hash)) {
+				\Core\core::log("getting recipe $id cache");
+				return $hash;
+			}
+		}
+
+		\Core\core::log("Building recipe $id cache");
+
 		$params = array($id);
 
 		$conservation['G1'] = 1;
@@ -214,7 +224,10 @@ class Recipe {
 
 		}
 		$recipe['footprint'] = round($recipe['footprint'], 3);
+				
+		$recipe['transport'] = \mod\repasrc\Analyze::transport($recipe);
 
+		self::updateRecipeHash($id, serialize($recipe));
 		return $recipe;
 	}
 
@@ -222,12 +235,14 @@ class Recipe {
 		$params = array((int)$rc_id, $label, (int)$shared, $component, $persons, $type, $comment);
 		$params[] = self::getBitsFromModulesList($_SESSION['recipe']['modules']);
 		return \core\Core::$db->exec_returning('INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_label, rrc_re_public, rrc_re_component, rrc_re_persons, rrc_re_type, rrc_re_comment, rrc_re_modules, rrc_re_creation) VALUES (?,?,?,?,?,?,?,?,now()) ', $params, 'rrc_re_id');
+		self::updateRecipeHash($recipeId);
 	}
 
 	public static function update($recipeId, $label, $shared, $component, $persons, $type, $comment='') {
 		$params = array($label, (int)$shared, $component, $persons, $type, $comment, (int)$recipeId);
 		$q = 'UPDATE rrc_recipe SET rrc_re_label=?, rrc_re_public=?, rrc_re_component=?, rrc_re_persons=?, rrc_re_type=?, rrc_re_comment=?, rrc_re_modification=now() WHERE rrc_re_id=?';
 		$res = \core\Core::$db->exec($q, $params);
+		self::updateRecipeHash($recipeId);
 	}
 
 	public static function duplicate($recipeId, $newName) {
@@ -271,6 +286,7 @@ class Recipe {
 		}
 		$d = "$m[3] $m[2] $m[1] 00:00:00";
 		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_consumptiondate=? WHERE rrc_re_id=?', array($d, (int)$recipeId));
+		self::updateRecipeHash($recipeId);
 	}
 
 	public static function getConsumptionDate($recipeId) {
@@ -283,6 +299,7 @@ class Recipe {
 			throw new \Exception('Invalid price');
 		}
 		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_price=?, rrc_re_vat=? WHERE rrc_re_id=?', array($price, $vat, (int)$recipeId));
+		self::updateRecipeHash($recipeId);
 	}
 
 	public static function getPrice($recipeId) {
@@ -319,5 +336,19 @@ class Recipe {
 	public static function getNameFromId($id) {
 		return \core\Core::$db->fetchOne('SELECT rrc_re_label FROM rrc_recipe WHERE rrc_re_id = ?', array($id));
 	}
+
+	public static function updateRecipeHash($id, $hash=NULL) {
+		if (is_null($hash)) {
+			$hash = serialize(self::getDetail($id, true));
+		}
+		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_hash=? WHERE rrc_re_id=?', array($hash, $id));	
+	}
+
+	public static function decodeRecipeHash($id) {
+		$hash = \core\Core::$db->fetchOne('SELECT rrc_re_hash FROM rrc_recipe WHERE rrc_re_id=?', array($id));
+		if (empty($hash)) return NULL;
+			else return unserialize($hash);
+	}
+
 
 }
