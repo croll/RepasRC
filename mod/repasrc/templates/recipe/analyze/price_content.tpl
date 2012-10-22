@@ -23,7 +23,7 @@
 				<div style="margin:10px 0">Montant total pour les aliments renseignés en prix HT: <strong>{$recipe.totalPrice.vatout} €/Kg</strong></div>
 			{/if}
 			{if isset($recipe.price) && !empty($recipe.price)}	
-				<div style="margin:10px 0 30px 0">Prix par personne défini pour la recette: <strong>{$recipe.price|print_r} €/Kg</strong></div>
+				<div style="margin:10px 0 30px 0">Prix par personne défini pour la recette: <strong>{$recipe.price} €/Personne</strong></div>
 			{/if}
 		</div>
 

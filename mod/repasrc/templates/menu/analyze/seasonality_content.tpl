@@ -68,30 +68,35 @@
 							{else}
 								{assign var='label' value=$fs.foodstuff.label}
 							{/if}
-							<h4 style="margin: 25px 0 3px 0">
-								{$label}
-							</h4>
 							{if !in_array($label, $done)}
+							{if !empty($menu.consumptionmonth)}
+								{assign var="month" value=$menu.consumptionmonth}
+							{else}
+								{assign var="month" value=$recipe.consumptionmonth}
+							{/if}
+								<h4 style="margin: 25px 0 3px 0">
+									{$label}
+								</h4>
 								{append var="done" value=$label}
 								<div class="btn-group">
-								{foreach $fs.foodstuff.seasonality as $month=>$s}
+								{foreach $fs.foodstuff.seasonality as $m=>$s}
 									{if $s == 0}
-										{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-											<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+										{if !empty($month) && $s@index+1 == $month}
+											<span class="btn btn-danger"><div style="border-bottom: 2px solid #fff">{$m}</div></span>
 										{else}
-											<span class="btn btn-danger">{$month}</span>
+											<span class="btn btn-danger">{$m}</span>
 										{/if}
 									{else if $s == 1}
-										{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-											<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+										{if !empty($month) && $s@index+1 == $month}
+											<span class="btn btn-warning"><div style="border-bottom: 2px solid #fff">{$m}</div></span>
 										{else}
-											<span class="btn btn-warning">{$month}</span>
+											<span class="btn btn-warning">{$m}</span>
 										{/if}
 									{else}
-										{if !empty($recipe.consumptionmonth) && $s@index+1 == $recipe.consumptionmonth}
-											<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$month}</div></span>
+										{if !empty($month) && $s@index+1 == $month}
+											<span class="btn btn-success"><div style="border-bottom: 2px solid #fff">{$m}</div></span>
 										{else}
-											<span class="btn btn-success">{$month}</span>
+											<span class="btn btn-success">{$m}</span>
 										{/if}
 									{/if}
 								{/foreach}

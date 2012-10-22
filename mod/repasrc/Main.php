@@ -316,7 +316,6 @@ class Main {
 		$recipes = array();
 		foreach($_SESSION['recipe']['comp'] as $rid) {
 			$recipeDetail = \mod\repasrc\Recipe::getDetail($rid);
-			$recipeDetail['transport'] =  \mod\repasrc\Analyze::transport($recipeDetail);
 			$recipes[] = $recipeDetail;
 		}
 
@@ -514,6 +513,64 @@ class Main {
 
 	public static function hook_mod_repasrc_menu_compare($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
+
+    $page = new \mod\webpage\Main();
+
+		// Remove menu from comparison list
+		$mid = (isset($params[1])) ? $params[1] : null;
+		if (strstr($params[0], 'del') && !empty($mid)) {
+			if (isset($_SESSION['menu']['comp']) && is_array($_SESSION['menu']['comp'])) {
+				$tmp = array();
+				foreach($_SESSION['menu']['comp'] as $tmpid) {
+					if ($tmpid != $mid)
+						$tmp[] = (int)$tmpid;
+				}
+				$_SESSION['menu']['comp'] = $tmp;
+			}
+		}
+
+		$menus = array();
+		foreach($_SESSION['menu']['comp'] as $mid) {
+			$menuDetail = \mod\repasrc\Menu::getDetail($mid);
+			$menuDetail['transport'] = \mod\repasrc\Analyze::menuTransportSummary($menuDetail);
+			$menus[] = $menuDetail;
+		}
+
+		$noData = $families = array();
+
+		$gctFootprintCol = new \mod\googlecharttools\Main();
+		$gctTransportCol = new \mod\googlecharttools\Main();
+		$gctMenuFootprint = new \mod\googlecharttools\Main();
+		$gctFootprintCol->addColumn('Val', 'string');
+		$gctFootprintCol->addRow('Empreinte écologique foncière des recettes');
+		$gctTransportCol->addColumn('Val', 'string');
+		$gctTransportCol->addRow('Empreinte écologique foncière des transports');
+		$gctFootprintCol->addColumn('Val', 'string');
+		$gctFootprintCol->addRow('Empreinte écologique des menus');
+		foreach($menus as $menu) {
+			foreach($menu['recipesList'] as $recipe) {
+					// Foodstuff with no footprint value
+				$gctFootprintCol->addColumn($recipe['label'], 'number');
+				$gctFootprintCol->addRow($recipe['footprint']);
+				$gctTransportCol->addColumn($recipe['label'], 'number');
+				$gctTransportCol->addRow($recipe['transport']['total']['footprint']);
+				$gctTransportCol->addColumn($menu['label'], 'number');
+				$gctTransportCol->addRow($menu['footprint']);
+				if (isset($recipe['families']) && sizeof($recipe['families']) > 0) {
+					$families[] = array_shift(array_keys($recipe['families']));
+				}
+			}
+		}
+		$page->smarty->assign(array(
+			'menuList' => $menus,
+			'noData' => $noData,
+			'dataFootprintCol' => $gctFootprintCol->getJSON(),
+			'dataTransportCol' => $gctTransportCol->getJSON(),
+			'dataMenuFootprint' => $gctTransportCol->getJSON(),
+			'menuCompareList' => $_SESSION['menu']['comp']
+		));
+		$page->setLayout('repasrc/menu/compare');
+    $page->display();
 	}
 
 	public static function hook_mod_repasrc_menu_analyze($hookname, $userdata, $params) {
@@ -557,6 +614,40 @@ class Main {
 			case 'saisonnalite': 
 				$menuDetail['seasonality'] = \mod\repasrc\Analyze::menuSeasonality($menuDetail);
 			break;
+			case 'transport':
+				$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
+				$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
+				$page->smarty->assign('rcGeo', $rcGeo);
+
+				$graph = \mod\repasrc\Graph::menuTransport($menuDetail);
+				$page->smarty->assign(array(
+					'colors' => $graph['colors'],
+					'dataFootprintCol1' => $graph['col1']->getJSON(),
+					'dataFootprintCol2' => $graph['col2']->getJSON(),
+					'dataFootprintPie' => $graph['comp']->getJSON()
+				));
+			break;
+			case 'mode':
+				$graph = \mod\repasrc\Graph::menuProductionConservation($menuDetail);
+				$page->smarty->assign(array(
+						'dataConservation' => $graph['pie1']->getJSON(),
+						'dataProduction' => $graph['pie2']->getJSON()
+					));
+			break;
+			case 'prix':
+			$graph = \mod\repasrc\Graph::menuPrice($menuDetail);
+			if (isset($graph['col1'])) {
+				$page->smarty->assign(array(
+					'dataFootprintCol1' => $graph['col1']['graph']->getJSON(),
+					'colors1' => $graph['col1']['colors']
+					));
+			}
+			if (isset($graph['col2'])) {
+				$page->smarty->assign(array(
+					'dataFootprintCol2' => $graph['col2']['graph']->getJSON(),
+					'colors2' => $graph['col2']['colors']
+					));
+			}
 		}
 
 		if (!empty($id)) {

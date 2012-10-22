@@ -122,6 +122,15 @@ class Analyze {
 		return array('datas' => $datas, 'markers' => $markers, 'lines' => array_values($lines), 'total' => $total, 'nodata' => $nodata);
 	}
 
+	public static function menuTransportSummary($menuDetail) {
+		$tr = array('distance' => 0, 'footprint' => 0);
+		foreach($menuDetail['recipesList'] as $recipe) {
+			$tr['distance'] += $recipe['transport']['total']['distance'];
+			$tr['footprint'] += $recipe['transport']['total']['footprint'];
+		}
+		return $tr;
+	}
+
 	public static function getC($locationType, $quantity, $distance) {
 		switch($locationType) {
 			case 'LOCAL':

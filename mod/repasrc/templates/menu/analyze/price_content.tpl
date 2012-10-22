@@ -9,21 +9,21 @@
 
 <div class="tab-content">
 	
-	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
+	<h2 style="margin-bottom: 3px">{$menu.label|ucfirst}</h2>
 {* *************************
  * Tab datas
  ************************* *}
 	<div class="tab-pane active" id="numbers">
 
 		<div style="margin: 15px 0 20px 0px; font-size: 16px">
-			{if isset($recipe.totalPrice.vatin) && !empty($recipe.totalPrice.vatin)}	
-				<div style="margin:10px 0">Montant total pour les aliments renseignés en prix TTC: <strong>{$recipe.totalPrice.vatin} €/Kg</strong></div>
+			{if isset($menu.totalPrice.vatin) && !empty($menu.totalPrice.vatin)}	
+				<div style="margin:10px 0">Montant total pour les aliments renseignés en prix TTC: <strong>{$menu.totalPrice.vatin} €/Kg</strong></div>
 			{/if}
-			{if isset($recipe.totalPrice.vatout) && !empty($recipe.totalPrice.vatout)}	
-				<div style="margin:10px 0">Montant total pour les aliments renseignés en prix HT: <strong>{$recipe.totalPrice.vatout} €/Kg</strong></div>
+			{if isset($menu.totalPrice.vatout) && !empty($menu.totalPrice.vatout)}	
+				<div style="margin:10px 0">Montant total pour les aliments renseignés en prix HT: <strong>{$menu.totalPrice.vatout} €/Kg</strong></div>
 			{/if}
-			{if isset($recipe.price) && !empty($recipe.price)}	
-				<div style="margin:10px 0 30px 0">Prix par personne défini pour la recette: <strong>{$recipe.price|print_r} €/Kg</strong></div>
+			{if isset($menu.price) && !empty($menu.price)}	
+				<div style="margin:10px 0 30px 0">Prix par personne défini pour le menu: <strong>{$menu.price} €/Personne</strong></div>
 			{/if}
 		</div>
 
@@ -40,49 +40,51 @@
 				</tr>
 			</thead>
 			<tbody>
-			{foreach $recipe.foodstuffList as $fs}
-				{if (isset($fs.foodstuff.synonym))}
-					{assign var='label' value=$fs.foodstuff.synonym}
-				{else}
-					{assign var='label' value=$fs.foodstuff.label}
-				{/if}
-				<tr>
-					<td>
-						{$label}
-					</td>
-					<td>
-						{if empty($fs.price)}
-							-
-						{else}
-							{if empty($fs.vat)}
-								{$fs.price} €/Kg
+			{foreach $menu.recipesList as $recipe}
+				{foreach $recipe.foodstuffList as $fs}
+					{if (isset($fs.foodstuff.synonym))}
+						{assign var='label' value=$fs.foodstuff.synonym}
+					{else}
+						{assign var='label' value=$fs.foodstuff.label}
+					{/if}
+					<tr>
+						<td>
+							{$label}
+						</td>
+						<td>
+							{if empty($fs.price)}
+								-
+							{else}
+								{if empty($fs.vat)}
+									{$fs.price} €/Kg
+								{/if}
 							{/if}
-						{/if}
-					</td>
-					<td>
-						{if empty($fs.price)}
-							-
-						{else}
-							{if !empty($fs.vat)}
-								{$fs.price} €/Kg
+						</td>
+						<td>
+							{if empty($fs.price)}
+								-
+							{else}
+								{if !empty($fs.vat)}
+									{$fs.price} €/Kg
+								{/if}
 							{/if}
-						{/if}
-					</td>
-					<td>
-						{if empty($fs.price)}
-							-
-						{else}
-							{math equation="x * y" x=$fs.price y=$fs.quantity} €
-						{/if}
-					</td>
-					<td>
-						{if empty($fs.price)}
-							-
-						{else}
-								{math equation="x * (y/z)" x=$fs.price y=$fs.quantity z=$recipe.persons} €
-						{/if}
-					</td>
-				</tr>
+						</td>
+						<td>
+							{if empty($fs.price)}
+								-
+							{else}
+								{math equation="x * y" x=$fs.price y=$fs.quantity} €
+							{/if}
+						</td>
+						<td>
+							{if empty($fs.price)}
+								-
+							{else}
+									{math equation="x * (y/z)" x=$fs.price y=$fs.quantity z=$recipe.persons} €
+							{/if}
+						</td>
+					</tr>
+					{/foreach}
 				{/foreach}
 			</tbody>
 		</table>

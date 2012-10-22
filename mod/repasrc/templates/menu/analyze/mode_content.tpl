@@ -8,7 +8,7 @@
 
 	<div class="tab-content">
 
-		<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
+		<h2 style="margin-bottom: 3px">{$menu.label|ucfirst}</h2>
 
 		{* *************************
 		* Tab datas
@@ -24,23 +24,29 @@
 					</tr>
 				</thead>
 				<tbody>
-					{foreach $recipe.foodstuffList as $fs}
-					{if (isset($fs.foodstuff.synonym))}
-					{assign var='label' value=$fs.foodstuff.synonym}
-					{else}
-					{assign var='label' value=$fs.foodstuff.label}
-					{/if}
-					<tr>
-						<td>
-							{$label}
-						</td>
-						<td>
-							{$fs.conservation_label}
-						</td>
-						<td>
-							{$fs.production_label}
-						</td>
-					</tr>
+					{assign var="done"  value=array()}
+					{foreach $menu.recipesList as $recipe}
+						{foreach $recipe.foodstuffList as $fs}
+						{if (isset($fs.foodstuff.synonym))}
+							{assign var='label' value=$fs.foodstuff.synonym}
+						{else}
+							{assign var='label' value=$fs.foodstuff.label}
+						{/if}
+						{if !in_array($label, $done)}
+							<tr>
+								<td>
+									{$label}
+								</td>
+								<td>
+									{$fs.conservation_label}
+								</td>
+								<td>
+									{$fs.production_label}
+								</td>
+							</tr>
+							{append var="done" value="label"}
+						{/if}
+						{/foreach}
 					{/foreach}
 				</tbody>
 			</table>

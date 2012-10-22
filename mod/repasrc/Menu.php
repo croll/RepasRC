@@ -18,7 +18,7 @@ class Menu {
 	}
 
 	public static function getDetail($menuId) {
-		$menuInfos = \core\Core::$db->fetchRow('SELECT rrc_me_id AS "id", rrc_me_label AS "label", rrc_me_public AS shared, rrc_me_eaters AS "eaters", rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification, rrc_me_price AS price, rrc_me_vat AS vat, rrc_me_consumptiondate AS consumptiondate FROM rrc_menu WHERE rrc_me_id=?', array($menuId));
+		$menuInfos = self::getInfos($menuId);
 		$menuInfos['recipesList'] = array();
 		$q = "SELECT rrc_mr_rrc_recipe_id AS recipeid, rrc_mr_portions AS portions FROM rrc_menu_recipe WHERE rrc_mr_rrc_menu_id = ?";
 		$menuInfos['footprint'] = 0;

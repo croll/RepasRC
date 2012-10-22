@@ -63,7 +63,7 @@
 					</tbody>
 				</table>
 			{/if}
-			{if sizeof($recipe.transport.nodata) > 0}
+			{if isset($recipe.transport.nodata) && sizeof($recipe.transport.nodata) > 0}
 				<h4>Aliments dont l'origine est indéfinie</h4>
 					{foreach $recipe.transport.nodata as $fsname}
 						<div>- {$fsname}</div>

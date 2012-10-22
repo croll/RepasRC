@@ -6,6 +6,14 @@
 - Correction du bug lors de l'ajout d'un aliment à une recette, ça plantait lors de l'ajout d'un autre aliment.
 - Correction du bug lors de l'ajout d'une recette à un menu, ça plantait lors de l'ajout d'une autre recette.
 - Les produits frais étaient mal classés dans le récapitulatif de saisonnalité.
+- Si on mettait une date de consommation pour le menu, elle n'etait pas prise en compte pour la section "Analyse"
+- Il y avait une inverstion entre les prix HT et TTC dans le module de prix.
+
+# Analyse
+
+<> Saisonnalité: Affichage de la liste des produits sans saisonnalité définie
+                 Messages si aucune saisonnalité ń'est définie pour aucun aliment
+- Comparaison de menus.
 
 ### 2012/01/10
 
