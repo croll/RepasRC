@@ -41,7 +41,7 @@ class Analyze {
 			$consumptionmonth = isset($menuDetail['consumptionmonth']) ? $menuDetail['consumptionmonth'] : null;
 			$recipeSeasonality = self::seasonality($recipeDetail, $consumptionmonth);
 			foreach(array('ok','nok','out','noinfo') as $type) {
-				if (isset($recipeSeasonality[$type]) && is_array($recipeSeasonality[$type])) {
+				if (isset($recipeSeasonality[$type]) &&is_array($recipeSeasonality[$type])) {
 					foreach($recipeSeasonality[$type] as $recipeName) {
 						if (!in_array($recipeName, $seasonality[$type])) {
 							$seasonality[$type][] = $recipeName;
@@ -61,11 +61,16 @@ class Analyze {
 		$total = array('distance' => 0, 'footprint' => 0);
 		$markers = array();
 		$lines = array();
+		$nodata = array();
 		foreach($recipeDetail['foodstuffList'] as $foodstuff) {
 			$id = $foodstuff['recipeFoodstuffId'];
 			$foodstuff['transport'] = array('distance' => 0, 'footprint' => 0);
 			$precise = false;
 			// For each, store informations and calculate distance
+			if (isset($foodstuff['origin']['nodata']) && ($foodstuff['origin']['nodata']) === true) {
+				$nodata[] = $foodstuff['foodstuff']['label'];
+				continue;
+			}
 			for($i=0; $i<sizeof($foodstuff['origin']);$i++) {
 				if (!empty($foodstuff['origin'][$i]['zoneid'])) {
 					$q = 'SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?';
@@ -114,7 +119,7 @@ class Analyze {
 
 			$datas[$foodstuff['foodstuff']['label']] = $foodstuff;
 		}
-		return array('datas' => $datas, 'markers' => $markers, 'lines' => array_values($lines), 'total' => $total);
+		return array('datas' => $datas, 'markers' => $markers, 'lines' => array_values($lines), 'total' => $total, 'nodata' => $nodata);
 	}
 
 	public static function getC($locationType, $quantity, $distance) {

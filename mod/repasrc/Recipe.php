@@ -136,7 +136,7 @@ class Recipe {
 
 	public static function getDetail($id, $nocache=false) {
 
-		if (0 && $nocache === false) {
+		if ($nocache === false) {
 			$hash = self::decodeRecipeHash($id);
 			if (!is_null($hash)) {
 				//\Core\core::log("getting recipe $id cache");

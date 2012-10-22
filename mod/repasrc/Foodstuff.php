@@ -201,7 +201,12 @@ class Foodstuff {
 		$q .= 'LEFT JOIN rrc_geo_zonevalue zv ON ori.rrc_or_rrc_geo_zonevalue_id=zv.rrc_zv_id ';
 		$q .= 'LEFT JOIN rrc_geo_zonetype zt ON zv.rrc_zv_rrc_geo_zonetype_id=zt.rrc_zt_id ';
 		$q .= 'WHERE ori.rrc_or_rrc_recipe_foodstuff_id = ? ORDER BY rrc_or_id ASC';
-		return \core\Core::$db->fetchAll($q, array((int)$recipeFoodstuffId));
+		$origin = \core\Core::$db->fetchAll($q, array((int)$recipeFoodstuffId));
+		if (empty($origin)) {
+			return array('nodata' => true);
+		} else {
+			return $origin;
+		}
 	}
 
 	public static function setOriginForRecipe($recipeFoodstuffId, $type, $zoneIds) {
