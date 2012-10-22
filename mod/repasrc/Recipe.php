@@ -136,15 +136,15 @@ class Recipe {
 
 	public static function getDetail($id, $nocache=false) {
 
-		if ($nocache === false) {
+		if (0 && $nocache === false) {
 			$hash = self::decodeRecipeHash($id);
 			if (!is_null($hash)) {
-				\Core\core::log("getting recipe $id cache");
+				//\Core\core::log("getting recipe $id cache");
 				return $hash;
 			}
 		}
 
-		\Core\core::log("Building recipe $id cache");
+		//\Core\core::log("Building recipe $id cache");
 
 		$params = array($id);
 
@@ -226,6 +226,8 @@ class Recipe {
 		$recipe['footprint'] = round($recipe['footprint'], 3);
 				
 		$recipe['transport'] = \mod\repasrc\Analyze::transport($recipe);
+		
+		$recipe['seasonality'] = \mod\repasrc\Analyze::seasonality($recipe);
 
 		self::updateRecipeHash($id, serialize($recipe));
 		return $recipe;

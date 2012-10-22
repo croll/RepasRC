@@ -112,6 +112,51 @@ class Graph {
     );
   }
 
+  public static function recipePrice($recipeDetail) {
+    $vatin = array();
+    $vatout = array();
+    $gctCol1 = null;
+    $gctCol2 = null;
+    $ret = array();
+    if (!empty($recipeDetail['totalPrice']['vatin'])) {
+      $families = array();
+      $gctCol1 = new \mod\googlecharttools\Main();
+      $gctCol1->addColumn('Val', 'string');
+      $gctCol1->addRow('Prix des aliments HT');
+      foreach($recipeDetail['foodstuffList'] as $fs) {
+        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        if ($fs['vat'] && !empty($fs['price'])) {
+          $gctCol1->addColumn($label, 'number');
+          $gctCol1->addRow($fs['price']);
+          if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+            $families[] = @array_shift(array_keys($fs['families']));
+          }
+        }
+      }
+      $colors1 = json_encode(\mod\repasrc\Tools::getColorsArray($families));
+      $ret['col1'] = array('graph' => $gctCol1, 'colors' => $colors1);
+    }
+    if (!empty($recipeDetail['totalPrice']['vatout'])) {
+      $families = array();
+      $gctCol2 = new \mod\googlecharttools\Main();
+      $gctCol2->addColumn('Val', 'string');
+      $gctCol2->addRow('Prix des aliments TTC');
+      foreach($recipeDetail['foodstuffList'] as $fs) {
+        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        if (!$fs['vat'] && !empty($fs['price'])) {
+          $gctCol2->addColumn($label, 'number');
+          $gctCol2->addRow($fs['price']);
+          if (isset($fs['families']) && sizeof($fs['families']) > 0) {
+            $families[] = @array_shift(array_keys($fs['families']));
+          }
+        }
+      }
+      $colors2 = json_encode(\mod\repasrc\Tools::getColorsArray($families));
+      $ret['col2'] = array('graph' => $gctCol2, 'colors' => $colors2);
+    }
+    return $ret;
+  }
+
 }
 
 ?>

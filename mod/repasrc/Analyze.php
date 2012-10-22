@@ -4,16 +4,25 @@ namespace mod\repasrc;
 
 class Analyze {
 
-	public static function seasonality($recipeDetail) {
-		$seasonality = array();
-		$month = \mod\repasrc\Tools::getMonthLabel($recipeDetail['consumptionmonth']);
+	public static function seasonality($recipeDetail, $consumptiondate=null) {
+		$seasonality = array('ok' => NULL, 'nok' => NULL, 'out' => NULL);
+		if (!is_null($consumptiondate)) {
+			$month = \mod\repasrc\Tools::getMonthLabel($consumptiondate);
+		} else if (!empty($recipeDetail['consumptionmonth'])){
+			$m = \mod\repasrc\Tools::getMonthLabel($recipeDetail['consumptionmonth']);
+			if (!is_null($m) && !empty($m)) {
+				$month = $m;
+			} else {
+				$month = null;
+			}
+		}
 		foreach($recipeDetail['foodstuffList'] as $foodstuff) {
 			$label = (isset($foodstuff['foodstuff']['synonym'])) ? $foodstuff['foodstuff']['synonym'] : $foodstuff['foodstuff']['label'];
-			if (($foodstuff['conservation'] == 'Frais' || $foodstuff['conservation'] == '') && (in_array('Légumes', $foodstuff['families']) || in_array('Fruits', $foodstuff['families']))) {
+			if (($foodstuff['conservation'] == 'G1' || $foodstuff['conservation'] == '') && (in_array('Légumes', $foodstuff['families']) || in_array('Fruits', $foodstuff['families']))) {
 				if (empty($foodstuff['foodstuff']['seasonality'])) {
 					$seasonality['noinfo'][] = $label;
 				} else {
-					if ($foodstuff['foodstuff']['seasonality'][$month] > 0) {
+					if ($month && $foodstuff['foodstuff']['seasonality'][$month] > 0) {
 						$seasonality['ok'][] = $label;
 					} else {
 						$seasonality['nok'][] = $label;
@@ -23,6 +32,24 @@ class Analyze {
 				$seasonality['out'][] = $label;
 			}
 		}
+		return $seasonality;
+	}
+
+	public static function menuSeasonality($menuDetail) {
+		$seasonality = array('ok' => array(), 'nok' => array(), 'out' => array(), 'noinfo' => array());
+		foreach($menuDetail['recipesList'] as $recipeDetail) {
+			$consumptionmonth = isset($menuDetail['consumptionmonth']) ? $menuDetail['consumptionmonth'] : null;
+			$recipeSeasonality = self::seasonality($recipeDetail, $consumptionmonth);
+			foreach(array('ok','nok','out','noinfo') as $type) {
+				if (isset($recipeSeasonality[$type]) && is_array($recipeSeasonality[$type])) {
+					foreach($recipeSeasonality[$type] as $recipeName) {
+						if (!in_array($recipeName, $seasonality[$type])) {
+							$seasonality[$type][] = $recipeName;
+						}
+					} 
+				}
+			}
+		} 
 		return $seasonality;
 	}
 

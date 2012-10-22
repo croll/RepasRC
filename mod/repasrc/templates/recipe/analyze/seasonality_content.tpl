@@ -38,32 +38,24 @@
 					<tbody>
 						<tr>
 							<td>
-								{if (isset($recipe.seasonality.ok))}
-									{foreach $recipe.seasonality.ok as $name}
-										- {$name}<br />
-									{/foreach}
-								{/if}
+								{foreach $recipe.seasonality.ok as $name}
+									- {$name}<br />
+								{/foreach}
 							</td>
 							<td>
-								{if (isset($recipe.seasonality.nok))}
-									{foreach $recipe.seasonality.nok as $name}
-										- {$name}<br />
-									{/foreach}
-								{/if}
+								{foreach $recipe.seasonality.nok as $name}
+									- {$name}<br />
+								{/foreach}
 							</td>
 							<td>
-								{if (isset($recipe.seasonality.noinfo))}
-									{foreach $recipe.seasonality.noinfo as $name}
-										- {$name}<br />
-									{/foreach}
-								{/if}
+								{foreach $recipe.seasonality.noinfo as $name}
+									- {$name}<br />
+								{/foreach}
 							</td>
 							<td>
-								{if (isset($recipe.seasonality.out))}
-									{foreach $recipe.seasonality.out as $name}
-										- {$name}<br />
-									{/foreach}
-								{/if}
+								{foreach $recipe.seasonality.out as $name}
+									- {$name}<br />
+								{/foreach}
 							</td>
 						</tr>
 					</tbody>

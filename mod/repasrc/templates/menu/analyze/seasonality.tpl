@@ -1,13 +1,13 @@
-{extends tplextends('repasrc/recipe_edit')}
+{extends tplextends('repasrc/menu_edit')}
 
 {block name='webpage_head' append}
-	{js file="/mod/repasrc/js/recipe.js"}
+	{js file="/mod/repasrc/js/menu.js"}
 {/block}
 
-{block name='recipe_title'}
+{block name='menu_title'}
 	<h1>{t d='repasrc' m='Saisonnalité'}</h1>
 {/block}
 
-{block name='recipe_content'}
-	{include file="repasrc/recipe/analyze/seasonality_content"}
+{block name='menu_content'}
+	{include file="repasrc/menu/analyze/seasonality_content"}
 {/block}

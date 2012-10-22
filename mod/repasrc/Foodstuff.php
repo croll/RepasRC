@@ -157,6 +157,7 @@ class Foodstuff {
 		if ($recipeFoodstuffId) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
 		}
+		\mod\repasrc\Recipe::updateRecipeHash(self::getRecipeId($recipeFoodstuffId));
 	}
 
 	public static function getRecipeFoodstuffId($recipeId, $foodstuffId, $synonymId) {
@@ -168,6 +169,12 @@ class Foodstuff {
 		if (\core\Core::$db->exec($q, array((float)$quantity, (float)$price, (int)$vat, $conservation, $production, (int)$recipeFoodstuffId))) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
 		}
+		\mod\repasrc\Recipe::updateRecipeHash(self::getRecipeId($recipeFoodstuffId));
+	}
+
+	public static function getRecipeId($recipeFoodstuffId) {
+		$id = \core\Core::$db->fetchOne('SELECT rrc_rf_rrc_recipe_id FROM rrc_recipe_foodstuff WHERE rrc_rf_id = ?', array((int)$recipeFoodstuffId));
+		return $id;
 	}
 
 	public static function getFromRecipe($recipeFoodstuffId) {
@@ -184,7 +191,9 @@ class Foodstuff {
 	}
 
 	public static function deleteFromRecipe($recipeFoodstuffId) {
+		$recipeId = self::getRecipeId($recipeFoodstuffId);
 		\core\Core::$db->exec('DELETE FROM rrc_recipe_foodstuff WHERE rrc_rf_id = ?', array($recipeFoodstuffId));
+		\mod\repasrc\Recipe::updateRecipeHash($recipeId);
 	}
 
 	public static function getOriginFromRecipe($recipeFoodstuffId) {

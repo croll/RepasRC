@@ -154,13 +154,13 @@
 									{$foodstuffForm.location}
 								</div>
 							</div>
-							<div class="control-group" id="location_steps"{if $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
+							<div class="control-group" id="location_steps"{if !isset($defaultValues.location) || $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
 								<label class="control-label" style="width: 50px">{t d='repasrc' m="Etapes"}</label>
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
 									<div id="steps" style="margin-top:10px">
 										{assign var="steps" value=""}
-										{if isset($defaultValues.origin) && $defaultValues.location == 'LETMECHOOSE' && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
+										{if isset($defaultValues.origin) && isset($defaultValues.location) && $defaultValues.location == 'LETMECHOOSE' && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
 											{foreach $defaultValues.origin as $step}
 												{if isset($step.zonelabel)}
 													<div rel="{$step.zoneid}" class="step"><span>{$step.zonelabel}</span><i class="icon icon-remove" style="cursor:pointer" onclick="$('steps_input').set('value', '');removeFoodstuffStep({$step.zoneid})"></i></div>

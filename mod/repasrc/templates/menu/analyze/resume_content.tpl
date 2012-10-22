@@ -24,7 +24,7 @@
 		{foreach $menu.recipesList as $recipe}
 			<div style="margin: 0 0 20px 0px">
 				<div style="font-size: 18px">
-					{$recipe.quantity}
+					{$recipe.portions}
 					<strong>
 						<a href="/recette/analyse/resume/{$recipe.id}" target="_blank">{$recipe.label}</a> <span style="font-size: 14px">({$recipe.footprint} m²g par personne)</span>
 					</strong>

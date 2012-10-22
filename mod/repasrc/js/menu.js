@@ -388,5 +388,7 @@ function updateMenuRecipe(menuId, recipeId, menuRecipeId, portions) {
 }
 
 function submitRecipeForm() {
-	document.id('recipeForm').submit();
+		var form = document.id('recipeForm');
+		form.set('action', top.document.location.href);
+		form.submit();
 }

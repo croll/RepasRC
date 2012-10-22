@@ -1,6 +1,6 @@
 <div style="margin: 0 0 20px 20px; font-size: 16px">
 	<div>Nombre de convives: <strong>{$menu.eaters}</strong></div>
-	{if $me.footprint > 0}
+	{if $menu.footprint > 0}
 		<div>Empreinte écologique foncière: <strong>{$menu.footprint|round:3}</strong> m²g</div>
 	{/if}
 </div>
@@ -14,8 +14,8 @@
 		</strong>
 	</div>
 	<div style="font-size: 14px">
-		<div>Empreinte écologique foncière du menu: <strong>{math equation="round(x / y,3)" x=$me.footprint y=$me.eaters} m²g/Kg</strong></div>
-		{if $me.footprint > 0}
+		{if $re.persons > 0 && $re.footprint > 0}
+			<div>Empreinte écologique foncière de la recette: <strong>{round($re.footprint/$re.persons, 3)} m²g/Kg</strong></div>
 		{/if}
 	</div>
 </div>

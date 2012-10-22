@@ -556,6 +556,8 @@ function submitFoodstuffForm() {
 	var chForm_foodstuffForm=document.id('foodstuffForm');
 	var chForm_foodstuffFormValidator = new Form.Validator.Inline(chForm_foodstuffForm, { evaluateFieldsOnChange: false, evaluateFieldsOnBlur: false, warningPrefix: '', errorPrefix: '' });
 	if(chForm_foodstuffForm.validate()) {
-		document.id('foodstuffForm').submit();
+		var form = document.id('foodstuffForm');
+		form.set('action', top.document.location.href);
+		form.submit();
 	}
 }

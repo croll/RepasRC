@@ -1,6 +1,12 @@
 {extends tplextends('webpage/webpage_main_html5')}
 
-{block name='webpage_head' append}
+{block name='webpage_head'}
+	<meta charset="utf-8">
+  <title>REPAS-RC</title>
+  <link rel="shortcut icon" href="/mod/repasrc/favicon.ico" type="image/x-icon" />
+  <!--[if lt IE 9]>
+    <script src="/mod/cssjs/ext/html5shiv/html5.js"></script>
+  <![endif]-->
 	{js file="/mod/cssjs/js/mootools.js"}
 	{js file="/mod/cssjs/js/mootools.more.js"}
 	{js file="/mod/cssjs/js/captainhook.js"}

@@ -232,11 +232,6 @@ class Main {
 				));
 			break;
 
-			case 'saisonnalite':
-				if (empty($recipeDetail['consumptionmonth'])) continue;
-				$recipeDetail['seasonality'] = \mod\repasrc\Analyze::seasonality($recipeDetail);
-			break;
-
 			case 'transport':
 				$rcInfos = \mod\repasrc\RC::getRcInfos($_SESSION['rc']);
 				$rcGeo = \core\Core::$db->fetchRow('SELECT ST_X(rrc_zv_geom) AS x, ST_Y(rrc_zv_geom) AS y, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_id = ?', array($rcInfos['zoneid']));
@@ -263,48 +258,20 @@ class Main {
 				if (empty($recipeDetail['totalPrice']['vatin']) && empty($recipeDetail['totalPrice']['vatin'])) {
 					$page->smarty->assign('noprice', true);
 				} else {
-					if (!empty($recipeDetail['totalPrice']['vatin'])) {
-						$families = array();
-						$gctCol1 = new \mod\googlecharttools\Main();
-						$gctCol1->addColumn('Val', 'string');
-						$gctCol1->addRow('Prix des aliments HT');
-						foreach($recipeDetail['foodstuffList'] as $fs) {
-							$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
-							if ($fs['vat'] && !empty($fs['price'])) {
-								$gctCol1->addColumn($label, 'number');
-								$gctCol1->addRow($fs['price']);
-								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
-									$families[] = @array_shift(array_keys($fs['families']));
-								}
-							}
-						}
+					$graph = \mod\repasrc\Graph::recipePrice($recipeDetail);
+					if (isset($graph['col1'])) {
 						$page->smarty->assign(array(
-							'dataFootprintCol1' => $gctCol1->getJSON(),
-							'colors1' => json_encode(\mod\repasrc\Tools::getColorsArray($families))
-						));
+							'dataFootprintCol1' => $graph['col1']['graph']->getJSON(),
+							'colors1' => $graph['col1']['colors']
+							));
 					}
-					if (!empty($recipeDetail['totalPrice']['vatout'])) {
-						$families = array();
-						$gctCol2 = new \mod\googlecharttools\Main();
-						$gctCol2->addColumn('Val', 'string');
-						$gctCol2->addRow('Prix des aliments TTC');
-						foreach($recipeDetail['foodstuffList'] as $fs) {
-							$label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
-							if (!$fs['vat'] && !empty($fs['price'])) {
-								$gctCol2->addColumn($label, 'number');
-								$gctCol2->addRow($fs['price']);
-								if (isset($fs['families']) && sizeof($fs['families']) > 0) {
-									$families[] = @array_shift(array_keys($fs['families']));
-								}
-							}
-						}
+					if (isset($graph['col2'])) {
 						$page->smarty->assign(array(
-							'dataFootprintCol2' => $gctCol2->getJSON(),
-							'colors2' => json_encode(\mod\repasrc\Tools::getColorsArray($families))
-						));
+							'dataFootprintCol2' => $graph['col2']['graph']->getJSON(),
+							'colors2' => $graph['col2']['colors']
+							));
 					}
 				}
-			break;
 		}
 
 		$recipes = array($recipeDetail);
@@ -412,7 +379,7 @@ class Main {
 		}
 		// Display
     $page = new \mod\webpage\Main();
-		$page->smarty->assign(array('menuList' => $_SESSION['menu']['comp']));
+		$page->smarty->assign(array('menuList' => (isset($_SESSION['menu']['comp']) ? $_SESSION['menu']['comp'] : NULL)));
 		$page->setLayout('repasrc/menu/list');
     $page->display();
 	}
@@ -523,7 +490,6 @@ class Main {
 
     $tplTrans = array('recettes' => 'recipe', 'commentaires' => 'comments');
     $tpl = (isset($tplTrans[$section])) ? $tplTrans[$section] : $section;
-    $page->smarty->assign(array('section' => $section, 'recipeId' => $id, 'modulesList' => $modules));
       if (!empty($id)) {
         $modules = \mod\repasrc\Menu::getModulesList($id);
       } else {
@@ -537,7 +503,11 @@ class Main {
     } else {
       $menu = array('id' => $id);
     }
-    $page->smarty->assign('menu', $menu);
+    $page->smarty->assign(
+    	array('section' => $section, 
+    		'menu' => $menu,
+    		'modulesList' => $modules
+    	));
     $page->setLayout('repasrc/menu/'.$tpl);
     $page->display();
 	}
@@ -584,6 +554,15 @@ class Main {
 					'dataFootprintCol' => $gctCol->getJSON()
 				));
 			break;
+			case 'saisonnalite': 
+				$menuDetail['seasonality'] = \mod\repasrc\Analyze::menuSeasonality($menuDetail);
+			break;
+		}
+
+		if (!empty($id)) {
+			$modules = \mod\repasrc\Menu::getModulesList($id);
+		} else {
+			$modules = (isset($_SESSION['menu']['modules'])) ? $_SESSION['menu']['modules'] : 0;
 		}
 
 		$tplTrans = array('saisonnalite' => 'seasonality', 'transport' => 'transport',  'prix' => 'price');
@@ -591,7 +570,8 @@ class Main {
 		$page->setLayout('repasrc/menu/analyze/'.$tpl);
 		$page->smarty->assign(array(
 			'section' => $section,
-			'menu' => $menuDetail
+			'menu' => $menuDetail,
+			'modulesList' => $modules
 		));
 		$page->display();
 	}
