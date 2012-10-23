@@ -135,6 +135,7 @@
 		</div>
 	{else}
 		<div class="alert alert-warn">
+			<a class="close" data-dismiss="alert">×</a>
 			La carte permet de visualiser les distances parcourues par les aliments. Pour cela l'origine des aliments doit être définie avec le plus de précision possible lors de la création de la recette.<br />
 			En passant la souris sur un repère, une liste d'aliments est affichée. 
 			Les aliments dont l'origine est vague ("Régionale", "France" ou "Internationale") sont affichés sur le repère de la RC. <br/>
