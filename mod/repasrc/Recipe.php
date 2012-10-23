@@ -235,7 +235,7 @@ class Recipe {
 
 	public static function add($rc_id, $label, $shared, $component, $persons, $type, $comment='') {
 		$params = array((int)$rc_id, $label, (int)$shared, $component, $persons, $type, $comment);
-		$params[] = self::getBitsFromModulesList($_SESSION['recipe']['modules']);
+		$params[] = \mod\repasrc\Tools::getBitsFromModulesList($_SESSION['recipe']['modules']);
 		return \core\Core::$db->exec_returning('INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_label, rrc_re_public, rrc_re_component, rrc_re_persons, rrc_re_type, rrc_re_comment, rrc_re_modules, rrc_re_creation) VALUES (?,?,?,?,?,?,?,?,now()) ', $params, 'rrc_re_id');
 		self::updateRecipeHash($recipeId);
 	}
