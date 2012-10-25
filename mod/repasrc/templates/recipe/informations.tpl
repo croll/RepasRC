@@ -8,43 +8,43 @@
 {block name='recipe_content'}
 
 	<div id="informations_container">
-		<div class="alert alert-info">
-			<a class="close" data-dismiss="alert">×</a>
-			Veuillez remplir le formulaire suivant pour renseigner les informations essentielles pour qualifier votre recette.
-		</div> 
+		<div class="help" code="composerunerecetteformulaire"></div>
 		{form mod="repasrc" file="templates/recipe/informations.json" defaultValues=\mod\repasrc\Recipe::getInfos($recipe.id)}
 			<fieldset>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Nom de la recette"}</label>
 					<div class="controls">
 						{$informations.label}
+						<div class="help" code="creernomdelarecette"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Composante"}</label>
+
 					<div class="controls">
 						{$informations.component}
-						<p class="help-block">{t d='repasrc' m="Indique le type de recette: entrée, plat, dessert, pain."}</p>	
+						<div class="help" code="creercomposante"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Nombre de convives"}</label>
 					<div class="controls">
 						{$informations.persons}
-						<p class="help-block">{t d='repasrc' m="Nombre de personnes prévues pour la recette."}</p>	
+						<div class="help" code="creernombreconvives"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m='Partager'}</label>
 					<div class="controls">
 						{$informations.shared}
-						<p class="help-block">{t d='repasrc' m="Une recette partagée sera visible par les autres utilisateurs du calculateur. Ils pourront comparer leur recette avec la votre et créer une recette en s'inspirant de cette dernière."}</p>	
+						<div class="help" code="creerpartager"></div>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Type de recette"}</label>
 					<div class="controls">
 						{$informations.type}
+						<div class="help" code="creertypederecette"></div>
 					</div>
 				</div>
 				{if $modulesList.seasonality}
@@ -53,7 +53,7 @@
 						<label class="control-label">{t d='repasrc' m="Date prévisionnelle de consommation"}</label>
 						<div class="controls">
 							{$informations.consumptiondate}
-							<p class="help-block">{t d='repasrc' m="Date prévisionnelle à laquelle la recette devrait être consommée. C'est à partir de cette date que sera calculée la saisonnalité des aliments composant la recette."}</p>	
+							<div class="help" code="creerdateprevisionnelledeconsommation"></div>
 						</div>
 					</div>
 				{/if}

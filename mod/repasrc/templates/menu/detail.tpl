@@ -1,8 +1,10 @@
 <div style="margin: 0 0 20px 20px; font-size: 16px">
 	<div>Nombre de convives: <strong>{$menu.eaters}</strong></div>
+	{*
 	{if $menu.footprint > 0}
 		<div>Empreinte écologique foncière: <strong>{$menu.footprint|round:3}</strong> m²g</div>
 	{/if}
+	*}
 </div>
 
 {foreach $menu.recipesList as $re}
@@ -10,19 +12,21 @@
 	<div style="font-size: 18px">
 		{$re.portions} portion{if $re.portions > 1}s{/if} de
 		<strong>
-			{$re.label}
+			<a href="/recette/analyse/resume/{$re.id}" target="_blank">{$re.label}</a>
 		</strong>
 	</div>
 	<div style="font-size: 14px">
+		{*
 		{if $re.persons > 0 && $re.footprint > 0}
 			<div>Empreinte écologique foncière de la recette: <strong>{round($re.footprint/$re.persons, 3)} m²g/Kg</strong></div>
 		{/if}
+		*}
 	</div>
 </div>
 {/foreach}
 
 <div class="form-actions" style="margin-top:30px">
-	<a class="btn" href="/menu/analyse/resume/{$menu.id}">Analyser le menu</a>
+	<a class="btn help" code="boutonanalyserlemenu" href="/menu/analyse/resume/{$menu.id}">Analyser le menu</a>
 	{if $comparison != false}
 		<a class="btn" href="/menu/liste/add/{$menu.id}">Sélectionner le menu pour comparaison</a>
 	{/if}

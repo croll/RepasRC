@@ -62,6 +62,7 @@
 							{/foreach}
 					</tbody>
 				</table>
+				<div class="help" code="commentaireanalyserecettetransport"></div>
 			{/if}
 			{if isset($recipe.transport.nodata) && sizeof($recipe.transport.nodata) > 0}
 				<h4>Aliments dont l'origine est indéfinie</h4>

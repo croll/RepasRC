@@ -50,8 +50,7 @@ window.addEvent('domready', function() {
 
 		document.id('subfamily').adopt(new Element('option').set('value', '').set('html', 'Sous famille de produit'));
 
-		loadFamilies();
-		loadSubFamilies();
+		loadFamilies();loadSubFamilies();
 		loadFoodstuff();
 
 		document.id('family').addEvent('change', function() {
@@ -376,6 +375,7 @@ function showRecipeDetail(id, c) {
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
 			CaptainHook.Bootstrap.initAlerts();
+			processHelp('div.modal-box');
 		},
 		onFailure: function() {
 			hideSpinner();
@@ -408,6 +408,7 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 			modalWin.show();
 			CaptainHook.Bootstrap.initTabs('quantity');
 			CaptainHook.Bootstrap.initAlerts();
+			processHelp('div.modal-box');
 			// JS for location
 			document.body.getElement('select[name=location]').addEvent('change', function() {
 				if (this.getSelected().get('value') == 'LETMECHOOSE') {
@@ -522,6 +523,7 @@ function duplicateRecipeModal(id) {
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
 			modalWin.setTitle('Dupliquer la recette').setBody(res.content).setFooter('');
+			processHelp('div.modal-box');
 		},
 		onFailure: function() {
 			hideSpinner();

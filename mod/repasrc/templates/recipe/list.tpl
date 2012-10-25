@@ -19,6 +19,7 @@
      <option value="OTHER">Recettes partagées par les autres RC</option>
      <option value="ADMIN">Recettes proposées par les administrateurs</option>
    </select>
+   <div class="help" code="vosrecettes" location="bottom"></div>
 
 	<select name="component" id="component">
     <option value="">Tout type de composante</option>
@@ -27,10 +28,13 @@
     <option value="CHEESE/DESSERT">Fromage/Dessert</option>
     <option value="BREAD">Pain</option>
   </select>
+   <div class="help" code="typesdecomposantes" location="bottom"></div>
 			
 	<input type="text" id="label" name="label" class="input-medium" placeholder="Nom de la recette" />
+  <div class="help" code="nomdelarecette" location="bottom"></div>
 
 	<input type="text" id="fsname" name="fsname" class="input-medium" placeholder="Nom d'un l'aliment" />
+  <div class="help" code="nomdunaliment" location="bottom"></div>
 
 	</form>
 
@@ -42,6 +46,7 @@
 		</div>
 		<div class="span3" style="margin: 0">
 			<h3 style="margin-bottom:10px">Recettes sélectionnées</h3>
+			<div class="help" code="recettesselectionnees"></div>
 			{if (!is_array($recipeList) || sizeof($recipeList) < 1)}
 			<div class="alert alert-error">
 				Aucune recette.

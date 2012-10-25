@@ -1,4 +1,4 @@
-
+<div class="help" code="analysedelarecetteempreintefonciere"></div>
 {* *************************
  * Tabs
  ************************* *}
@@ -8,19 +8,21 @@
 </ul>
 
 <div class="tab-content">
-	
-	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 {* *************************
  * Tab datas
  ************************* *}
 	<div class="tab-pane active" id="numbers">
+		<div class="help" code="analysedelarecetteempreintefoncierechiffres"></div>
+		<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 
 		<div style="margin: 15px 0 20px 0px; font-size: 16px">
-			<div>Composante: <strong>{$recipe.component}</strong></div>
-			<div>Nombre de convives: <strong>{$recipe.persons}</strong></div>
 			<div>Empreinte écologique foncière pour une personne: <strong>{$recipe.footprint}</strong> m²g</div>
 			<div>Empreinte écologique foncière pour {$recipe.persons} personne{if $recipe.persons > 1}s{/if}: <strong>{math equation="x * y" x=$recipe.persons y=$recipe.footprint}</strong> m²g</div>
+			<div style="margin-top:5px;font-size:12px">Composante: <strong>{$recipe.component}</strong></div>
+			<div style="font-size:12px">Nombre de convives: <strong>{$recipe.persons}</strong></div>
 		</div>
+
+		<hr></hr>
 
 		{foreach $recipe.foodstuffList as $fs}
 			{if (isset($fs.foodstuff.synonym))}
@@ -41,33 +43,33 @@
 				{/foreach}
 				</div>
 				<div style="font-size: 14px">
+					{if !empty($fs.foodstuff.footprint)}
+						<div>Empreinte écologique foncière pour un kilo: <b>{$fs.foodstuff.footprint|round:3} m²g/Kg</b></div>
+						<div style="margin-bottom:5px">Empreinte écologique foncière pour une personne: <b>{math equation="round(x * (y/z),3)" x=$fs.foodstuff.footprint y=$fs.quantity z=$recipe.persons|round:3} m²g</b></div>
+					{/if}
 					{if (!empty($fs.conservation))}
-						<div>Mode de conservation: <strong>{$fs.conservation_label}</strong></div>
+						<div style="font-size:12px">Mode de conservation: <b>{$fs.conservation_label}</b></div>
 					{/if}
 					{if (!empty($fs.production))}
-						<div>Mode de production: <strong>{$fs.production_label}</strong></div>
-					{/if}
-					{if !empty($fs.foodstuff.footprint)}
-						<div>Empreinte écologique foncière pour un kilo: <strong>{$fs.foodstuff.footprint|round:3} m²g/Kg</strong></div>
-						<div>Empreinte écologique foncière pour une personne: <strong>{math equation="round(x * (y/z),3)" x=$fs.foodstuff.footprint y=$fs.quantity z=$recipe.persons|round:3} m²g</strong></div>
+						<div style="font-size:12px">Mode de production: <b>{$fs.production_label}</b></div>
 					{/if}
 					{if (isset($fs.origin) && !empty($fs.origin.0.zonelabel))}
-						<div>Origine: <strong>{$fs.origin.0.zonelabel}</strong></div>
+						<div style="font-size:12px">Provenance: <b>{$fs.origin.0.zonelabel}</b></div>
 					{else if (isset($fs.origin) && !empty($fs.origin.0.location))} 
 						{if $fs.origin.0.location == 'LOCAL'}
-							<div>Origine: <strong>Locale</strong></div>
+							<div style="font-size:12px">Provenance: <b>Locale</b></div>
 						{else if $fs.origin.0.location == 'REGIONAL'}
-							<div>Origine: <strong>Locale</strong></div>
+							<div style="font-size:12px">Provenance: <b>Locale</b></div>
 						{else if $fs.origin.0.location == 'FRANCE'}
-							<div>Origine: <strong>France</strong></div>
+							<div style="font-size:12px">Provenance: <b>France</b></div>
 						{else if $fs.origin.0.location == 'EUROPE'}
-							<div>Origine: <strong>Europe</strong></div>
+							<div style="font-size:12px">Provenance: <b>Europe</b></div>
 						{else if $fs.origin.0.location == 'WORLD'}
-							<div>Origine: <strong>Monde</strong></div>
+							<div style="font-size:12px">Provenance: <b>Monde</b></div>
 						{/if}
 					{/if}
 					{if (isset($fs.price) && !empty($fs.price))}
-						<div>Prix: <strong>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</strong></div>
+						<div style="font-size:12px">Prix: <b>{$fs.price} {if $fs.vat == 0}HT{else}TTC{/if}</b></div>
 					{/if}
 
 					{if empty($fs.foodstuff.footprint)}
@@ -97,6 +99,8 @@
 	 * Tab graphs
 	 ************************* *}
 		<div class="tab-pane" id="graphs">
+			<div class="help" code="analysedelarecetteempreintefoncieregraphiques"></div>
+			<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 		
 			{if sizeof($noData) > 0}
 				<div class='alert alert-danger'>

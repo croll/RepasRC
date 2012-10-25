@@ -28,7 +28,7 @@
 						<thead>
 							<tr>
 								<th>Aliment</th>
-								<th>Origine et étapes</th>
+								<th>Provenance aproximative et initénaire</th>
 								<th>Distance parcourue</th>
 								<th>Empreinte du transport</th>
 								<th>Précision</th>

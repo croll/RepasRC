@@ -1,16 +1,17 @@
-{extends tplextends('webpage/webpage_main')}
+{extends tplextends('repasrc/layout')}
 
 {block name='webpage_head' append}
 	{css file='/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css'}
 	{js file='/mod/cssjs/js/mootools.js'}
 	{js file='/mod/cssjs/js/mootools.more.js'}
 	{if isset($url_redirect)}
-		<meta http-equiv="Refresh" content="2; url={$url_redirect}/" />
+		<meta http-equiv="Refresh" content="2; url={$url_redirect}" />
 	{/if}
 {/block}
+{$_SESSION|print_r}
 
 {block name='webpage_body'}
-  <div style="width: 340px;margin: 200px auto">
+  <div style="width: 340px;margin: 100px auto">
   {if $displayForm}
 	<div class="hero-unit">
 		<legend><h2>REPAS-RC</h2></legend>

@@ -19,7 +19,11 @@
 	{js file="/mod/cssjs/js/spin.js"}
 	{js file="/mod/repasrc/js/repasrc.js"}
 	{js file="/mod/page/js/page.js"}
+	{js file="/mod/repasrc/ext/Bootstrap.js"}
+	{js file="/mod/repasrc/ext/Bootstrap.Tooltip.js"}
+	{js file="/mod/repasrc/ext/Bootstrap.Popover.js"}
 	{js file="/mod/repasrc/ext/MooDatePicker/js/MooDatePicker.js"}
+	{js file="/mod/repasrc/js/help.js"}
 	{js file="/mod/cssjs/ext/meioautocomplete/meioautocomplete.js"}
 	{css file="/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css"}
 	{css file="/mod/repasrc/css/bootstrap-responsive.css"}

@@ -76,6 +76,10 @@
 			"id" : "zoneid",
 			"class" : "input-xlarge"
 		},
+		{	"type" : "checkbox",
+			"name" : "showhelp",
+			"checked" : "checked"
+		},
 		{	"type" : "submit",
 			"name" : "submit",
 			"class" : "btn btn-primary",

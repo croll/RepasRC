@@ -11,6 +11,7 @@
 
 {block name='main-container-content'}
 
+		<div class="help" code="vosinformations"></div>
 		{form mod="repasrc" file="templates/account/account.json" defaultValues=\mod\repasrc\RC::getRcInfos($smarty.session.rc)}
 			<fieldset>
 				<div class="control-group">
@@ -38,14 +39,19 @@
 					<label class="control-label">{t d='repasrc' m='Nom de la commune'}</label>
 					<div class="controls">
 						{$informations.city}
-						<p class="help-block">{t d='repasrc' m="Saisissez les premieres lettres du nom de la commune."}</p>	
+						<div class="help" code="nomdelacommune"></div>
 					</div>
 				</div>
 				<div class="control-group">
-					<label class="control-label">{t d='repasrc' m=""}</label>
+					<label class="control-label"></label>
 					<div class="controls">
 						{$informations.zonelabel}
-						<p class="help-block">{t d='repasrc' m="La commune sélectionnée s'affichera dans ce champs de saisie."}</p>	
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">{t d='repasrc' m="Afficher les bulles d'aide"}</label>
+					<div class="controls">
+						{$informations.showhelp}
 					</div>
 				</div>
 				<div class="form-actions">

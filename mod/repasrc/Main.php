@@ -679,4 +679,33 @@ class Main {
 		}
 	}
 
+	/* ************ */
+	/*    IMPORt    */
+	/* ***********  */
+
+	public static function hook_mod_repasrc_import($hookname, $userdata, $urlmatches) {
+		$page = new \mod\webpage\Main();
+		$page->setLayout('arkeogis/import');
+		$page->display();
+	} 
+
+	public static function hook_mod_arkeogis_repasrc_submit($hookname, $userdata, $urlmatches) {
+
+		$params = array('mod' => 'repasrc', 'file' => 'templates/import.json');
+		$form = new \mod\form\Form($params);
+		if ($form->validate()) {
+			$separator = $form->getValue('separator');
+			$enclosure = $form->getValue('enclosure');
+			$file = $form->getValue('dbfile');
+			$skipline = $form->getValue('skipline');
+			$description = $form->getValue('description');
+			$result =	\mod\repasrc\Recipe::importCsv($file['tmp_name'], $separator, $enclosure, $skipline, $lang, $description);
+			unlink($file['tmp_name']);
+			$page = new \mod\webpage\Main();
+			$page->smarty->assign("result", $result);
+		}
+		$page->setLayout('arkeogis/import');
+		$page->display();
+	}
+
 }

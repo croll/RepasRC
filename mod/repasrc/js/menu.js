@@ -254,6 +254,7 @@ function showMenuDetail(id, c) {
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
 			CaptainHook.Bootstrap.initAlerts();
+			processHelp('div.modal-box');
 		},
 		onFailure: function() {
 			hideSpinner();
@@ -282,6 +283,7 @@ function showRecipeDetail(id, menuRecipeId) {
 			document.getElement('div.form-actions').dispose();
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
+			processHelp('div.modal-box');
 		},
 		onFailure: function() {
 			hideSpinner();
@@ -361,6 +363,7 @@ function showUpdateMenuRecipeModal(menuId, recipeId, menuRecipeId) {
 					updateMenuRecipe(menuId, recipeId, menuRecipeId, document.id('portions').value);
 				}
 			});
+			processHelp('div.modal-box');
 		},
 		onFailure: function() {
 			hideSpinner();

@@ -149,13 +149,13 @@
 					<div class="tab-pane" rel="les informations de production/conservation" id="transport">
 						<fieldset>
 							<div class="control-group">
-								<label class="control-label" style="width: 50px">{t d='repasrc' m="Origine"}</label>
+								<label class="control-label" style="width: 50px">{t d='repasrc' m="Provenance approximative"}</label>
 								<div class="controls" style="margin-left:75px">
 									{$foodstuffForm.location}
 								</div>
 							</div>
 							<div class="control-group" id="location_steps"{if !isset($defaultValues.location) || $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
-								<label class="control-label" style="width: 50px">{t d='repasrc' m="Etapes"}</label>
+								<label class="control-label" style="width: 50px">{t d='repasrc' m="Itinéraire"}</label>
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
 									<div id="steps" style="margin-top:10px">

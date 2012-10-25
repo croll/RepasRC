@@ -13,7 +13,7 @@
 			{/block}
 		</div>
 
-		<div class="span9">
+		<div style="width: 890px">
 			<div class="recipe_content">
 				{block name='main-container-content'}
 				{/block}
