@@ -41,3 +41,34 @@ function showSpinner() {
 function hideSpinner() {
   spinner.stop();
 }
+
+function saveAsImg(chartCont, title) {
+  var chartContainer = document.getElementById(chartCont);
+  var chartDiv = document.getElementById(chartCont);
+  var chartArea = chartDiv.getElementsByTagName('div')[1];
+  var svg = chartArea.innerHTML;
+  var doc = chartContainer.ownerDocument;
+  var canvas = doc.createElement('canvas');
+  canvas.setAttribute('width', chartArea.offsetWidth);
+  canvas.setAttribute('height', chartArea.offsetHeight);
+  canvas.setAttribute('id', 'thecanvas');
+  canvas.setAttribute(
+    'style',
+    'position: absolute; ' +
+    'top: ' + (-chartArea.offsetHeight * 2) + 'px;' +
+    'left: ' + (-chartArea.offsetWidth * 2) + 'px;');
+  doc.body.appendChild(canvas);
+  canvg(canvas, svg);
+  var imgData = canvas.toDataURL("image/png");
+  canvas.parentNode.removeChild(canvas);
+  var req = new Request.JSON({
+      'url': '/ajax/call/repasrc/getImage',
+      onRequest: function() {
+        showSpinner();
+      },
+      'onSuccess': function(imagename) {
+        hideSpinner();
+        window.location.href = 'http://pouet.rpi.beve.org/image/'+imagename+'==='+title;
+      }
+  }).post({'img': imgData.replace(/^data:image\/(png|jpg);base64,/, "")});
+}

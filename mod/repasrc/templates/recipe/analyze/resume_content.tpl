@@ -1,3 +1,7 @@
+{if empty($oldbrowser)}
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+{/if}
 <div class="help" code="analysedelarecetteempreintefonciere"></div>
 {* *************************
  * Tabs
@@ -156,8 +160,34 @@
 			</script>
 
 			<div id="chart_div"></div>
+			{if empty($oldbrower)}
+			<div style="width:200px;margin:0 auto 0 auto">
+				<a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$recipe.label} - Empreinte écologique foncière par aliment')">Enregistrer le graphique</a>
+			</div>
+			{else}
+				<div class="help" code="navigateurimpressionimpossible"></div>
+			{/if}
+			<hr>
+
+			
 			<div id="chart_div2"></div>
+			{if empty($oldbrower)}
+			<div style="width:200px;margin:0 auto 0 auto">
+				<a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte écologique foncière par aliment (pour une personne)')">Enregistrer le graphique</a>
+			</div>
+			{else}
+				<div class="help" code="navigateurimpressionimpossible"></div>
+			{/if}
+			<hr>
+			
 			<div id="chart_div3"></div>
+			{if empty($oldbrower)}
+			<div style="width:200px;margin:0 auto 0 auto">
+				<a href="javascript:void(0)" onclick="saveAsImg('chart_div3', '{$recipe.label} - Relation empreinte foncière et quantité d\'aliment')">Enregistrer le graphique</a>
+			</div>
+			{else}
+				<div class="help" code="navigateurimpressionimpossible"></div>
+			{/if}
 
 		</div>
 

@@ -166,4 +166,18 @@ class Ajax {
 		return true;
 	}
 
+	public static function getImage($params) {
+		$hash = md5($params['img']);
+		$dir1 = substr($hash, 0 , 2);
+		$dir2 = substr($hash, 2, 2);
+		$filename = substr($hash, 4, strlen($hash));
+		$path = dirname(__FILE__).'/tmp/'.$dir1.'/'.$dir2;
+		if (!is_dir($path)) {
+			if (!mkdir($path, 0755, true)) {
+				\core\Core::log('tmp directory not writable ?');
+			}
+			file_put_contents($path.'/'.$filename.'.png', base64_decode($params['img']));
+		}
+		return $dir1.'---'.$dir2.'---'.$filename;
+	}
 }

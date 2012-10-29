@@ -25,10 +25,11 @@ class ModuleDefinition extends \core\ModuleDefinition {
 		\mod\regroute\Main::registerRoute($this->id, '#^/menu/liste/?a?d?d?d?e?l?/?([0-9]*)$#', 'mod_repasrc_menu_list');
 		\mod\regroute\Main::registerRoute($this->id, '#^/menu/comparer/?d?e?l?/?([0-9]*)$#', 'mod_repasrc_menu_compare');
 		\mod\regroute\Main::registerRoute($this->id, '#^/menu/analyse/?([a-z]*)/?([0-9]*)$#', 'mod_repasrc_menu_analyze');
+		\mod\regroute\Main::registerRoute($this->id, '#^/image/?([A-Za-z0-9_-]+)={3}(.*)$#', 'mod_repasrc_get_image');
 		\mod\user\Main::addRight("Import RepasRC datas", "User can import datas");			
 		\mod\user\Main::assignRight('View page', 'Anonymous');
-		\mod\user\Main::assignRight('View page', 'Admin');
 		\mod\user\Main::assignRight('View page', 'Registered');
+		//\mod\user\Main::assignRight('View page', 'Admin');
 	}
 
 	function uninstall() {

@@ -209,7 +209,9 @@ class Main {
 		if (isset($params[2]))
 			$id = $params[2];
     $page = new \mod\webpage\Main();
-		
+    $oldbrowser = (preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) ? 1 : 0;
+    $page->smarty->assign('oldbrowser', $oldbrowser);
+
 		if (!isset($section) || is_null($section)) $section = $params[1];
 
 		if (!empty($id)) {
@@ -578,6 +580,8 @@ class Main {
 		if (isset($params[2]))
 			$id = $params[2];
     $page = new \mod\webpage\Main();
+    $oldbrowser = (preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) ? 1 : 0;
+    $page->smarty->assign('oldbrowser', $oldbrowser);
 		
 		if (!isset($section) || is_null($section)) $section = $params[1];
 
@@ -690,7 +694,6 @@ class Main {
 	} 
 
 	public static function hook_mod_arkeogis_repasrc_submit($hookname, $userdata, $urlmatches) {
-
 		$params = array('mod' => 'repasrc', 'file' => 'templates/import.json');
 		$form = new \mod\form\Form($params);
 		if ($form->validate()) {
@@ -707,5 +710,27 @@ class Main {
 		$page->setLayout('arkeogis/import');
 		$page->display();
 	}
+
+  /* ************** */
+  /*     Image      */
+  /* ************** */
+
+  public static function hook_mod_repasrc_get_image($hookname, $userdata, $urlmatches) {
+    print_r($urlmatches);
+    $filename = $urlmatches[1];
+    $title = $urlmatches[2];
+    $path = dirname(__FILE__).'/tmp/'.str_replace('---', '/', $filename).'.png'; 
+    header("Pragma: public"); // required 
+    header("Expires: 0"); 
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
+    header("Cache-Control: private",false); // required for certain browsers 
+    header("Content-Type: $ctype"); 
+    header("Content-Disposition: attachment; filename=\"".urldecode($title)."\";" ); 
+    header("Content-Transfer-Encoding: binary"); 
+    header("Content-Length: ".filesize($path)); 
+    ob_clean(); 
+    flush(); 
+    readfile($path); 
+  } 
 
 }
