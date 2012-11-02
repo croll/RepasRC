@@ -2,7 +2,7 @@
 
 {block name='webpage_head'}
 	<meta charset="utf-8">
-  <title>REPAS-RC {$smarty.session.displayHelp}</title>
+  <title>REPAS-RC</title>
 	<script>
   {if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
 		var displayHelp = {$smarty.session.displayHelp};
@@ -123,6 +123,7 @@
 			</div>
 		</div>
 
+		{if $smarty.server.REQUEST_URI != '/' && !strpos($smarty.server.REQUEST_URI, 'page')}
 		<div id="content" style="position: relative">
 		  <div style="position: absolute;top:5px;left: 680px">
 		  	<a href="javascript:void(0)" id="helpToggler" onclick="toggleHelp()">
@@ -133,6 +134,7 @@
 		  		{/if}
 		  	</a>
 		  </div>
+		  {/if}
 			{block name='repasrc_content'}
 			{/block}
 		</div>
