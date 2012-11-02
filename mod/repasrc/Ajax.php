@@ -180,4 +180,9 @@ class Ajax {
 		}
 		return $dir1.'---'.$dir2.'---'.$filename;
 	}
+
+	public static function setHelpVisibility($params) {
+		$display = (int)$params['displayHelp'];
+		$_SESSION['displayHelp'] = $display;
+	}
 }

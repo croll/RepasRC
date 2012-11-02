@@ -2,6 +2,10 @@
 
 {block name='webpage_head' append}
 	{js file="/mod/repasrc/js/menu.js"}
+	{if empty($oldbrowser)}
+	    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+	    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+	{/if}
 {/block}
 
 {block name='main-container-title'}
@@ -190,7 +194,7 @@
 										'height':400 
 									};
 
-									var menuFootprint = new google.visualization.ColumnChart(document.getElementById('chart_div0'));
+									var menuFootprint = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 									menuFootprint.draw(dataMenuFootprint, optionsMenuFootprint);
 								{/if}
 								
@@ -223,9 +227,32 @@
 						}
 						</script>
 
-						<div id="chart_div0"></div>
+						<div id="chart_div"></div>
+			      {if empty($oldbrower)}
+			      <div style="width:200px;margin:0 auto 0 auto">
+			        <a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$menu.label} - Empreinte écologique foncières des aliments')">Enregistrer le graphique</a>
+			      </div>
+			      {else}
+			        <div class="help" code="navigateurimpressionimpossible"></div>
+			      {/if}
+			      <br /><br /><hr>
 						<div id="chart_div1"></div>
+			      {if empty($oldbrower)}
+			      <div style="width:200px;margin:0 auto 0 auto">
+			        <a href="javascript:void(0)" onclick="saveAsImg('chart_div1', '{$menu.label} - Empreinte écologique foncières des aliments')">Enregistrer le graphique</a>
+			      </div>
+			      {else}
+			        <div class="help" code="navigateurimpressionimpossible"></div>
+			      {/if}
+			      <br /><br /><hr>
 						<div id="chart_div2"></div>
+			      {if empty($oldbrower)}
+			      <div style="width:200px;margin:0 auto 0 auto">
+			        <a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$menu.label} - Empreinte écologique des transports')">Enregistrer le graphique</a>
+			      </div>
+			      {else}
+			        <div class="help" code="navigateurimpressionimpossible"></div>
+			      {/if}
 					{/if}
 
 			</div>

@@ -1,3 +1,7 @@
+{if empty($oldbrowser)}
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+{/if}
 {* *************************
  * Tabs
  ************************* *}
@@ -104,7 +108,7 @@
 							'height':400 
 						};
 						var optionsCol2 = { 
-							'title':'Empreinte écologique des transport par aliment',
+							'title':'Empreinte écologique des transports par aliment',
 							{if isset($colors)}
 								'colors' : {$colors},
 							{/if}
@@ -117,7 +121,7 @@
 							'height':400,
 							'isStacked':false
 						};
-						var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+						var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 						var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
 						var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
 						chart1.draw(dataCol1, optionsCol1);
@@ -125,8 +129,23 @@
 						//chart3.draw(dataComp, optionsComp);
 				}
 				</script>
-				<div id="chart_div1"></div>
+				<div id="chart_div"></div>
+	      {if empty($oldbrower)}
+	      <div style="width:200px;margin:0 auto 0 auto">
+	        <a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$menu.label} - Distance parcourure par les aliments en Km')">Enregistrer le graphique</a>
+	      </div>
+	      {else}
+	        <div class="help" code="navigateurimpressionimpossible"></div>
+	      {/if}
+				<br /><br /><hr>
 				<div id="chart_div2"></div>
+	      {if empty($oldbrower)}
+	      <div style="width:200px;margin:0 auto 0 auto">
+	        <a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$menu.label} - Empreinte écologique des transports par aliment')">Enregistrer le graphique</a>
+	      </div>
+	      {else}
+	        <div class="help" code="navigateurimpressionimpossible"></div>
+	      {/if}
 				<div id="chart_div3"></div>
 				{/if}
 	</div>

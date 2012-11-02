@@ -236,12 +236,14 @@ class Graph {
     $vatout = array();
     $gctCol1 = new \mod\googlecharttools\Main();
     $gctCol2 = new \mod\googlecharttools\Main();
+    $gctCol1->addColumn('Val', 'string');
+    $gctCol1->addRow('Prix des aliments HT');
+    $gctCol2->addColumn('Val', 'string');
+    $gctCol2->addRow('Prix des aliments TTC');
     $ret = array();
     foreach($menuDetail['recipesList'] as $recipeDetail) {
       if (!empty($recipeDetail['totalPrice']['vatout'])) {
         $families = array();
-        $gctCol1->addColumn('Val', 'string');
-        $gctCol1->addRow('Prix des aliments HT');
         foreach($recipeDetail['foodstuffList'] as $fs) {
           $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
           if ($fs['vat'] == 0 && !empty($fs['price'])) {
@@ -257,8 +259,6 @@ class Graph {
       }
       if (!empty($recipeDetail['totalPrice']['vatin'])) {
         $families = array();
-        $gctCol2->addColumn('Val', 'string');
-        $gctCol2->addRow('Prix des aliments TTC');
         foreach($recipeDetail['foodstuffList'] as $fs) {
           $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
           if ($fs['vat'] == 1 && !empty($fs['price'])) {

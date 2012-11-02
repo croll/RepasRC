@@ -2,6 +2,10 @@
 
 {block name='webpage_head' append}
 	{js file="/mod/repasrc/js/recipe.js"}
+	{if empty($oldbrowser)}
+	    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+	    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+	{/if}
 {/block}
 
 {block name='main-container-title'}
@@ -203,7 +207,7 @@
 										'height':400 
 									};
 
-									var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+									var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 									chart1.draw(dataFootprintCol, optionsFootprintCol);
 								{/if}
 								
@@ -211,7 +215,7 @@
 									var dataTransportCol = new google.visualization.DataTable({$dataTransportCol});
 
 									var optionsTransportCol = { 
-										'title':'Empreinte écologique foncière des transports',
+										'title':'Empreinte écologique des transports',
 										'colors' : {$colors},
 										'width':800,
 										'height':400 
@@ -224,8 +228,23 @@
 						}
 						</script>
 
-						<div id="chart_div1"></div>
+						<div id="chart_div"></div>
+			      {if empty($oldbrower)}
+			      <div style="width:200px;margin:0 auto 0 auto">
+			        <a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$recipe.label} - Empreinte écologique foncières des aliments')">Enregistrer le graphique</a>
+			      </div>
+			      {else}
+			        <div class="help" code="navigateurimpressionimpossible"></div>
+			      {/if}
+			      <br /><br /><hr>
 						<div id="chart_div2"></div>
+			      {if empty($oldbrower)}
+			      <div style="width:200px;margin:0 auto 0 auto">
+			        <a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte des transports')">Enregistrer le graphique</a>
+			      </div>
+			      {else}
+			        <div class="help" code="navigateurimpressionimpossible"></div>
+			      {/if}
 					{/if}
 
 			</div>

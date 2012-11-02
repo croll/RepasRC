@@ -1,3 +1,8 @@
+
+{if empty($oldbrowser)}
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/rgbcolor.js"></script> 
+    <script type="text/javascript" src="http://canvg.googlecode.com/svn/trunk/canvg.js"></script>
+{/if}
 {* If no consumption date defined, error *}
 {if empty($recipe.consumptionmonth)}
 	<div class="alert alert-danger">
@@ -119,8 +124,6 @@
 
 			function drawChart() {
 
-				{foreach $recipes as $recipe}
-
 					var data2 = new google.visualization.DataTable();
 					data2.addColumn('string', 'Topping');
 					data2.addColumn('number', 'Slices');
@@ -137,14 +140,19 @@
 						'height':400 };
 
 					// Instantiate and draw our chart, passing in some options.
-					var chart2{$recipe@index} = new google.visualization.PieChart(document.getElementById('chart_div2{$recipe@index}'));
-					chart2{$recipe@index}.draw(data2, options2);
-				{/foreach}
+					var chart2 = new google.visualization.PieChart(document.getElementById('chart_div'));
+					chart2.draw(data2, options2);
 			}
 			</script>
 
-			<div id="chart_div{$recipe@index}"></div>
-			<div id="chart_div2{$recipe@index}"></div>
+			<div id="chart_div"></div>
+			{if empty($oldbrower)}
+			<div style="width:200px;margin:0 auto 0 auto">
+				<a href="javascript:void(0)" onclick="saveAsImg('chart_div', '{$recipe.label} - Saisonnalité des aliments.')">Enregistrer le graphique</a>
+			</div>
+			{else}
+				<div class="help" code="navigateurimpressionimpossible"></div>
+			{/if}
 
 		</div>
 

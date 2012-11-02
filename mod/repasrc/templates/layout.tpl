@@ -2,7 +2,14 @@
 
 {block name='webpage_head'}
 	<meta charset="utf-8">
-  <title>REPAS-RC</title>
+  <title>REPAS-RC {$smarty.session.displayHelp}</title>
+	<script>
+  {if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
+		var displayHelp = {$smarty.session.displayHelp};
+  {else}
+		var displayHelp = 0;
+	{/if}
+	</script>
   <link rel="shortcut icon" href="/mod/repasrc/favicon.ico" type="image/x-icon" />
   <!--[if lt IE 9]>
     <script src="/mod/cssjs/ext/html5shiv/html5.js"></script>
@@ -116,7 +123,16 @@
 			</div>
 		</div>
 
-		<div id="content">
+		<div id="content" style="position: relative">
+		  <div style="position: absolute;top:5px;left: 680px">
+		  	<a href="javascript:void(0)" id="helpToggler" onclick="toggleHelp()">
+		  		{if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
+		  			Masquer l'aide et les explications.
+		  		{else}
+		  			Afficher l'aide et les explications.
+		  		{/if}
+		  	</a>
+		  </div>
 			{block name='repasrc_content'}
 			{/block}
 		</div>

@@ -24,7 +24,7 @@ function processHelp(c) {
 					icon = 'icon-informations';
 				}
 				if (el.get('tag') == 'div') {
-					i = new Element('i', {'class': 'icon-question-sign '+icon, 'style': 'margin: 1px 5px 0px 0px', 'location': loc, 'rel': 'popover', 'msg': message.message}).inject(el.getPrevious(), 'after');
+					i = new Element('i', {'class': 'customhelp icon-question-sign '+icon, 'style': 'margin: 1px 5px 0px 0px', 'location': loc, 'rel': 'popover', 'msg': message.message}).inject(el.getPrevious(), 'after');
 						el.dispose();
 				} else {
 					el.set('msg', message.message);
@@ -56,16 +56,42 @@ function processHelp(c) {
 						break;
 					}
 					el.adopt(new Element('a', {'class': 'close', 'data-dismiss': 'alert', 'html': 'x'}));
-					el.addClass('alert').addClass(alertType);
+					el.addClass('customhelp alert '+alertType);
 					el.set('html', el.get('html')+message.message);
 				} else if (message.type.indexOf('form') != -1) {
-					var p = new Element('p', {'class': 'help-block', 'html': message.message});
+					var p = new Element('p', {'class': 'customhelp help-block', 'html': message.message});
 					p.inject(el.getPrevious(), 'after');
 					el.dispose();
 				} else if (message.type.indexOf('imple')) {
-					el.addClass('hint');
+					el.addClass('customhelp hint');
+				}
+				if (displayHelp === 0) {
+					if (typeOf(i) == 'element')
+						i.setStyle('display', 'none');
+					if (typeOf(el) == 'element')
+					el.setStyle('display', 'none');
 				}
 			});
+}
+
+function toggleHelp() {
+	if (displayHelp == 1) {
+		document.id('helpToggler').set('html', 'Afficher l\'aide et les explications');
+		$$('.customhelp').each(function(el) {
+			el.setStyle('display', 'none');
+		});
+		displayHelp = 0;
+	} else {
+		document.id('helpToggler').set('html', 'Masquer l\'aide et les explications');
+		$$('.customhelp').each(function(el) {
+			var t = (el.get('tag') == 'div') ? 'block' : 'inline-block';
+			el.setStyle('display', t);
+		});
+		displayHelp = 1;
+	}
+	var jsonRequest = new Request.JSON({
+   'url': '/ajax/call/repasrc/setHelpVisibility',
+	}).post({'displayHelp': displayHelp});
 }
 
 var helpMessages;

@@ -301,6 +301,8 @@ class Main {
     \mod\user\Main::redirectIfNotLoggedIn();
 
     $page = new \mod\webpage\Main();
+    $oldbrowser = (preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) ? 1 : 0;
+    $page->smarty->assign('oldbrowser', $oldbrowser);
 
 		// Remove recipe from comparison list
 		$rid = (isset($params[1])) ? $params[1] : null;
@@ -517,6 +519,8 @@ class Main {
     \mod\user\Main::redirectIfNotLoggedIn();
 
     $page = new \mod\webpage\Main();
+    $oldbrowser = (preg_match('/(?i)msie [1-8]/',$_SERVER['HTTP_USER_AGENT'])) ? 1 : 0;
+    $page->smarty->assign('oldbrowser', $oldbrowser);
 
 		// Remove menu from comparison list
 		$mid = (isset($params[1])) ? $params[1] : null;
@@ -684,7 +688,7 @@ class Main {
 	}
 
 	/* ************ */
-	/*    IMPORt    */
+	/*    IMPORT    */
 	/* ***********  */
 
 	public static function hook_mod_repasrc_import($hookname, $userdata, $urlmatches) {
@@ -724,7 +728,7 @@ class Main {
     header("Expires: 0"); 
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
     header("Cache-Control: private",false); // required for certain browsers 
-    header("Content-Type: $ctype"); 
+    header("Content-Type: image/png"); 
     header("Content-Disposition: attachment; filename=\"".urldecode($title)."\";" ); 
     header("Content-Transfer-Encoding: binary"); 
     header("Content-Length: ".filesize($path)); 
