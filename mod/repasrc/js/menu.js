@@ -253,7 +253,6 @@ function showMenuDetail(id, c) {
 			document.getElement('div.form-actions').dispose();
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
-			CaptainHook.Bootstrap.initAlerts();
 			processHelp('div.modal-box');
 		},
 		onFailure: function() {

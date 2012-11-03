@@ -43,7 +43,13 @@
 				</div>
 				<div>
 				{foreach $fs.foodstuff.infos as $info}
-					<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+					{if $info.family_group_id == 2}
+						<span class="badge fam{$info.family_group_id} help" code="commentaireanalyserecetteempreintefoncierecerealesfeculents" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+					{else if $info.family_group_id == 6}
+						<span class="badge fam{$info.family_group_id} help" code="commentaireanalyserecetteempreitnefoncierevpo" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+					{else}
+						<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+					{/if}
 				{/foreach}
 				</div>
 				<div style="font-size: 14px">

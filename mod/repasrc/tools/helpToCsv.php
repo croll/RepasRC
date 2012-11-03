@@ -51,7 +51,14 @@ class HelpToImport {
 		if ($detected != 'UTF-8') {
 			$str = iconv($detected, 'UTF-8', $str);
 		}
-		return nl2br(trim(str_replace(array('"',';','NULL','null'), array('',"\n",NULL,NULL),$str)));
+		$str = preg_replace("/\[b\](.*)\[\/b\]/Usi", "<b>\\1</b>", $str);
+		$str = preg_replace("/\[g\](.*)\[\/g\]/Usi", "\"\\1\"", $str);
+		$str = preg_replace("/\[i\](.*)\[\/i\]/Usi", "<i>\\1</i>", $str);
+		$str = preg_replace("/\[u\](.*)\[\/u\]/Usi", "<u>\\1</u>", $str);
+		$str = preg_replace("/\[v\](.*)\[\/v\]/Usi", "<a href=\"javascript=void(0)\" onclick=\"showVideo('\\1')\">\\1</v>", $str);
+		$str = preg_replace("/\[l (.*)\](.*)\[\/l\]/Us", "<a href=\"/page/\\1\">\\2</span>", $str);
+		$str = preg_replace("/\[L (.*)\](.*)\[\/L\]/Us", "<a href=\"/page/\\1\" target=\"_blank\">\\2</span>", $str);
+		return nl2br($str);
 	}
 
 }

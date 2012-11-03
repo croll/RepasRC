@@ -10,6 +10,7 @@
 {/block}
 
 {block name='main-container-content'}
+<div class="help" code="livrederecette"></div>
 <form class="well form-inline" id="recipe_search_form" name="repice_search_form"  action="/recette/liste" method="post">
 
 	<select name="type" id="type">

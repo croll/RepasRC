@@ -32,9 +32,6 @@
 						{$informations.type}
 					</div>
 				</div>
-				<div class="alert alert-info">
-					La localisation géographique de votre RC est utilisée pour le module Transport. Indiquez dans la zone de saisie les 1ères lettres de votre commune. Votre choix définitif s'affichera alors dans le champ suivant.
-				</div>
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m='Nom de la commune'}</label>
 					<div class="controls">
@@ -48,12 +45,14 @@
 						{$informations.zonelabel}
 					</div>
 				</div>
+				<!--
 				<div class="control-group">
 					<label class="control-label">{t d='repasrc' m="Afficher les bulles d'aide"}</label>
 					<div class="controls">
 						{$informations.showhelp}
 					</div>
 				</div>
+			-->
 				<div class="form-actions">
 						{$informations.zoneid}
 						{$informations.submit}

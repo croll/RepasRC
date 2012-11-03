@@ -20,7 +20,13 @@
 	</div>
 	<div>
 	{foreach $fs.foodstuff.infos as $info}
-		<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+		{if $info.family_group_id == 2}
+			<span class="badge fam{$info.family_group_id} help" code="commentaireanalyserecetteempreintefoncierecerealesfeculents" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+		{else if $info.family_group_id == 6}
+			<span class="badge fam{$info.family_group_id} help" code="commentaireanalyserecetteempreitnefoncierevpo" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+		{else}
+			<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+		{/if}
 	{/foreach}
 	</div>
 	<div style="font-size: 14px">
@@ -67,7 +73,7 @@
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn analyzeButton help" location="top" code="boutonanalyserlarecette" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
 	{if !isset($menuId) && $comparison != false}
-	<a class="btn compareButton help" code="boutonselectionnerlarecettepourcomparaison" position="" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
+	<a class="btn compareButton help" code="boutonselectionnerlarecettepourcomparaison" location="top" href="/recette/liste/add/{$recipe.id}">Sélectionner la recette pour comparaison</a>
 	{else}
 		{if empty($menuRecipeId)}
 			<a class="btn btn-primary" href="javascript:void(0)" onclick="showUpdateMenuRecipeModal({$menuId}, {$recipe.id}, null)">Ajouter la recette</a>

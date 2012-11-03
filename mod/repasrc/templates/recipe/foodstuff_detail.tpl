@@ -91,13 +91,7 @@
 			</div>
 		{/if}
 
-		<div class="alert alert-info">
-			<a class="close" data-dismiss="alert">×</a>
-			<p>
-				En fonction des modules choisis, il vous est possible de saisir différentes informations.<br />
-				Veuillez renseigner les informations demandées dans chacun des onglets ci dessous pour avoir une analyse la plus complète de votre recette.
-			</p>
-		</div> 
+		<div class="help" code="fenetrealiment"></div> 
 			
 			{assign var='defaultValues' value=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
 			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=$defaultValues}
@@ -122,6 +116,7 @@
 								<div class="input-append">
 									{$foodstuffForm.quantity}
 									<span class="add-on">Kg</span>
+									<div class="help" code="fenetrealimentongletquantite"></div>
 								</div>
 							</div>
 						</div>
@@ -134,12 +129,14 @@
 								<label class="control-label" style="width: 150px">{t d='repasrc' m="Mode de production"}</label>
 								<div class="controls" style="margin-left:160x">
 									{$foodstuffForm.production}
+									<div class="help" code="fenetrealimentongletproductionconservationmodedeproduction"></div>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" style="width: 150px">{t d='repasrc' m="Mode de conservation"}</label>
 								<div class="controls" style="margin-left: 160px">
 									{$foodstuffForm.conservation}
+									<div class="help" code="fenetrealimentongletproductionconservationmodedeconservation"></div>
 								</div>
 							</div>
 						</fieldset>
@@ -149,15 +146,17 @@
 					<div class="tab-pane" rel="les informations de production/conservation" id="transport">
 						<fieldset>
 							<div class="control-group">
-								<label class="control-label" style="width: 50px">{t d='repasrc' m="Provenance approximative"}</label>
+								<label class="control-label" style="width: 100px">{t d='repasrc' m="Provenance approximative"}</label>
 								<div class="controls" style="margin-left:75px">
 									{$foodstuffForm.location}
+									<div class="help" code="fenetrealimentonglettransportprovenance"></div>
 								</div>
 							</div>
 							<div class="control-group" id="location_steps"{if !isset($defaultValues.location) || $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
 								<label class="control-label" style="width: 50px">{t d='repasrc' m="Itinéraire"}</label>
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
+									<div class="help" code="fenetrealimentonglettransportitineraire"></div>
 									<div id="steps" style="margin-top:10px">
 										{assign var="steps" value=""}
 										{if isset($defaultValues.origin) && isset($defaultValues.location) && $defaultValues.location == 'LETMECHOOSE' && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
@@ -188,6 +187,7 @@
 									<span class="add-on">au Kg</span>
 								</div>
 									{$foodstuffForm.vat}
+									<div class="help" code="fenetrealimentongletprix"></div>
 								</div>
 							</div>
 						</fieldset>

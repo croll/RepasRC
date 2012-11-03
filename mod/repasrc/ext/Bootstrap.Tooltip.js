@@ -51,6 +51,8 @@ Bootstrap.Tooltip = Bootstrap.Twipsy = new Class({
 	},
 
 	show: function(){
+		if (this.destroyed === true)
+			return;
 		this._clear();
 		this._makeTip();
 		var pos, edge, offset = {x: 0, y: 0};
@@ -102,6 +104,10 @@ Bootstrap.Tooltip = Bootstrap.Twipsy = new Class({
 		if (this.tip) this.tip.destroy();
 		this.destroyed = true;
 		return this;
+	},
+
+	enable: function(){
+		this.destroyed = false;
 	},
 
 	// PRIVATE METHODS

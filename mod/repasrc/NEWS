@@ -1,3 +1,11 @@
+### 2012/03/11
+
+# Aide en ligne
+- Possibilité de montrer/masquer l'aide. Le paramètre est conservé jusqu'à la déconnexion.
+- Suppression du titre "Informations" pour plus de lisibilité et une occupation d'espace par la bulle plus limitée.
+- Correction d'un bug qui faisait que les bulles d'aide s'affichaient même si on masquait l'aide
+- La bulle d'aide du bouton "Selectionner la recette pour comparaison" ne s'affichait pas au dessus du bouton.
+- Les informations de type "simple", par exemple les descriptions des modules, ne s'affichaient pas correctement.
 ### 2012/29/10
 
 # Correction de bug

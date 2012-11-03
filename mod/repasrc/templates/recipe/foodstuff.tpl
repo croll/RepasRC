@@ -11,11 +11,7 @@
 
 {block name='recipe_content'}
 	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
-	<div class="alert alert-info">
-		<a class="close" data-dismiss="alert">×</a>
-		Cliquez sur un aliment pour l'ajouter à votre recette.<br />
-		Vous pouvez chercher dans la base des aliments en filtrant par famille ou par nom.
-	</div> 
+	<div class="help" code="composerunerecette"></div> 
 
 	<form class="well form-inline" id="foodstuff_search_form" name="search_form"  action="/recette/liste" method="post">
 		<select class="input-medium" name="family" id="family">

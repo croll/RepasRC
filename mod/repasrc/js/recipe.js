@@ -374,7 +374,6 @@ function showRecipeDetail(id, c) {
 			document.getElement('div.form-actions').dispose();
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
-			CaptainHook.Bootstrap.initAlerts();
 			processHelp('div.modal-box');
 		},
 		onFailure: function() {
@@ -407,7 +406,6 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 			modalWin.setFooter(clone.get('html'));
 			modalWin.show();
 			CaptainHook.Bootstrap.initTabs('quantity');
-			CaptainHook.Bootstrap.initAlerts();
 			processHelp('div.modal-box');
 			// JS for location
 			document.body.getElement('select[name=location]').addEvent('change', function() {
