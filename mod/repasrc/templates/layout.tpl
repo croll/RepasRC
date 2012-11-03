@@ -127,7 +127,7 @@
 		<div id="content" style="position: relative">
 		  <div style="position: absolute;top:5px;left: 680px">
 		  	<a href="javascript:void(0)" id="helpToggler" onclick="toggleHelp()">
-		  		{if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
+		  		{if !isset($smarty.session.displayHelp) || $smarty.session.displayHelp == 1}
 		  			Masquer l'aide et les explications.
 		  		{else}
 		  			Afficher l'aide et les explications.
