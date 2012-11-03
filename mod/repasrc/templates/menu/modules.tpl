@@ -29,7 +29,7 @@
 			<form id="modules_form" name="modules_form"  action="/menu/edition/informations" method="post">
 				<div class="form-actions">
 					<input type="submit" class="btn btn-primary special" id="submit" value="Valider le choix de modules" />
-					<input type="button" class="btn" id="cancel" value="Annuler la création de la menu" />
+					<input type="button" class="btn" id="cancel" value="Annuler la création du menu" />
 				</div>
 				<input type="hidden" id="modules" name="modules" value="" />
 				{if isset($menu) && isset($menu.id)}

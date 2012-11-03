@@ -1,6 +1,6 @@
 function processHelp(c) {
 
-			var message, code, loc, informations, alertType, i, container;
+			var message, code, loc, informations, alertType, i, container, tmp;
 			if (typeof(c) != 'undefined') {
 				if (typeof(c) == 'string') {
 					container = document.getElement(c);
@@ -16,29 +16,29 @@ function processHelp(c) {
 			}
 			var pop;
 			container.getElements('.help').each(function(el) {
-				loc = el.get('location') || 'right';
-					message = helpMessages[el.get('code')];
+				code = el.get('code');
+					loc = el.get('location') || 'right';
+					message = helpMessages[code];
 					if (message.type == '?' || message.type == '!') {
-							if (message.type == '?')	{
-								icon = 'icon-question-sign';
-							} else {
-								icon = 'icon-informations';
-							}
-							if (el.get('tag') == 'div') {
-								i = new Element('i', {'class': 'customhelp icon-question-sign '+icon, 'style': 'margin: 1px 5px 0px 0px', 'location': loc, 'rel': 'popover', 'msg': message.message}).inject(el.getPrevious(), 'after');
-								el.dispose();
-							} else {
-								el.set('msg', message.message);
-								i = el;
-							}
-							pop = new Bootstrap.Popover(i, {
-								location: loc,
-								getContent: function(elem) {
-									return elem.get('msg');
-								},
-								offset: 0
-							});
-							helpPopover[el.get('code')] = pop;
+						if (message.type == '?')	{
+							icon = 'icon-question-sign';
+						} else {
+							icon = 'icon-informations';
+						}
+						if (el.get('tag') == 'div' || el.get('tag') == 'i') {
+							tmp = new Element('i', {'class': 'customhelp help icon-question-sign '+icon, code: code, 'style': 'margin: 1px 5px 0px 0px', 'location': loc, 'rel': 'popover', 'msg': message.message}).inject(el.getPrevious(), 'after');
+							el.dispose();
+							el = tmp;
+						} else {
+							el.set('msg', message.message).removeClass('help');
+						}
+						pop = new Bootstrap.Popover(el, {
+							location: loc,
+							getContent: function(elem) {
+								return elem.get('msg');
+							},
+							offset: 0
+						});
 					} else if (message.type.indexOf('adre') != -1) {
 						switch(message.type.split(' ')[1]) {
 							case 'jaune':
@@ -55,14 +55,14 @@ function processHelp(c) {
 							break;
 						}
 						el.adopt(new Element('a', {'class': 'close', 'data-dismiss': 'alert', 'html': 'x'}));
-						el.addClass('customhelp alert '+alertType);
+						el.addClass('customhelp alert '+alertType).removeClass('help');
 						el.set('html', el.get('html')+message.message);
 					} else if (message.type.indexOf('form') != -1) {
 						var p = new Element('p', {'class': 'customhelp hint', 'html': message.message});
 						p.inject(el.getPrevious(), 'after');
 						el.dispose();
 					} else if (message.type.indexOf('imple')) {
-						el.addClass('customhelp hint');
+						el.addClass('customhelp hint').removeClass('help');
 					}
 					if (displayHelp === 0) {
 						if ((typeOf(i) == 'element') && !i.hasClass('btn') && !el.hasClass('badge')) {
@@ -72,14 +72,18 @@ function processHelp(c) {
 							el.setStyle('display', 'none');
 						}
 					}
-					// show / hide popover
-					Object.each(helpPopover, function(pop, id) {
-						if (displayHelp == 0) {
-	 						pop.destroy();
-						}
-					});
-					CaptainHook.Bootstrap.initAlerts();
+					helpDone.push(pop);
 			});
+			// show / hide popover
+			if (displayHelp == 0) {
+				helpDone.each(function(pop) {
+					if (displayHelp == 0) {
+						if (typeOf(pop) == 'object')
+							pop.disable();
+					}
+				});
+			}
+			CaptainHook.Bootstrap.initAlerts();
 }
 
 function toggleHelp() {
@@ -89,27 +93,29 @@ function toggleHelp() {
 			el.setStyle('display', 'none');
 		});
 		displayHelp = 0;
+		// show / hide popover
+		helpDone.each(function(pop) {
+			if (displayHelp == 0) {
+				if (typeOf(pop) == 'object')
+					pop.disable();
+			}
+		});
 	} else {
 		document.id('helpToggler').set('html', 'Masquer l\'aide et les explications');
+		displayHelp = 1;
+		processHelp();
 		$$('.customhelp').each(function(el) {
 			var t = (el.get('tag') == 'div') ? 'block' : 'inline-block';
 			el.setStyle('display', t);
 		});
-		displayHelp = 1;
 	}
-	// show / hide popover
-	Object.each(helpPopover, function(pop, id) {
-	if (displayHelp == 0) {
-		pop.destroy();
-		}
-	});
 	var jsonRequest = new Request.JSON({
 		'url': '/ajax/call/repasrc/setHelpVisibility',
 	}).post({'displayHelp': displayHelp});
 }
 
 var helpMessages;
-var helpPopover = {};
+var helpDone = [];
 
 document.addEvent('domready', function() {
 	var jsonRequest = new Request.JSON({
