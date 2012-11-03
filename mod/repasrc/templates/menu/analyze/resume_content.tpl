@@ -79,13 +79,16 @@
 					var optionsPie = { 
 						'title':'Empreinte écologique foncière pour le menu',
 						'width':800,
-						'height':400 
+						'height':400,
+						'fontSize' : 11
 					};
 
 					var optionsCol = { 
-						'title':'',
+						'title':'Empreinte écologique foncière pour le menu',
 						'width':800,
-						'height':400 
+						'height':400, 
+						'fontSize' : 11,
+						'vAxis' : { format : '#.### gha'},
 					};
 
 					var chart = new google.visualization.PieChart(document.getElementById('chart_div'));

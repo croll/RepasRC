@@ -8,26 +8,40 @@ class Graph {
     $noData = $families = array();
     $gctPie = new \mod\googlecharttools\Main();
     $gctCol = new \mod\googlecharttools\Main();
+    $gctCol2 = new \mod\googlecharttools\Main();
     $gctComp = new \mod\googlecharttools\Main();
     $gctPie->addColumn('Aliment', 'string');
-    $gctPie->addColumn('Empreinte écologique foncière pour la recette', 'number');
+    $gctPie->addColumn('', 'number');
     $gctCol->addColumn('Val', 'string');
-    $gctCol->addRow('Empreinte écologique foncière pour une personne');
+    $gctCol->addRow('');
+    $gctCol2->addColumn('Val', 'string');
+    $gctCol2->addRow('');
     $gctComp->addColumn('Aliment', 'string');
-    $gctComp->addColumn('Empreinte écologique foncière', 'number');
+    $gctComp->addColumn('EE foncière', 'number');
     $gctComp->addColumn('Quantité', 'number');
+    $recipeEEfor1Person = $recipeDetail['footprint']/$recipeDetail['persons'];
+    $recipeQtyfor1Person = $recipeDetail['totalWeight']/$recipeDetail['persons'];
     foreach($recipeDetail['foodstuffList'] as $fs) {
         // Foodstuff with no footprint value
+      $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
       if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
-        $noData[] = $fs['foodstuff']['label'];
+        $noData[] = $label;
       } else {
-        $gctPie->addRow($fs['foodstuff']['label']);
-        $gctPie->addRow($fs['foodstuff']['footprint']*$fs['quantity']);
-        $gctCol->addColumn($fs['foodstuff']['label'], 'number');
-        $gctCol->addRow($fs['foodstuff']['footprint']*($fs['quantity']/$recipeDetail['persons']));
-        $gctComp->addRow($fs['foodstuff']['label']);
+        $gctPie->addRow($label);
+        $gctPie->addRow(round($fs['foodstuff']['footprint']*$fs['quantity'], 3));
+        $gctCol->addColumn($label, 'number');
+        $fsQtyfor1person = $fs['quantity']/$recipeDetail['persons'];
+        $fsEEfor1person = $fs['foodstuff']['footprint']*$fsQtyfor1person;
+        $gctCol->addRow(round($fsEEfor1person, 3));
+        $gctCol2->addColumn($label, 'number');
+        $gctCol2->addRow(round($fs['foodstuff']['footprint']*$fs['quantity'], 3));
+        $gctComp->addRow($label);
+        /*
         $gctComp->addRow(round(($fs['foodstuff']['footprint']*($fs['quantity'])*100)/$recipeDetail['footprint'],2));
         $gctComp->addRow(round(((float)$fs['quantity']*100)/($recipeDetail['totalWeight']/$recipeDetail['persons'])),2);
+        */
+        $gctComp->addRow(round(($fsEEfor1person*100)/$recipeDetail['footprint'],3));
+        $gctComp->addRow(round(($fsQtyfor1person*100)/($recipeDetail['totalWeight']/$recipeDetail['persons']),3));
         if (isset($fs['families']) && sizeof($fs['families']) > 0) {
           $families[] = array_shift(array_keys($fs['families']));
         }
@@ -36,6 +50,7 @@ class Graph {
     return array(
       'pie' => $gctPie, 
       'col' => $gctCol, 
+      'col2' => $gctCol2, 
       'comp' => $gctComp, 
       'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families)), 
       'noData' => $noData
@@ -55,11 +70,12 @@ class Graph {
     $gctComp->addColumn('Empreinte écologique foncière', 'number');
     $gctComp->addColumn('Distance', 'number');
     foreach($recipeDetail['transport']['datas'] as $fs) {
-      $gctCol1->addColumn($fs['foodstuff']['label'], 'number');
+      $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+      $gctCol1->addColumn($label, 'number');
       $gctCol1->addRow($fs['transport']['distance']);
-      $gctCol2->addColumn($fs['foodstuff']['label'], 'number');
+      $gctCol2->addColumn($label, 'number');
       $gctCol2->addRow($fs['transport']['footprint']);
-      $gctComp->addRow($fs['foodstuff']['label']);
+      $gctComp->addRow($label);
       $gctComp->addRow(round($fs['transport']['distance'],3));
       $gctComp->addRow(round($fs['transport']['footprint'],3));
       if (isset($fs['families']) && sizeof($fs['families']) > 0) {
@@ -88,11 +104,12 @@ class Graph {
     $gctComp->addColumn('Distance', 'number');
     foreach($menuDetail['recipesList'] as $recipeDetail) {
       foreach($recipeDetail['transport']['datas'] as $fs) {
-        $gctCol1->addColumn($fs['foodstuff']['label'], 'number');
+        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        $gctCol1->addColumn($label, 'number');
         $gctCol1->addRow($fs['transport']['distance']);
-        $gctCol2->addColumn($fs['foodstuff']['label'], 'number');
+        $gctCol2->addColumn($label, 'number');
         $gctCol2->addRow($fs['transport']['footprint']);
-        $gctComp->addRow($fs['foodstuff']['label']);
+        $gctComp->addRow($label);
         $gctComp->addRow(round($fs['transport']['distance'],3));
         $gctComp->addRow(round($fs['transport']['footprint'],3));
         if (isset($fs['families']) && sizeof($fs['families']) > 0) {
@@ -120,7 +137,7 @@ class Graph {
     foreach($recipeDetail['foodstuffList'] as $fs) {
       $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
           // Conservation
-      if (empty($fs['production'])) {
+      if (empty($fs['conservation'])) {
         $conservation['Non renseigné'] = $label;
       } else {
         $conservation[$fs['conservation_label']][] = $label;

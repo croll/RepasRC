@@ -5,7 +5,7 @@
 {/block}
 
 {block name='recipe_title'}
-	<h1>{t d='repasrc' m='Synthèse des informations de la recette'}</h1>
+	<h1>{t d='repasrc' m='Empreinte écologique foncière'}</h1>
 {/block}
 
 {block name='recipe_content'}

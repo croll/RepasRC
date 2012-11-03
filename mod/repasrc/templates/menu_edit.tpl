@@ -41,7 +41,7 @@
 						{/if}
 						<li class="nav-header">{t d='repasrc' m='Analyse'}</li>
 						{if \mod\repasrc\Menu::hasRecipe($menu.id)}
-							<li{if ($section == 'resume')} class="active"{/if}><a href="/menu/analyse/resume/{$menu.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résumé'}</a></li>
+							<li{if ($section == 'resume')} class="active"{/if}><a href="/menu/analyse/resume/{$menu.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Empreinte Foncière'}</a></li>
 							{if (isset($modulesList) && $modulesList.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/menu/analyse/saisonnalite/{$menu.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/menu/analyse/transport/{$menu.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.production == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/menu/analyse/mode/{$menu.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}

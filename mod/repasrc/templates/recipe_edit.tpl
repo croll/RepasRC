@@ -41,7 +41,7 @@
 						{/if}
 						<li class="nav-header">{t d='repasrc' m='Analyse'}</li>
 						{if \mod\repasrc\Recipe::hasFoodstuff($recipe.id)}
-							<li{if ($section == 'resume')} class="active"{/if}><a href="/recette/analyse/resume/{$recipe.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Résumé'}</a></li>
+							<li{if ($section == 'resume')} class="active"{/if}><a href="/recette/analyse/resume/{$recipe.id}"><i class="icon-align-left"></i>{t d='repasrc' m='Empreinte foncière'}</a></li>
 							{if (isset($modulesList) && $modulesList.seasonality == 1)}<li{if ($section == 'saisonnalite')} class="active"{/if}><a href="/recette/analyse/saisonnalite/{$recipe.id}"><i class="icon-leaf"></i>{t d='repasrc' m='Saisonnalité'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.transport == 1)}<li{if ($section == 'transport')} class="active"{/if}><a href="/recette/analyse/transport/{$recipe.id}"><i class="icon-road"></i>{t d='repasrc' m='Transport'}</a></li>{/if}
 							{if (isset($modulesList) && $modulesList.production == 1)}<li{if ($section == 'mode')} class="active"{/if}><a href="/recette/analyse/mode/{$recipe.id}"><i class="icon-map-marker"></i>{t d='repasrc' m='Production / conservation'}</a></li>{/if}

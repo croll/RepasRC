@@ -1,5 +1,23 @@
 ### 2012/03/11
 
+# Résumé de la recette
+- La sectïon "Résumé" a été renommée "EE Foncière" afin d'être plus synthétique et ne pas proposer des informations redondantes affichée dans les différents modules.
+- Reprise des informations d'EE foncière, type de composante, nombre de convives dans la section "Graphiques"
+- Suppression des informations de mode de conservation, mode de production, provenance des aliments dans l'onglet "Empreinte foncière". Ca nuisait à la lecture rapide des informations de la recette et était redondant avec les sections consacrées aux modules "saisonnalité", "transport", etc
+- Ajout de la date de consommation de la recette
+- Ajout d'un noveau graphique "EE foncière pour le service".
+- Les données numériques affichées dans les bulles d'info du graphique ne comportent plus que 2 chiffres après la virgule.
+- Correction d'un bug qui faisait que parfois les synonymes étaient confondus dans les graphiques
+- L'unité est précisée sur l'axe des ordonnées pour les graphiques de type baton.
+- Taille de la police dans les graphiques revue à la baisse. Ca limite le nombre de noms d'aliments tronqués sans nuire à la lisibilité.
+- Graphique de comparaison entre la quantite d'aliment et l'empreinte écologique: il faut qu'on ait deux unités identiques pour la comparaison, donc on compare le pourcentage que représente le grammage de chaque aliment pour une personne, au pourcentage d'EE de l'aliment pour une personne.
+<> Les unités sur l'axe des ordonnées ont été corrigées pour ce graphique.
+<> Nouveau type de graphique plus parlant
+<> Le nom des aliments sur l'axe des abscisses est à présent noté en diagonale pour éviter qu'ils ne se superposent.
+
+# Production / Conservation
+- Correction d'un bug qui faisait qu'il n'y avait pas de libellé "Non renseigné" dans la légende des graphiques.
+
 # Aide en ligne
 - Possibilité de montrer/masquer l'aide. Le paramètre est conservé jusqu'à la déconnexion.
 - Suppression du titre "Informations" pour plus de lisibilité et une occupation d'espace par la bulle plus limitée.

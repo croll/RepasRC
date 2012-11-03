@@ -230,6 +230,7 @@ class Main {
 					'noData' => $graph['noData'],
 					'dataFootprintPie' => $graph['pie']->getJSON(),
 					'dataFootprintCol' => $graph['col']->getJSON(),
+          'dataFootprintCol2' => $graph['col2']->getJSON(),
 					'dataFootprintComp' => $graph['comp']->getJSON()
 				));
 			break;
@@ -605,9 +606,9 @@ class Main {
 				$gctPie = new \mod\googlecharttools\Main();
 				$gctCol = new \mod\googlecharttools\Main();
 				$gctPie->addColumn('Aliment', 'string');
-				$gctPie->addColumn('Empreinte écologique foncière pour le menu', 'number');
+				$gctPie->addColumn('', 'number');
 				$gctCol->addColumn('Val', 'string');
-				$gctCol->addRow('Empreinte écologique foncière pour le menu');
+				$gctCol->addRow('');
 				foreach ($menuDetail['recipesList'] as $recipe) {
 					$gctPie->addRow($recipe['label']);
 					$gctPie->addRow($recipe['footprint']);
