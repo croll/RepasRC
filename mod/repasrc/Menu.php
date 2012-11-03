@@ -72,14 +72,14 @@ class Menu {
 		\core\Core::$db->exec('DELETE FROM rrc_menu_recipe WHERE rrc_mr_id=?', array($menuId));
 	}
 
-	public static function search($rcId='', $label='', $shared='', $owner='', $limit='ALL', $offset=0) {
+	public static function search($rcId='', $label='', $shared='', $owner='', $limit='ALL', $offset=0, $onlyNumResults=false) {
 		$params = array();
 		$f = 'SELECT DISTINCT rrc_me_id AS id, rrc_me_public AS shared, rrc_me_label AS label, rrc_me_eaters AS eaters, rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification';
 		$q = ' FROM rrc_menu AS me';
 		$w = ' WHERE 1=1';
 		if ($label) {
-			$params[] = $label;
-			$w.= " AND UPPER(rrc_me_label) LIKE UPPER('%?%')";	
+			$params[] = '%'.$label.'%';
+			$w.= " AND UPPER(rrc_me_label) LIKE UPPER(?)";	
 		}
 		if ($shared && !$owner) {
 			$w.= ' AND rrc_me_public=\'1\'';	
@@ -101,12 +101,17 @@ class Menu {
 		}
 		$o = " ORDER BY label";
 		$o = "LIMIT $limit OFFSET $offset";
-		$query = $f.$q.$w.$o;
-		return \core\Core::$db->fetchAll($query, $params);
+		if ($onlyNumResults == false) {
+			$query = $f.$q.$w.$o;
+			return \core\Core::$db->fetchAll($query, $params);
+		} else {
+			$query = 'SELECT count(*) '.$q.$w.$o;
+			return (int)\core\Core::$db->fetchOne($query, $params);
+		}
 	}
 
-	public static function searchComputed($rcId, $label=NULL, $shared=NULL, $owner='') {
-		$menus = self::search($rcId, $label, $shared, $owner);
+	public static function searchComputed($rcId, $label=NULL, $shared=NULL, $owner='', $limit='ALL', $offset=0) {
+		$menus = self::search($rcId, $label, $shared, $owner, $limit, $offset);
 		foreach ($menus as $menu) {
 			$result[] = self::getDetail($menu['id']);
 		}

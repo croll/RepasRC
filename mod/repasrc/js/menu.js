@@ -4,6 +4,10 @@
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
+var menuListOffset = 0;
+var menuListNumPerPage = 15;
+var menuListLimit = 10;
+
 window.addEvent('domready', function() {
 
 	// Informations
@@ -58,13 +62,20 @@ window.addEvent('domready', function() {
 			}
 		});
 
+		var timeout = undefined;
 		document.id('label').addEvent('keyup', function(e) {
-				if (e.key == 'enter') {
-					e.stop();
-					e.stopPropagation();
-					return;
-				}
-				filterResults(this.get('value'));
+			if (e.key == 'enter') {
+				e.stop();
+				e.stopPropagation();
+				return;
+			}
+			var text = this.value;
+			if (timeout != undefined) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				loadMenus();
+			}, 200);
 		});
 
 	}
@@ -106,19 +117,27 @@ function loadMenus() {
 	}
 	showSpinner();
 	var menuList = new Request.JSON({
-			'url': '/ajax/call/repasrc/searchMenu',
-			'onSuccess': function(res) {
-				hideSpinner();
-				var container = document.body.getElement('.thumbnails');
-				container.set('html', '');
-				var html = '';
-				// for each foodstuff
-				Object.each(res, function(fs) {
-					html += buildMenuThumb(fs);
+		'url': '/ajax/call/repasrc/searchMenu',
+		onRequest: function() {
+			console.log('ici');
+			showSpinner();
+		},
+		'onSuccess': function(res) {
+			console.log('la');
+			hideSpinner();
+			var container = document.body.getElement('.thumbnails');
+			container.set('html', '');
+			var html = '';
+			if (typeOf(res['menuList']) == 'array' && res['menuList'].length > 0) {
+				Object.each(res['menuList'], function(me) {
+					html += buildMenuThumb(me);
 				});
-				container.set('html', html);
+			} else {
+				html += '<div style="width: 540px;padding: 10px" class="alert alert-danger">Aucun menu ne correspond à vos critères de recherche</div>';
 			}
-  }).post({typeId: typeId});
+			container.set('html', html);
+		}
+	}).post({typeId: typeId, label: document.id('label').value, offset: menuListOffset, limit: menuListLimit});
 }
 
 /* ---------------------------------------------------------------------

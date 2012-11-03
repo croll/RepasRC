@@ -4,14 +4,15 @@ namespace mod\repasrc;
 
 class Recipe {
 
-	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false, $limit='ALL', $offset=0) {
+	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false, $limit='ALL', $offset=0, $onlyNumResults=false) {
 
+		\core\Core::log('LIMITE '.$limit);
 		$params = array();
 		$f = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification ';
-		$q.= 'FROM rrc_recipe AS re ';
+		$q = 'FROM rrc_recipe AS re ';
 		$w = ' WHERE 1=1';
 		if ($label) {
-			$params[] = $label;
+			$params[] = '%'.$label.'%';
 			$w.= " AND UPPER(rrc_re_label) LIKE UPPER(?)";	
 	}
 		if ($component) {
@@ -19,7 +20,7 @@ class Recipe {
 			$w.= ' AND rrc_re_component=?';	
 		}
 		if ($foodstuff) {
-			$params[] = $foodstuff;
+			$params[] = '%'.$foodstuff.'%';
 			$q.= 'LEFT JOIN rrc_recipe_foodstuff AS rf ON re.rrc_re_id=rf.rrc_rf_rrc_recipe_id LEFT JOIN rrc_foodstuff AS fs ON rf.rrc_rf_rrc_foodstuff_id=fs.rrc_fs_id ';
 			$w.= " AND rrc_fs_label_caps LIKE UPPER(?) ";	
 		}
@@ -70,19 +71,22 @@ class Recipe {
 		}
 		$o = "ORDER BY label ";
 		$o = "LIMIT $limit OFFSET $offset";
-		$query = $f.$q.$w.$o;
+		if ($onlyNumResults == false) {
+			$query = $f.$q.$w.$o;
+			return \core\Core::$db->fetchAll($query, $params);
+		} else {
+			$query = 'SELECT count(*) '.$q.$w.$o;
+			return (int)\core\Core::$db->fetchOne($query, $params);
+		}
 
-		return \core\Core::$db->fetchAll($query, $params);
 	}
 
-	public static function searchComputed($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL) {
-
+	public static function searchComputed($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $limit='ALL', $offset=0) {
 		$result = array();
-		$recipes = self::search($rc_id, $owner, $component, $label, $foodstuff, $shared, true);
+		$recipes = self::search($rc_id, $owner, $component, $label, $foodstuff, $shared, true, $limit, $offset);
 		foreach ($recipes as $recipe) {
 			$result[] = self::getDetail($recipe['id']);
 		}
-
 		return $result;
 	}
 

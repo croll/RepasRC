@@ -1,5 +1,8 @@
 # 2012/03/11
 
+## Généralités
+- Suppression des recettes "pied léger", nous avons à présent une unique rubrique "Recettes étalon" et on range dedans les recettes "pied léger" et "pied lourd".
+
 ## Résumé de la recette
 - La sectïon "Résumé" a été renommée "EE Foncière" afin d'être plus synthétique et ne pas proposer des informations redondantes affichée dans les différents modules.
 - Reprise des informations d'EE foncière, type de composante, nombre de convives dans la section "Graphiques"

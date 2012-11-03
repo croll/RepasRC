@@ -47,8 +47,14 @@ class Ajax {
 	public static function searchRecipe($params) {
 		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
 		$componentId = (!empty($params['componentId'])) ? $params['componentId'] : NULL;
-		$ret = \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, NULL, NULL, (\mod\user\Main::userHasRight('Voir toutes les recettes')));
-		return $ret;
+		$recipeLabel = (!empty($params['recipeLabel'])) ? $params['recipeLabel'] : NULL;
+		$foodstuffName = (!empty($params['foodstuffName'])) ? $params['foodstuffName'] : NULL;
+		$limit = (!empty($params['limit'])) ? $params['limit'] : 'ALL';
+		$offset = (!empty($params['offset'])) ? $params['offset'] : 0;
+		$recipeList = \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, $recipeLabel, $foodstuffName, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $limit, $offset);
+		$numResults = \mod\repasrc\Recipe::search($_SESSION['rc'], $typeId, $componentId, $recipeLabel, $foodstuffName, (\mod\user\Main::userHasRight('Voir toutes les recettes')), false, $limit, $offset, true);
+
+		return array('recipeList' => $recipeList, 'numResults' => $numResults);
 	}
 
 	public static function showRecipeDetail($params) {
@@ -104,8 +110,12 @@ class Ajax {
 	public static function searchMenu($params) {
 		$label = (!empty($params['label'])) ? $params['label'] : NULL;
 		$typeId = (!empty($params['typeId'])) ? $params['typeId'] : NULL;
-		$ret = \mod\repasrc\Menu::searchComputed($_SESSION['rc'], $label, 1, $typeId);
-		return $ret;
+		$limit = (!empty($params['limit'])) ? $params['limit'] : 'ALL';
+		$offset = (!empty($params['offset'])) ? $params['offset'] : 0;
+		$menuList = \mod\repasrc\Menu::searchComputed($_SESSION['rc'], $label, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $typeId, $limit, $offset);
+		$numResults = \mod\repasrc\Menu::search($_SESSION['rc'], $label, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $typeId, $limit, $offset, true);
+
+		return array('menuList' => $menuList, 'numResults' => $numResults);
 	}
 
 	public static function showMenuDetail($params) {

@@ -4,6 +4,10 @@
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
+var recipeListOffset = 0;
+var recipeListNumPerPage = 15;
+var recipeListLimit = 10;
+
 window.addEvent('domready', function() { 
 	
 	// Informations
@@ -50,7 +54,8 @@ window.addEvent('domready', function() {
 
 		document.id('subfamily').adopt(new Element('option').set('value', '').set('html', 'Sous famille de produit'));
 
-		loadFamilies();loadSubFamilies();
+		loadFamilies();
+		loadSubFamilies();
 		loadFoodstuff();
 
 		document.id('family').addEvent('change', function() {
@@ -104,22 +109,35 @@ window.addEvent('domready', function() {
 			}
 		});
 
+		var timeout = undefined;
 		document.id('label').addEvent('keyup', function(e) {
 			if (e.key == 'enter') {
 				e.stop();
 				e.stopPropagation();
 				return;
 			}
-			filterResults(this.get('value'));
+			var text = this.value;
+			if (timeout != undefined) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				loadRecipes();
+			}, 200);
 		});
 
 		document.id('fsname').addEvent('keyup', function(e) {
-				if (e.key == 'enter') {
-					e.stop();
-					e.stopPropagation();
-					return;
-				}
-				filterResults(this.get('value'));
+			if (e.key == 'enter') {
+				e.stop();
+				e.stopPropagation();
+				return;
+			}
+			var text = this.value;
+			if (timeout != undefined) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				loadRecipes();
+			}, 200);
 		});
 	}
 
@@ -297,7 +315,7 @@ function loadRecipes(reset) {
 			componentId = componentSelected.get('value');
 		}
 	}
-	var foodstuffList = new Request.JSON({
+	var rList = new Request.JSON({
 			'url': '/ajax/call/repasrc/searchRecipe',
 			onRequest: function() {
 				showSpinner();
@@ -308,8 +326,8 @@ function loadRecipes(reset) {
 				container.set('html', '');
 				var html = '';
 				// for each recipe 
-				if (res.length > 0) {
-					Object.each(res, function(re) {
+				if (typeOf(res['recipeList']) == 'array' && res['recipeList'].length > 0) {
+					Object.each(res['recipeList'], function(re) {
 						html += buildRecipeThumb(re);
 					});
 				} else {
@@ -317,7 +335,7 @@ function loadRecipes(reset) {
 				}
 				container.set('html', html);
 			}
-  }).post({typeId: typeId, componentId: componentId});
+  }).post({typeId: typeId, componentId: componentId, recipeLabel: document.id('label').value, foodstuffName: document.id('fsname').value, offset: recipeListOffset, limit: recipeListLimit});
 }
 
 /* -------------------------------------------------

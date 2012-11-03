@@ -14,6 +14,7 @@
 
 	<select name="type" id="type">
    <option value="me">Vos Menus</option>
+   <option value="STALLION">Recettes "Etalon"</option>
    <option value="OTHER">Menu partagés par les autres RC</option>
   </select>
 			
