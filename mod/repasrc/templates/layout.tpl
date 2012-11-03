@@ -7,7 +7,7 @@
   {if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
 		var displayHelp = {$smarty.session.displayHelp};
   {else}
-		var displayHelp = 0;
+		var displayHelp = 1;
 	{/if}
 	</script>
   <link rel="shortcut icon" href="/mod/repasrc/favicon.ico" type="image/x-icon" />
