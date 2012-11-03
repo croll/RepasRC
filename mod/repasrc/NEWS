@@ -1,6 +1,6 @@
-### 2012/03/11
+# 2012/03/11
 
-# Résumé de la recette
+## Résumé de la recette
 - La sectïon "Résumé" a été renommée "EE Foncière" afin d'être plus synthétique et ne pas proposer des informations redondantes affichée dans les différents modules.
 - Reprise des informations d'EE foncière, type de composante, nombre de convives dans la section "Graphiques"
 - Suppression des informations de mode de conservation, mode de production, provenance des aliments dans l'onglet "Empreinte foncière". Ca nuisait à la lecture rapide des informations de la recette et était redondant avec les sections consacrées aux modules "saisonnalité", "transport", etc
@@ -15,16 +15,27 @@
 <> Nouveau type de graphique plus parlant
 <> Le nom des aliments sur l'axe des abscisses est à présent noté en diagonale pour éviter qu'ils ne se superposent.
 
-# Production / Conservation
+### Production / Conservation
 - Correction d'un bug qui faisait qu'il n'y avait pas de libellé "Non renseigné" dans la légende des graphiques.
 
-# Aide en ligne
+### Aide en ligne
 - Possibilité de montrer/masquer l'aide. Le paramètre est conservé jusqu'à la déconnexion.
 - Suppression du titre "Informations" pour plus de lisibilité et une occupation d'espace par la bulle plus limitée.
 - Correction d'un bug qui faisait que les bulles d'aide s'affichaient même si on masquait l'aide
 - La bulle d'aide du bouton "Selectionner la recette pour comparaison" ne s'affichait pas au dessus du bouton.
 - Les informations de type "simple", par exemple les descriptions des modules, ne s'affichaient pas correctement.
-### 2012/29/10
+
+## Vos informations
+- Il faut saisir au moins 3 lettres pour avoir une liste de nom de villes. Ca évite de trop surcharger les machines obsolètes qui ont tendance à pédaler dans la choucroute (en boite)
+- Cliquer sur le bouton "Ne rien modifier" renvoi à la page d'accueil
+
+## Composer une recette
+- Cliquer sur le bouton "Annuler la création de la recette" ramène à a liste des recettes. 
+
+## Composer un menu
+- Cliquer sur le bouton "Annuler la création du menu" ramène à a liste des menus. 
+
+# 2012/29/10
 
 # Correction de bug
 - Correction du bug lors de la génération des prix HT/TTC pour un menu
@@ -32,7 +43,7 @@
 # Nouveauté
 - Export des graphs !
 
-### 2012/21/10
+# 2012/21/10
 
 # Correction de bug
 - Correction du bug qui faisait qu'on avait l'impression que l'aliment n'était pas ajouté à la recette
@@ -49,7 +60,7 @@
                  Messages si aucune saisonnalité ń'est définie pour aucun aliment
 - Comparaison de menus.
 
-### 2012/01/10
+# 2012/01/10
 
 - Témoin de chargement: permet de savoir quand on a envoyé une requette au serveur et qu'elle est en cours de traitement. (Apparait à gauche du sigle REPAS-RC)
 - Nouveau moteur de recherche des recette, beaucoup plus rapide.

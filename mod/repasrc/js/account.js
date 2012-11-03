@@ -2,7 +2,8 @@ window.addEvent('domready', function() {
 	var myAutocomplete = new Meio.Autocomplete($('city'), '/ajax/call/repasrc/getCities', {
 			filter: {
 				type: 'contains',
-				path: 'label'
+				path: 'label',
+				minChars: 3
 			},
 			onNoItemToList: function(elements){
 				elements.field.node.highlight('#ff5858');
@@ -17,4 +18,8 @@ window.addEvent('domready', function() {
 			$('zonelabel').set('value', '');
 			$('zoneid').set('value', '');
 		});
+
+		$('cancel').addEvent('click', function() {
+			document.location.href='/';
+		})
 });

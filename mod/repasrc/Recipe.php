@@ -7,7 +7,7 @@ class Recipe {
 	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false, $limit='ALL', $offset=0) {
 
 		$params = array();
-		$q = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification ';
+		$f = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification ';
 		$q.= 'FROM rrc_recipe AS re ';
 		$w = ' WHERE 1=1';
 		if ($label) {
@@ -70,7 +70,7 @@ class Recipe {
 		}
 		$o = "ORDER BY label ";
 		$o = "LIMIT $limit OFFSET $offset";
-		$query = $q.$w.$o;
+		$query = $f.$q.$w.$o;
 
 		return \core\Core::$db->fetchAll($query, $params);
 	}

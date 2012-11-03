@@ -87,6 +87,7 @@
 		},
 		{	"type" : "button",
 			"name" : "cancel",
+			"id" : "cancel",
 			"class" : "btn",
 			"value" : "Ne rien modifier"
 		}

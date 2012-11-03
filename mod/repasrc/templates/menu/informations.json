@@ -58,7 +58,8 @@
 			]	
 		},
 		{	"type" : "text",
-			"name" : "consumptiondate"
+			"name" : "consumptiondate",
+			"style" : "width:100px"
 		},
 		{	"type" : "text",
 			"name" : "price",
@@ -90,6 +91,7 @@
 		},
 		{	"type" : "button",
 			"name" : "cancel",
+			"id" : "cancel",
 			"class" : "btn",
 			"value" : "Annuler la création du menu"
 		},

@@ -74,7 +74,8 @@ class Menu {
 
 	public static function search($rcId='', $label='', $shared='', $owner='', $limit='ALL', $offset=0) {
 		$params = array();
-		$q = 'SELECT DISTINCT rrc_me_id AS id, rrc_me_public AS shared, rrc_me_label AS label, rrc_me_eaters AS eaters, rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification FROM rrc_menu AS me';
+		$f = 'SELECT DISTINCT rrc_me_id AS id, rrc_me_public AS shared, rrc_me_label AS label, rrc_me_eaters AS eaters, rrc_me_rrc_rc_id AS owner, rrc_me_creation AS creation, rrc_me_modification AS modification';
+		$q = ' FROM rrc_menu AS me';
 		$w = ' WHERE 1=1';
 		if ($label) {
 			$params[] = $label;
@@ -100,7 +101,7 @@ class Menu {
 		}
 		$o = " ORDER BY label";
 		$o = "LIMIT $limit OFFSET $offset";
-		$query = $q.$w.$o;
+		$query = $f.$q.$w.$o;
 		return \core\Core::$db->fetchAll($query, $params);
 	}
 
