@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
   <title>REPAS-RC</title>
 	<script>
-  {if isset($smarty.session.displayHelp) && $smarty.session.displayHelp == 1}
+  {if isset($smarty.session.displayHelp)}
 		var displayHelp = {$smarty.session.displayHelp};
   {else}
 		var displayHelp = 1;
