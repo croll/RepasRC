@@ -30,14 +30,6 @@
 					"label" : "Menu standard"
 				},
 				{ "type" : "option",
-					"value" : "LIGHTFOOTPRINT",
-					"label" : "Menu pied léger"
-				},
-				{ "type" : "option",
-					"value" : "ADMIN",
-					"label" : "Menu proposé par les administrateurs"
-				},
-				{ "type" : "option",
 					"value" : "STALLION",
 					"label" : "Menu étalon"
 				}

@@ -14,10 +14,16 @@ class Ajax {
 	}
 
 	public static function searchFoodstuff($params) {
-		$familyId = (!empty($params['familyId'])) ? $params['familyId'] : NULL;
+		$familyId = (!empty($params['familyId']) && $params['familyId'] != 
+			 'null') ? $params['familyId'] : NULL;
 		$subFamilyId = (!empty($params['subFamilyId'])) ? $params['subFamilyId'] : NULL;
-		$fsList = \mod\repasrc\Foodstuff::searchAll($familyId, $subFamilyId);
-		return $fsList;
+		$label = (!empty($params['label'])) ? $params['label'] : NULL;
+		$limit = (!empty($params['limit'])) ? $params['limit'] : NULL;
+		$offset = (!empty($params['offset'])) ? $params['offset'] : 0;
+		$allResults = \mod\repasrc\Foodstuff::searchAll($familyId, $subFamilyId, $label, NULL);
+		$fsList = (!is_null($limit) && !is_null($offset)) ? array_splice($allResults, $offset, $limit) : $allResults;
+		$numResults = sizeof($allResults);	
+		return array('fsList' => $fsList, 'numResults' => $numResults);
 	}
 
 	public static function showFoodstuffDetail($params) {
@@ -52,8 +58,7 @@ class Ajax {
 		$limit = (!empty($params['limit'])) ? $params['limit'] : 'ALL';
 		$offset = (!empty($params['offset'])) ? $params['offset'] : 0;
 		$recipeList = \mod\repasrc\Recipe::searchComputed($_SESSION['rc'], $typeId, $componentId, $recipeLabel, $foodstuffName, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $limit, $offset);
-		$numResults = \mod\repasrc\Recipe::search($_SESSION['rc'], $typeId, $componentId, $recipeLabel, $foodstuffName, (\mod\user\Main::userHasRight('Voir toutes les recettes')), false, $limit, $offset, true);
-
+		$numResults = \mod\repasrc\Recipe::search($_SESSION['rc'], $typeId, $componentId, $recipeLabel, $foodstuffName, (\mod\user\Main::userHasRight('Voir toutes les recettes')), false, 'ALL', 0, true);
 		return array('recipeList' => $recipeList, 'numResults' => $numResults);
 	}
 
@@ -113,7 +118,7 @@ class Ajax {
 		$limit = (!empty($params['limit'])) ? $params['limit'] : 'ALL';
 		$offset = (!empty($params['offset'])) ? $params['offset'] : 0;
 		$menuList = \mod\repasrc\Menu::searchComputed($_SESSION['rc'], $label, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $typeId, $limit, $offset);
-		$numResults = \mod\repasrc\Menu::search($_SESSION['rc'], $label, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $typeId, $limit, $offset, true);
+		$numResults = \mod\repasrc\Menu::search($_SESSION['rc'], $label, (\mod\user\Main::userHasRight('Voir toutes les recettes')), $typeId, 'ALL', 0, true);
 
 		return array('menuList' => $menuList, 'numResults' => $numResults);
 	}

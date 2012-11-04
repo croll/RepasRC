@@ -25,7 +25,7 @@
 
 	<div class="recipe_container">
 
-		<div class="span2">
+		<div class="span3">
 			{block name='recipe_sidebar'}
 			<div class="well" style="padding: 8px 0;">
 				<ul class="nav nav-list">
@@ -56,7 +56,7 @@
 			{/block}
 		</div>
 
-		<div class="span9">
+		<div class="span11">
 			<div class="recipe_content">
 				{block name='recipe_content'}
 				{/block}

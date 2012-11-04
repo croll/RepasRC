@@ -92,17 +92,23 @@ class Menu {
 					$params[] = $rcId;
 					$w.= ' AND rrc_me_rrc_rc_id=? ';	
 				break;
+				case "STALLION":
+					$params[] = $owner;
+					$w.= ' AND rrc_me_type = ? AND rrc_me_public=\'1\' ';
+					if (!\mod\user\Main::userBelongsToGroup('admin')) {
+						$w.= ' AND rrc_me_public=\'1\' ';
+					}
 				// Other menus
-				case "other":
+				case "OTHER":
 					$params[] = $rcId;
 					$w.= ' AND rrc_me_rrc_rc_id != ? AND rrc_me_public=1';
 				break;
 			}
 		}
-		$o = " ORDER BY label";
-		$o = "LIMIT $limit OFFSET $offset";
+		$g = " GROUP BY rrc_me_id, rrc_me_label ORDER BY rrc_me_label ";
+		$o = " LIMIT $limit OFFSET $offset";
 		if ($onlyNumResults == false) {
-			$query = $f.$q.$w.$o;
+			$query = $f.$q.$w.$g.$o;
 			return \core\Core::$db->fetchAll($query, $params);
 		} else {
 			$query = 'SELECT count(*) '.$q.$w.$o;
@@ -112,6 +118,7 @@ class Menu {
 
 	public static function searchComputed($rcId, $label=NULL, $shared=NULL, $owner='', $limit='ALL', $offset=0) {
 		$menus = self::search($rcId, $label, $shared, $owner, $limit, $offset);
+		$result = array();
 		foreach ($menus as $menu) {
 			$result[] = self::getDetail($menu['id']);
 		}

@@ -17,6 +17,7 @@
      <option value="me">Vos recettes</option>
      <option value="STALLION">Recettes "Etalon"</option>
      <option value="OTHER">Recettes partagées par les autres RC</option>
+     <option value="ALL">Toutes les recettes</option>
    </select>
    <div class="help" code="vosrecettes" location="bottom"></div>
 
@@ -37,14 +38,15 @@
 
 	</form>
 
-	<div id="recipe_container">
-		<div class="span6 recipe-list">
+	<div id="recipe_container" class="clearfix">
+		<div class="span9 recipe-list">
+      <div class="pagination pagination-small" id="listpagination"></div>
 			<div class='alert alert-danger not-found' style='display: none'>Aucune recette ne correspond aux critères de recherche.</div>
 			<ul class="thumbnails">
 			</ul>
 		</div>
-		<div class="span3" style="margin: 0">
-			<h3 style="margin-bottom:10px">Recettes sélectionnées</h3>
+		<div class="span3">
+			<h4 style="margin-bottom:10px">Recettes sélectionnées</h4>
 			<div class="help" code="recettesselectionnees"></div>
 			{if (!is_array($recipeList) || sizeof($recipeList) < 1)}
 			<div class="alert alert-error">

@@ -22,7 +22,7 @@ class Analyze {
 				if (empty($foodstuff['foodstuff']['seasonality'])) {
 					$seasonality['noinfo'][] = $label;
 				} else {
-					if ($month && $foodstuff['foodstuff']['seasonality'][$month] > 0) {
+					if (isset($month) && $foodstuff['foodstuff']['seasonality'][$month] > 0) {
 						$seasonality['ok'][] = $label;
 					} else {
 						$seasonality['nok'][] = $label;

@@ -6,7 +6,6 @@ class Recipe {
 
 	public static function search($rc_id, $owner=NULL, $component=NULL, $label=NULL, $foodstuff=NULL, $shared=NULL, $getFoodstuff=false, $limit='ALL', $offset=0, $onlyNumResults=false) {
 
-		\core\Core::log('LIMITE '.$limit);
 		$params = array();
 		$f = 'SELECT DISTINCT rrc_re_id AS id, rrc_re_public AS shared, rrc_re_label AS label, rrc_re_component AS component, rrc_re_persons AS persons, rrc_re_rrc_rc_id AS owner, rrc_re_creation AS creation, rrc_re_modification AS modification ';
 		$q = 'FROM rrc_recipe AS re ';
@@ -67,12 +66,13 @@ class Recipe {
 						$w.= ' AND rrc_re_public=\'1\' ';
 					}
 				break;
+				
 			}
 		}
-		$o = "ORDER BY label ";
-		$o = "LIMIT $limit OFFSET $offset";
+		$g = " GROUP BY rrc_re_id, rrc_re_label ORDER BY rrc_re_label ";
+		$o = " LIMIT $limit OFFSET $offset";
 		if ($onlyNumResults == false) {
-			$query = $f.$q.$w.$o;
+			$query = $f.$q.$w.$g.$o;
 			return \core\Core::$db->fetchAll($query, $params);
 		} else {
 			$query = 'SELECT count(*) '.$q.$w.$o;
@@ -314,6 +314,7 @@ class Recipe {
 
 	public static function setComments($recipeId, $comments) {
 		\core\Core::$db->exec('UPDATE rrc_recipe SET rrc_re_comment=? WHERE rrc_re_id=?', array($comments, (int)$recipeId));
+		self::updateRecipeHash($recipeId);
 	}
 
 	public static function getComments($recipeId) {

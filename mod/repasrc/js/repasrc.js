@@ -1,7 +1,7 @@
 //  -*- mode:js; tab-width:2; c-basic-offset:2; -*-
 
 var modalWin;
-var spinner;
+var spinners = [];
 
 window.addEvent('domready', function() { 
 	
@@ -16,8 +16,7 @@ window.addEvent('domready', function() {
 });
 
 function showSpinner() {
-  if (!spinner) {
-    spinner = new Spinner({
+  var sp = new Spinner({
       lines: 11, // The number of lines to draw
       length: 5, // The length of each line
       width: 2, // The line thickness
@@ -34,12 +33,15 @@ function showSpinner() {
       top: 7, // Top position relative to parent in px
       left: -30 // Left position relative to parent in px
     })
-    spinner.spin(document.id('spinnercontainer'));
-  };
+  sp.spin(document.id('spinnercontainer'));
+  spinners.push(sp);
 }
 
 function hideSpinner() {
-  spinner.stop();
+  spinners.each(function(spinner) {
+    spinner.stop();
+    spinner = undefined;
+  });
 }
 
 function saveAsImg(chartCont, title) {

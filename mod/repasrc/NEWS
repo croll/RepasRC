@@ -1,7 +1,34 @@
 # 2012/03/11
 
 ## Généralités
+
+- Adaptation du design. C'est plus clair et épuré, l'affichage est un peu plus large afin 
+d'afficher les graphiques et autres information sans qu'on se sente étriqué. Toutefois c'est dans des proportions qui permettent l'affichage sur des moniteurs anciens.
+
+- Les listes des recettes, menus, aliments ont été remaniées pour être plus claires.
+
+- Nouveau moteur de recherche, il affiche 10 résultats par page ainsi que la pagination pour naviguer rapidement entre les pages de résultat. Totalement dynamique il permet de rechercher automatiquement en fonction de différents critères mais ontrairement à la façon de faire précédente où l'on récupérait toutes les recettes d'un type donné et qu'ensuite on filtrait en fonction du nom, ou de l'aliment, à présent on interroge le serveur pour avoir uniquement les recettes correspondantes.
+Le filtrage étant côté serveur et non plus côté navigateur, même les machines de faible puissance peuvent utiliser le calculateur.
+Atout majeur: On peut à présent chercher dans toutes les recettes existantes en même temps. Un nouveau filtre de recherche "Toutes les recettes" a donc été ajouté. La pagination est dynamique et s'adapte au nombre de résultats ainsi qu'au numero de page qui est cliqué.
+
+Le nouveau moteur de recherche est utilisé pour les recettes, menus et aliments.
+
+- Tri des aliments, recettes et menus par ordre alphabétique.
+
 - Suppression des recettes "pied léger", nous avons à présent une unique rubrique "Recettes étalon" et on range dedans les recettes "pied léger" et "pied lourd".
+
+- Une simplification de la catégorisation des recettes et menus a été faite. À présent il n'y a plus que deux type de recettes/menus: "Etalon" ou "Standart". Dans la catégorie étalon seront placés les recettes et menus "Pied lourd" et "Pied léger", la distinction se fera dans le nom de la recette ou du menu.
+Les moteurs de recherche ont été adaptés en conséquence, on peut à présent filtrer comme suit:
+<> "Mes recettes (ou menus)"
+<> "Recettes (ou menus) étalon"
+<> "Recettes (ou menus) partagé(e)s par les autres RC"
+<> "Toutes les recettes (ou menus)"
+
+- Correction d'un bug qui faisait que le temoin de chargement (qui apparait à gauche de de REPAS-RC) n'était pas toujours visible lors des recherches. C'est pratique pour savoir si "ça travaille".
+
+- Correction d'un bug lors de la saisie des commentaires d'une recette.
+
+- Correction d'un bug qui faisait qu'on était déconnecté de façon aléatoire.
 
 ## Résumé de la recette
 - La sectïon "Résumé" a été renommée "EE Foncière" afin d'être plus synthétique et ne pas proposer des informations redondantes affichée dans les différents modules.

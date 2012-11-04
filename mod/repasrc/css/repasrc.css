@@ -8,11 +8,11 @@ body {
 }
 
 #content {
-	width: 1140px;
 	margin: 0 auto;
 }
 
 #repasrc_container {
+  width: 1140px;
 	margin: 0 auto;
 }
 
@@ -96,8 +96,26 @@ div.recipe_content {
 	overflow-x: hidden;
 }
 
-.dl-horizontal {
-	margin-bottom: 2px;
+.pagination li {
+  cursor: pointer;
+}
+
+dl {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.dl-horizontal dt {
+  float: left;
+  width: 160px;
+  clear: left;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dl-horizontal dd {
+  margin-left: 165px;
 }
 
 /* COMMENTS */
@@ -109,4 +127,8 @@ div.recipe_content {
 /* MODAL */
 .modal-box {
 	width: 600px;
+}
+
+li {
+  list-style-type: none;
 }

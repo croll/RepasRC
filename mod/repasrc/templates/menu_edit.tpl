@@ -25,7 +25,7 @@
 
 	<div class="menu_container">
 
-		<div class="span2">
+		<div class="span3">
 			{block name='menu_sidebar'}
 			<div class="well" style="padding: 8px 0;">
 				<ul class="nav nav-list">
@@ -56,7 +56,7 @@
 			{/block}
 		</div>
 
-		<div class="span9">
+		<div class="span11">
 			<div class="menu_content">
 				{block name='menu_content'}
 				{/block}

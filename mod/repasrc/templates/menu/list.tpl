@@ -14,21 +14,23 @@
 
 	<select name="type" id="type">
    <option value="me">Vos Menus</option>
-   <option value="STALLION">Recettes "Etalon"</option>
-   <option value="OTHER">Menu partagés par les autres RC</option>
+   <option value="STALLION">Menus "Etalon"</option>
+   <option value="OTHER">Menus partagés par les autres RC</option>
+   <option value="ALL">Tous les menus</option>
   </select>
 			
 	<input type="text" id="label" name="label" class="input-medium" placeholder="Nom du menu" />
 
 </form>
 
-	<div id="menu_container">
-		<div class="span6 menu-list">
+	<div id="menu_container" class="clearfix">
+		<div class="span8 menu-list">
+      <div class="pagination pagination-small" id="listpagination"></div>
 			<div class='alert alert-danger not-found' style='display: none'>Aucun menu ne correspond aux critères de recherche.</div>
 			<ul class="thumbnails">
 			</ul>
 		</div>
-		<div class="span3" style="margin: 0">
+		<div class="span3">
 			<h3 style="margin-bottom:10px">Menus sélectionnés</h3>
 			{if (!is_array($menuList) || sizeof($menuList) < 1)}
 			<div class="alert alert-error">

@@ -8,12 +8,12 @@
 
 	<div class="main-container">
 
-		<div class="span2">
+		<div class="span3">
 			{block name='main-container-sidebar'}
 			{/block}
 		</div>
 
-		<div style="width: 890px">
+		<div>
 			<div class="recipe_content">
 				{block name='main-container-content'}
 				{/block}

@@ -24,13 +24,14 @@
 	</form>
 
 	<div id="foodstuff_container">
-		<div class="span6 foodstuff-list">
+    <div class="pagination pagination-small" id="listpagination"></div>
+		<div class="span7 foodstuff-list">
 			<ul class="thumbnails">
 			</ul>
 			<div class='alert alert-danger not-found' style='display: none'>Attention, la liste des aliments disponibles n'est pas exhaustive ; elle comprend surtout des aliments bruts, classés par catégorie.</div>
 		</div>
-		<div class="span3" style="margin: 0">
-			<h3 style="margin-bottom:10px">Composition de la recette</h3>
+		<div class="span4" style="margin: 0">
+			<h4 style="margin-bottom:10px">Composition de la recette</h4>
 			{if (!isset($recipe.foodstuffList) || empty($recipe.foodstuffList))}
 			<div class="alert alert-error">
 				Aucun aliment.

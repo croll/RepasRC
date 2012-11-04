@@ -43,20 +43,24 @@ class Foodstuff {
 		//$w = "WHERE dv.rrc_dv_rrc_foodstuff_datatype_id=1 ";
 		$w = "WHERE 1=1 ";
 		if ($label != NULL) {
-			$params[] = "%$label%";
-			$params[] = "%$label%";
-			$q .= "AND UPPER(fs.rrc_fs_label) ILIKE ? OR UPPER(ss.rrc_ss_label) ILIKE ? ";
+			if ($searchSynonyms) {
+				$params[] = "%$label%";
+				$w.= " AND UPPER(ss.rrc_ss_label) ILIKE ?"; 
+			} else {
+				$params[] = "%$label%";
+				$w .= " AND UPPER(fs.rrc_fs_label) ILIKE ?";
+			}
 		}
 		if ($familyGroup != NULL) {
 			$params[] =  $familyGroup;
-			$q .= 'AND fg.rrc_fg_code=? ';
+			$w .= 'AND fg.rrc_fg_code=? ';
 		}
 		if ($family != NULL) {
 			$params[] = $family;
-			$q .= 'AND fa.rrc_fa_id=? ';
+			$w .= 'AND fa.rrc_fa_id=? ';
 		}
 
-		$o = 'ORDER BY label ASC';
+		$o = 'ORDER BY label ASC ';
 		if ($searchSynonyms) {
 		  $o .= ', synonym ASC';
 		}
@@ -113,6 +117,7 @@ class Foodstuff {
 
 	public static function searchAll($familyGroup=NULL, $family=NULL, $label=NULL, $fsIds=NULL) {
 		$r1 = self::search($familyGroup, $family, $label, $fsIds, false);
+
 		$r2 = self::search($familyGroup, $family, $label, $fsIds, true);
 		$synList = array();
 		foreach($r2 as $fs) {
@@ -184,7 +189,7 @@ class Foodstuff {
 		$foodstuff = \core\Core::$db->fetchRow($q, $params);
 		$origin = self::getOriginFromRecipe($recipeFoodstuffId);
 		$foodstuff['origin'] = $origin;
-		if ($origin) {
+		if (isset($origin) && isset($origin[0])) {
 			$foodstuff['location'] = $origin[0]['location'];
 		}
 		return $foodstuff;

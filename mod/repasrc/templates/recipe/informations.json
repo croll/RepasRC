@@ -52,14 +52,6 @@
 					"label" : "Recette standard"
 				},
 				{ "type" : "option",
-					"value" : "LIGHTFOOTPRINT",
-					"label" : "Recette pied léger"
-				},
-				{ "type" : "option",
-					"value" : "ADMIN",
-					"label" : "Recette proposée par les administrateurs"
-				},
-				{ "type" : "option",
 					"value" : "STALLION",
 					"label" : "Recette étalon"
 				}

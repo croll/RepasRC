@@ -11,7 +11,8 @@
 
 {block name='main-container-content'}
 
-		<div class="help" code="vosinformations"></div>
+	<div class="help" code="vosinformations"></div>
+	<div style="width: 100%;border: 1px solid white">
 		{form mod="repasrc" file="templates/account/account.json" defaultValues=\mod\repasrc\RC::getRcInfos($smarty.session.rc)}
 			<fieldset>
 				<div class="control-group">
@@ -60,5 +61,6 @@
 				</div>
 			</fieldset>
 		{/form}
+	</div>
 
 {/block}

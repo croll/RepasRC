@@ -21,10 +21,9 @@
 
 		<select name="type" id="type">
 	     <option value="me">Vos recettes</option>
-	     <option value="LIGHTFOOTPRINT">Recettes "Pied léger"</option>
 	     <option value="STALLION">Recettes "Etalon"</option>
 	     <option value="OTHER">Recettes partagées par les autres RC</option>
-	     <option value="ADMIN">Recettes proposées par les administrateurs</option>
+	     <option value="ALL">Toutes les recettes</option>
 	   </select>
 
 		<select name="component" id="component">
@@ -37,15 +36,18 @@
 				
 		<input type="text" id="label" name="label" class="input-medium" placeholder="Nom de la recette" />
 
+		<input type="text" id="fsname" name="fsname" class="input-medium" placeholder="Nom de l'aliment" />
+
 	</form>
 
 	<div id="menu_container">
-		<div class="span6 recipe-list">
+		<div id="listpagination" class="pagination pagination-small"></div>
+		<div class="span7 recipe-list">
 			<ul class="thumbnails">
 			</ul>
 			<div class='alert alert-danger not-found' style='display: none'>Aucun résultat.</div>
 		</div>
-		<div class="span3" style="margin: 0">
+		<div class="span4" style="margin: 0">
 			<h3 style="margin-bottom:10px">Composition du menu</h3>
 			{if (!isset($menu.recipesList) || empty($menu.recipesList))}
 			<div class="alert alert-error">

@@ -4,9 +4,15 @@
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
-var recipeListOffset = 0;
-var recipeListNumPerPage = 15;
-var recipeListLimit = 10;
+var listOffset = 0;
+var currentPage = 0;
+var listLimit = 10;
+
+function resetSearch() {
+	listOffset = 0;	
+	currentPage = 0;	
+	listLimit = 10;
+}
 
 window.addEvent('domready', function() { 
 	
@@ -63,6 +69,7 @@ window.addEvent('domready', function() {
 			var val = this.get('value');
 			if (val != '') {
 				document.id('subfamily').empty().adopt(new Element('option').set('value', '').set('html', 'Sous famille de produit'));
+				resetSearch();
 				loadFoodstuff();
 				loadSubFamilies(val);
 			} else {
@@ -72,16 +79,24 @@ window.addEvent('domready', function() {
 
 		document.id('subfamily').addEvent('change', function() {
 				document.id('fsname').set('value', '');
+				resetSearch();
 				loadFoodstuff();
 		});
 
 		document.id('fsname').addEvent('keyup', function(e) {
-				if (e.key == 'enter') {
-					e.stop();
-					e.stopPropagation();
-					return;
-				}
-				filterResults(this.get('value'));
+			if (e.key == 'enter') {
+				e.stop();
+				e.stopPropagation();
+				return;
+			}
+			var text = this.value;
+			if (timeout != undefined) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				resetSearch();
+				loadFoodstuff();
+			}, 200);
 		});
 
 	}
@@ -96,6 +111,7 @@ window.addEvent('domready', function() {
 			document.id('fsname').set('value', '');
 			var val = this.get('value');
 			if (val != '') {
+				resetSearch();
 				loadRecipes();
 			}
 		});
@@ -105,6 +121,7 @@ window.addEvent('domready', function() {
 			document.id('fsname').set('value', '');
 			var val = this.get('value');
 			if (val != '') {
+				resetSearch();
 				loadRecipes();
 			}
 		});
@@ -121,6 +138,7 @@ window.addEvent('domready', function() {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
+				resetSearch();
 				loadRecipes();
 			}, 200);
 		});
@@ -136,6 +154,7 @@ window.addEvent('domready', function() {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
+				resetSearch();
 				loadRecipes();
 			}, 200);
 		});
@@ -194,7 +213,8 @@ function loadSubFamilies(num) {
  * @reset: Reset families and sub families selects
  * ---------------------------------------------- */
 function loadFoodstuff(reset) {
-	var familyId = subFamilyId = null;
+	var familyId = null;
+	var subFamilyId = null;
 	if (reset != true) {
 		var familySelected = document.id('family').getElement('option:selected');
 		if (typeOf(familySelected) == 'element') {
@@ -213,15 +233,30 @@ function loadFoodstuff(reset) {
 			'onSuccess': function(res) {
 				hideSpinner();
 				var container = document.body.getElement('.thumbnails');
-				container.set('html', '');
+				container.empty();
 				var html = '';
+				var rowscount = 0;
 				// for each foodstuff
-				Object.each(res, function(fs) {
-					html += buildFoodstuffThumb(fs);
+				if (typeOf(res['fsList']) == 'array' && res['fsList'].length > 0) {
+					Object.each(res['fsList'], function(fs) {
+						html += buildFoodstuffThumb(fs);
+					});
+					rowscount = res['numResults'];
+				}
+				new Paginator(document.id('listpagination'), {
+					rowscount: rowscount,
+					rowsperpage: listLimit,
+					page: currentPage,
+					onSelect: function(infos) {
+						listOffset = infos.offset;
+						currentPage = infos.page;
+						loadFoodstuff();
+					}
 				});
 				container.set('html', html);
 			}
-  }).post({familyId: familyId, subFamilyId: subFamilyId});
+			// Hack for familyId, humfr...
+  }).post({familyId: ''+familyId, subFamilyId: subFamilyId, label: document.id('fsname').get('value'), limit: listLimit, offset: listOffset});
 }
 
 /* ---------------------------------------------------------------------
@@ -266,7 +301,7 @@ function buildFoodstuffThumb(fs) {
 		var imgId = fs.id;
 		var name = fs.label;
 	}
-	html = '<li onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
+	html = '<li class="span6" onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+imgId+'.jpg" alt /></li>';
 	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
@@ -279,10 +314,10 @@ function buildFoodstuffThumb(fs) {
 			html += '</div>';
 		}
 		if (fs.footprint) {
-			html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd>'+Math.round(fs.footprint,3)+'&nbsp;m²</dd></dl>';
+			html += '<dl class="dl-horizontal"><dt>Empreinte foncière:</dt><dd>'+Math.round(fs.footprint,3)+'&nbsp;m²</dd></dl>';
 		}
 		if (fs.synonym && (fs.synonym != fs.label)) {
-			html += '<dl class="alert dl-horizontal"><dt>Basé sur:</dt><dd>'+fs.label+'</dd></dl>';
+			html += '<div class="alert alert-warning">'+fs.label+'</div>';
 		}
 		if (fs.conservation) {
 		html += '<dl class="dl-horizontal"><dt>Mode de conservation</dt><dd>'+fs.conservation+'</dd></dl>';
@@ -325,17 +360,29 @@ function loadRecipes(reset) {
 				var container = document.body.getElement('.thumbnails');
 				container.set('html', '');
 				var html = '';
+				var rowscount = 0;
 				// for each recipe 
 				if (typeOf(res['recipeList']) == 'array' && res['recipeList'].length > 0) {
 					Object.each(res['recipeList'], function(re) {
 						html += buildRecipeThumb(re);
 					});
+					rowscount = res['numResults'];
 				} else {
 						html += '<div style="width: 540px;padding: 10px" class="alert alert-danger">Aucune recette ne correspond à vos critères de recherche</div>';
 				}
+				new Paginator(document.id('listpagination'), {
+					rowscount: rowscount,
+					rowsperpage: listLimit,
+					page: currentPage,
+					onSelect: function(infos) {
+						listOffset = infos.offset;
+						currentPage = infos.page;
+						loadRecipes();
+					}
+				});
 				container.set('html', html);
 			}
-  }).post({typeId: typeId, componentId: componentId, recipeLabel: document.id('label').value, foodstuffName: document.id('fsname').value, offset: recipeListOffset, limit: recipeListLimit});
+  }).post({typeId: typeId, componentId: componentId, recipeLabel: document.id('label').value, foodstuffName: document.id('fsname').value, offset: listOffset, limit: listLimit});
 }
 
 /* -------------------------------------------------
@@ -344,18 +391,18 @@ function loadRecipes(reset) {
  * @re: recipe object 
  * ---------------------------------------------- */
 function buildRecipeThumb(re) {
-	html = '<li onclick="showRecipeDetail('+re.id+')" class="span5 result" style="width: 550px;cursor:pointer"><div class="thumbnail">';
+	html = '<li class="span9" onclick="showRecipeDetail('+re.id+')" class="span5 result" style="cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
-	html+= '<li class="span" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
-	html+= '<li class="span4" style="margin: 0;padding:5px 0 0 10px">';
+	html+= '<li class="span2" style="margin: 0"><img style="height:110px" src="/mod/repasrc/foodstuffImg/'+'TODO'+'.jpg" alt /></li>';
+	html+= '<li class="span7" style="margin: 0;padding:5px 0 0 10px">';
 	html+= '<div><h3 class="name" rel="xyz">'+re.label+'</h3></div>';
 	if (typeOf(re.families) == 'object') {
-		html += '<div style="max-width:380px">';
+		html += '<div>';
 		var i = 0;
 		Object.each(re.families, function(fam, famId) {
 			info = fam.split('_');
 			html += '<span class="badge fam'+famId+'" style="margin: 0px 5px 0 0">'+info[1]+'</span>';
-			if (i>1) {
+			if (i>3) {
 				html += '<br/>';
 				i=0;
 			}
@@ -363,10 +410,12 @@ function buildRecipeThumb(re) {
 		});
 		html += '</div>';
 	}
-  html += '<dl class="dl-horizontal"><dt>Composante:</dt><dd>'+re.component+'</dd></dl>';
-	html += '<dl class="dl-horizontal"><dt>Empreinte écologique foncière:</dt><dd">'+re.footprint+'&nbsp;m²</dd></dl>';
-  html += '<dl class="dl-horizontal"><dt>Nombre d\'aliments:</dt><dd>'+re.foodstuffList.length+'</dd></dl>';
-	html+= '</li>';
+  html += '<table style="margin-top:8px">';
+  html += '<tr><td>Composante:</td><td class="bold">'+re.component+'</td></tr>';
+	html += '<tr><td>Empreinte foncière:</td><td class="bold">'+re.footprint+'&nbsp;m²</td></tr>';
+  html += '<tr><td>Nombre d\'aliments:</td><td class="bold">'+re.foodstuffList.length+'</td></tr>';
+	html+= '</table></li>';
+	html+= '</table></li>';
 	html+= '<div class="clearfix"></div>';
 	html += '</ul></div></li>';
 	return html;

@@ -30,10 +30,10 @@
 	{js file="/mod/repasrc/ext/Bootstrap.Tooltip.js"}
 	{js file="/mod/repasrc/ext/Bootstrap.Popover.js"}
 	{js file="/mod/repasrc/ext/MooDatePicker/js/MooDatePicker.js"}
+	{js file="/mod/repasrc/js/paginator.js"}
 	{js file="/mod/repasrc/js/help.js"}
 	{js file="/mod/cssjs/ext/meioautocomplete/meioautocomplete.js"}
-	{css file="/mod/cssjs/ext/twitter-bootstrap/css/bootstrap.css"}
-	{css file="/mod/repasrc/css/bootstrap-responsive.css"}
+	{css file="/mod/repasrc/ext/bootstrap/css/bootstrap.css"}
 	{css file="/mod/cssjs/css/Modal.css"}
 	{css file="/mod/cssjs/css/mypaginate.css"}
 	{css file="/mod/page/css/page.css"}
@@ -46,7 +46,6 @@
 	<div id="repasrc_container">
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
-				<div class="container-fluid">
 					<div class="container">
 						<span id="spinnercontainer"></span>
 						<a class="brand" href="#">REPAS-RC</a>
@@ -118,14 +117,13 @@
 								<li><a href="/login">{t d='user' m='Connexion'}</a></li>
 							{/if}
 						</ul>
-					</div>
 				</div>
 			</div>
 		</div>
 
 		{if $smarty.server.REQUEST_URI != '/' && !strpos($smarty.server.REQUEST_URI, 'page')}
 		<div id="content" style="position: relative">
-		  <div style="position: absolute;top:5px;left: 680px">
+		  <div style="position: absolute;top:5px;left: 825px">
 		  	<a href="javascript:void(0)" id="helpToggler" onclick="toggleHelp()">
 		  		{if !isset($smarty.session.displayHelp) || $smarty.session.displayHelp == 1}
 		  			Masquer l'aide et les explications
