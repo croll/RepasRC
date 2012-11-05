@@ -70,7 +70,7 @@ function saveAsImg(chartCont, title) {
       },
       'onSuccess': function(imagename) {
         hideSpinner();
-        window.location.href = 'http://pouet.rpi.beve.org/image/'+imagename+'==='+title;
+        window.location.href = '/image/'+imagename+'==='+title;
       }
   }).post({'img': imgData.replace(/^data:image\/(png|jpg);base64,/, "")});
 }
