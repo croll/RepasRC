@@ -2,6 +2,9 @@
 
 - Ajout du symbole € lors de la saisie des informations du module prix lors de la création des recettes/menus.
 - Correction d'un bug lors de la sauvegarde des graphiques.
+- Nouvelle page d'acceuil
+- Suppression du lien "accueil" qui apparaissait lorsqu'on était déconnecté, il ne servait à rien.
+- Cliquer sur "REPAS-RC" dans le menu renvoi à la page d'acceuil
 
 # 2012/03/11
 

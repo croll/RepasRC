@@ -48,11 +48,8 @@
 			<div class="navbar-inner">
 					<div class="container">
 						<span id="spinnercontainer"></span>
-						<a class="brand" href="#">REPAS-RC</a>
+						<a class="brand" href="/">REPAS-RC</a>
 						<ul class="nav">
-							{if !\mod\user\Main::userIsLoggedIn()}
-								<li><a href="/">{t d='repasrc' m='Accueil'}</a></li>
-							{/if}
 							{if \mod\user\Main::userIsLoggedIn()}
 							{* Informations *}
 							<li><a href="/compte">{t d='repasrc' m='Vos informations'}</a></li>
