@@ -358,5 +358,38 @@ class Recipe {
 			else return unserialize($hash);
 	}
 
+	public static function export($id) {
+		$infos = self::getDetail($id);
+		$priceHT = (isset($infos['vat']) && $infos['vat'] === 0) ? $infos['price'] : '';
+		$priceTTC = (isset($infos['vat']) && $infos['vat'] === 1) ? $infos['price'] : '';
+		if ($priceHT == 0) $priceHT = '';
+		if ($priceTTC == 0) $priceTTC = '';
+		$type = ($infos['type'] == 'STANDARD') ? 'Standard' : 'Recette étalon';
+		$outp = "Nom de la recette;Type de composante;Type de partage;Type de recette;Prix HT;Prix TTC\n";
+		$outp .= $infos['label'].';'.$infos['component'].';'.$infos['shared'].';'.$type.';'.$priceHT.';'.$priceTTC."\n";
+		$outp .= ";Code de l'aliment;Nom de l'aliment;Quantité;Type de production;Moyen de conservation;Provenance approximative;Itineraire;Prix HT;Prix TTC\n";
+		foreach($infos['foodstuffList'] as $fs) {
+			$origin_type = '';
+			$origin = '';
+			$label = (isset($fs['foodstuff']['synonym_id']) && !empty($fs['foodstuff']['synonym_id'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+			$code = (isset($fs['foodstuff']['synonym_code']) && !empty($fs['foodstuff']['synonym_code'])) ? $fs['foodstuff']['synonym_code'] : $fs['foodstuff']['code'];
+			$fsPriceHT = (isset($fs['vat']) && $fs['vat'] === 0) ? $fs['price'] : '';
+			$fsPriceTTC = (isset($fs['vat']) && $fs['vat'] === 1) ? $fs['price'] : '';
+			\core\Core::log($fs['vat']);
+			if ($fsPriceHT == 0) $fsPriceHT = '';
+			if ($fsPriceTTC == 0) $fsPriceTTC = '';
+			if (is_array($fs['origin']) && sizeof($fs['origin']) > 0) {
+				$origin_type = \mod\repasrc\Foodstuff::$origin[$fs['origin'][0]['location']];
+				foreach($fs['origin'] as $ori) {
+					$origin .= $ori['zonelabel'].',';
+				}
+				$origin = substr($origin, 0, -1);
+			}
+			$outp.= ';'.$code.';'.$label.';'.$fs['quantity'].$fs['unit'].';'.$fs['production_label'].';'.$fs['conservation_label'].';'.$origin_type.';'.$origin.';'.$fsPriceHT.';'.$fsPriceTTC."\n";
+		}
+		$filename = '/tmp/recipe_'.$id.'csv';
+		file_put_contents($filename, $outp);
+		return $filename;
+	}
 
 }

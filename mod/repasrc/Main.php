@@ -700,12 +700,33 @@ class Main {
 		$page->display();
 	}
 
+	/* ************ */
+	/*    EXPORT    */
+	/* ***********  */
+
+  public static function hook_mod_repasrc_recipe_export($hookname, $userdata, $urlmatches) {
+  	$id = $urlmatches[1];
+ 	 	$path = \mod\repasrc\Recipe::export($id);
+  	$recipe = \mod\repasrc\Recipe::getInfos($id);
+    $title = $recipe['label'].'.csv';
+    header("Pragma: public"); // required 
+    header("Expires: 0"); 
+    header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
+    header("Cache-Control: private",false); // required for certain browsers 
+    header("Content-Type: text/"); 
+    header("Content-Disposition: attachment; filename=\"".urldecode($title)."\";" ); 
+    header("Content-Transfer-Encoding: binary"); 
+    header("Content-Length: ".filesize($path)); 
+    ob_clean(); 
+    flush(); 
+    readfile($path); 
+  }
+
   /* ************** */
   /*     Image      */
   /* ************** */
 
   public static function hook_mod_repasrc_get_image($hookname, $userdata, $urlmatches) {
-    print_r($urlmatches);
     $filename = $urlmatches[1];
     $title = $urlmatches[2];
     $path = dirname(__FILE__).'/tmp/'.str_replace('---', '/', $filename).'.png'; 

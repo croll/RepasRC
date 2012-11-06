@@ -70,6 +70,7 @@
 	</div>
 </div>
 {/foreach}
+<div style="margin:20px;0px;0px;20px"><a href="/recette/exporter/{$recipe.id}">Exporter la recette au format csv</a></div>
 <div class="form-actions" style="margin-top:30px">
 	<a class="btn analyzeButton help" location="top" code="boutonanalyserlarecette" href="/recette/analyse/resume/{$recipe.id}">Analyser la recette</a>
 	{if !isset($menuId) && $comparison != false}

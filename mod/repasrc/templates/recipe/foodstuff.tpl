@@ -10,6 +10,7 @@
 {/block}
 
 {block name='recipe_content'}
+
 	<h2 style="margin-bottom: 3px">{$recipe.label|ucfirst}</h2>
 	<div class="help" code="composerunerecette"></div> 
 

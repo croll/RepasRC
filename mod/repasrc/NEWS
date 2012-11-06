@@ -9,6 +9,7 @@
 - Suppression de l'information de saissonalité des aliments sur la fenêtre volante de recap d'une recette.
 - Correction d'un bug qui pouvait faire planter le navigateur lors de la recherche d'une ville
 - Possibilité de chercher une ville sans distinction des accents
+- Export des recettes au format csv, un lien est présent dans la fenetre volante qui présente le resumé de la recette.
 # 2012/03/11
 
 ## Généralités

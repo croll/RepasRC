@@ -295,18 +295,16 @@ function buildFoodstuffThumb(fs) {
 	if (typeOf(fs.synonym_id) == 'number') {
 		imgId = 's'+fs.synonym_id;
 		name = fs.synonym;
-		tmpcode = 's '+fs.synonym_id;
 	} else {
 		fs.synonym_id = null;
 		imgId = fs.id;
 		name = fs.label;
-		tmpcode = fs.id;
 	}
 	html = '<li class="span6" onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+imgId+'.jpg" alt /></li>';
 	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
-		html+= '<div><h3 class="name" rel="'+fs.label_caps+'">'+name+'('+tmpcode+')</h3></div>';
+		html+= '<div><h3 class="name" rel="'+fs.label_caps+'">'+name+'</h3></div>';
 		if (typeOf(fs.infos) == 'array') {
 			html += '<div>';
 			fs.infos.each(function(info) {
@@ -503,7 +501,6 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 						el.inject(document.id('steps'));
 						$('steps_input').set('value', '');
 						document.id('origin_steps').value+=value.id+' ';
-						$('locationWarning').setStyle('display', 'block');
 					}
 			});
 		},
@@ -515,11 +512,10 @@ function showFoodstuffDetail(id, sid, recipeFoodstuffId) {
 }
 
 /* -------------------------------------------------
- * Remove origin step from receipe foodstuff 
+ * Remove origin step from receipe foodstuff
  * @this: element
  * ---------------------------------------------- */
 function removeFoodstuffStep(id) {
-	$('locationWarning').setStyle('display', 'block');
 	document.body.getElement('div[rel='+id+']').dispose();
 	var val = '';
 	document.body.getElements('div[class="step"]').each(function(el) {
@@ -530,7 +526,7 @@ function removeFoodstuffStep(id) {
 
 /* -------------------------------------------------
  * Send ajax request to delete foodstuff from recipe
- * and close modal window  
+ * and close modal window
  * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
 function deleteRecipeFoodstuff() {

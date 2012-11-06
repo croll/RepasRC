@@ -8,13 +8,13 @@
 {block name='main-container-content'}
 	<div class="alert alert-warn">
 		<a class="close" data-dismiss="alert">×</a>
-		Vous pouvez télécharger le fichier type en <a href="#">cliquant ici</a> ainsi que la liste des aliments et leur code associé en suivant <a>ce lien</a>. <br />
+		Vous pouvez télécharger le fichier type en <a href="/mod/repasrc/templates/recipe/exemple_import.csv">cliquant ici</a> ainsi que la liste des aliments et leur code associé en suivant <a>ce lien</a>. <br />
 		Si des erreurs sont détectées lors de l'import, elles seront affichées ci dessous.
 	</div> 
 
 	{if !isset($result)}
 
-		{form mod="repasrc" file="templates/recipe/dbUpload.json"}
+		{form mod="repasrc" file="templates/recipe/import.json"}
 			<fieldset>
 				<legend>{t d='repasrc' m="Import d'une liste de recettes."}</legend>
 				<div class="control-group">
