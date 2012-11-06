@@ -39,7 +39,6 @@
 		{*
 		<div>Empreinte écologique foncière: <strong>{$fs.foodstuff.footprint|round:3} m²g/Kg</strong></div>
 		<div>Empreinte écologique foncière pour la recette: <strong>{math equation="round(x * y,3)" x=$fs.foodstuff.footprint y=$fs.quantity} m²g</strong></div>
-		*}
 		{if ($fs.foodstuff.infos.0.family_group == 'Fruits' || $fs.foodstuff.infos.0.family_group == 'Légumes') && $fs.foodstuff.seasonality}
 		<div style="margin-top:10px">Saisonnalité: <span></span></div>
 			<div class="btn-group">
@@ -66,6 +65,7 @@
 			{/foreach}
 			</div>
 		{/if}
+		*}
 
 	</div>
 </div>

@@ -278,32 +278,35 @@ function filterResults(txt, type) {
 			}
 		});
 	}
-	if (found == false) {
+	if (found === false) {
 		if (notfoundEl) {
 			notfoundEl.setStyle('display', 'block');
 		}
-	} 
+	}
 }
 
 /* -------------------------------------------------
- * Build foodstuff tiny block with image, fs name, etc  
+ * Build foodstuff tiny block with image, fs name, etc
  * multiple occurences build the foodstuff list
- * @fs: foodstuff object 
+ * @fs: foodstuff object
  * ---------------------------------------------- */
 function buildFoodstuffThumb(fs) {
+	var imgId, name, tmpcode;
 	if (typeOf(fs.synonym_id) == 'number') {
-		var imgId = 's'+fs.synonym_id;
-		var name = fs.synonym;
+		imgId = 's'+fs.synonym_id;
+		name = fs.synonym;
+		tmpcode = 's '+fs.synonym_id;
 	} else {
 		fs.synonym_id = null;
-		var imgId = fs.id;
-		var name = fs.label;
+		imgId = fs.id;
+		name = fs.label;
+		tmpcode = fs.id;
 	}
 	html = '<li class="span6" onclick="showFoodstuffDetail('+fs.id+', '+fs.synonym_id+')" class="span5 result" style="cursor:pointer"><div class="thumbnail">';
 	html+= '<ul style="margin:0">';
 	html+= '<li class="span2" style="margin: 0"><img style="height:100px" src="/mod/repasrc/foodstuffImg/'+imgId+'.jpg" alt /></li>';
 	html+= '<li class="span3" style="margin: 0;padding:5px 0 0 10px">';
-		html+= '<div><h3 class="name" rel="'+fs.label_caps+'">'+name+'</h3></div>';
+		html+= '<div><h3 class="name" rel="'+fs.label_caps+'">'+name+'('+tmpcode+')</h3></div>';
 		if (typeOf(fs.infos) == 'array') {
 			html += '<div>';
 			fs.infos.each(function(info) {

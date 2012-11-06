@@ -81,9 +81,15 @@ class Ajax {
 	}
 
 	public static function getCities($params) {
-		$name=$params['q'].'%';
-		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label FROM rrc_geo_zonevalue WHERE rrc_zv_label_caps ILIKE ? ORDER BY rrc_zv_label";
-		return \core\Core::$db->fetchAll($query, array($name));
+		$name='%'.\core\Tools::removeAccents(str_replace(' ', '_', $params['q'])).'%';
+		\core\Core::log($name);
+		$query="SELECT rrc_zv_id AS id, rrc_zv_label AS label, rrc_zv_label_caps as label_caps FROM rrc_geo_zonevalue WHERE UPPER(rrc_zv_label_caps) ILIKE UPPER(?) ORDER BY rrc_zv_label_caps";
+		$ret = array();
+		foreach(\core\Core::$db->fetchAll($query, array($name)) as $row) {
+			$row['label_caps'] = ucfirst(strtolower(str_replace('_', ' ',$row['label_caps'])));
+			$ret[] = $row;
+		}
+		return $ret;
 	}
 
 	public static function deleteRecipeFoodstuff($params) {

@@ -281,13 +281,6 @@ class Main {
     $page->display();
 	}
 
-	public static function hook_mod_repasrc_recipe_import($hookname, $userdata, $params) {
-    \mod\user\Main::redirectIfNotLoggedIn();
-    $page = new \mod\webpage\Main();
-		$page->setLayout('repasrc/recipe/import');
-    $page->display();
-	}
-
 	public static function hook_mod_repasrc_recipe_compare($hookname, $userdata, $params) {
     \mod\user\Main::redirectIfNotLoggedIn();
 
@@ -682,13 +675,14 @@ class Main {
 	/*    IMPORT    */
 	/* ***********  */
 
-	public static function hook_mod_repasrc_import($hookname, $userdata, $urlmatches) {
-		$page = new \mod\webpage\Main();
-		$page->setLayout('arkeogis/import');
-		$page->display();
-	} 
+	public static function hook_mod_repasrc_recipe_import($hookname, $userdata, $params) {
+    \mod\user\Main::redirectIfNotLoggedIn();
+    $page = new \mod\webpage\Main();
+		$page->setLayout('repasrc/recipe/import');
+    $page->display();
+	}
 
-	public static function hook_mod_arkeogis_repasrc_submit($hookname, $userdata, $urlmatches) {
+	public static function hook_mod_repasrc_recipe_import_submit($hookname, $userdata, $urlmatches) {
 		$params = array('mod' => 'repasrc', 'file' => 'templates/import.json');
 		$form = new \mod\form\Form($params);
 		if ($form->validate()) {

@@ -10,12 +10,23 @@
 
 <div class="row-fluid" id="homeContainer">
 	<ul class="thumbnails">
+		{if !$smarty.session.login}
 		<li class="span4">
 			<a class="thumbnail" href="http://demo.rcresponsable.org" target="_blank">
 				<img src="/mod/repasrc/img/home/calculateur.png">
 			</a>
 			<p>Testez le calculateur en utilisant la version <a href="http://demo.rcresponsable.org" target="_blank">demo</a></p>
 		</li>
+		{else}
+		<li class="span4" style="margin-left: 180px">
+			<a class="thumbnail" href="/compte">
+				<img style="margin-top:62px" src="/mod/repasrc/img/home/informations.png" />
+			</a>
+			<p>
+				Commencez par remplir les <a href="/compte">informations générales</a> sur votre RC
+			</p>
+		</li>
+		{/if}
 		<li class="span4">
 			<a class="thumbnail" href="javascript:void(0)" onclick="showVideo()">
 				<img src="/mod/repasrc/img/home/video2.png" />
@@ -24,23 +35,16 @@
 					Regardez la <a href="javascript:void(0)" onclick="showVideo()">video</a> de présentation
 			</p>
 		</li>
+		{if !$smarty.session.login}
 		<li class="span4">
-			{if !$smarty.session.login}
-				<a class="thumbnail" href="/login">
-					<img style="margin-top:62px" src="/mod/repasrc/img/home/connexion.png" />
-				</a>
-				<p>
-					Pour vous <a href="/login">connecter</a>, utilisez le menu dans la barre&nbsp;en haut de l'écran.
-				</p>
-			{else}
-				<a class="thumbnail" href="/compte">
-					<img style="margin-top:62px" src="/mod/repasrc/img/home/informations.png" />
-				</a>
-				<p>
-					Commencez par remplir les <a href="/compte">informations générales</a> sur votre RC
-				</p>
-			{/if}
+			<a class="thumbnail" href="/login">
+				<img style="margin-top:62px" src="/mod/repasrc/img/home/connexion.png" />
+			</a>
+			<p>
+				Pour vous <a href="/login">connecter</a>, utilisez le menu dans la barre&nbsp;en haut de l'écran.
+			</p>
 		</li>
+		{/if}
 	</ul>
 </div>
 

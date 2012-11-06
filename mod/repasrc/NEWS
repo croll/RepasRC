@@ -2,10 +2,13 @@
 
 - Ajout du symbole € lors de la saisie des informations du module prix lors de la création des recettes/menus.
 - Correction d'un bug lors de la sauvegarde des graphiques.
-- Nouvelle page d'acceuil
+- Modification de la page d'accueil: quand on est connecté on ne voit pas le lien vers le site demo, quand on est connecté on ne voit pas l'encart de connexion par contre on voit l'encart "modifier vos informations".
 - Suppression du lien "accueil" qui apparaissait lorsqu'on était déconnecté, il ne servait à rien.
 - Cliquer sur "REPAS-RC" dans le menu renvoi à la page d'acceuil
-
+- Intégration du dernier tableau de saisonnalité. On a à présent 44 produits frais avec leur saisonnalité renseignée.
+- Suppression de l'information de saissonalité des aliments sur la fenêtre volante de recap d'une recette.
+- Correction d'un bug qui pouvait faire planter le navigateur lors de la recherche d'une ville
+- Possibilité de chercher une ville sans distinction des accents
 # 2012/03/11
 
 ## Généralités

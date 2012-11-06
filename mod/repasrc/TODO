@@ -1,3 +1,9 @@
+- Ne pas oublier d'integrer le dump seasonality.sql mais avant, vider les infos de saisonnalité et les hash des recettes.
+
+- maj des noms des synonymes
+alter table rrc_foodstuff_synonym add column rrc_ss_label_caps varchar(255);
+/!\ Changer le path vers captainhook dans le script /!\ lancer le script updateSynonymsLabelsCaps
+
 Sur le module transport, toujours la même remarque que nous avions évoquée en réunion téléphonique :cela fait bizarre de préciser l’origine dans un onglet étape plutôt que dans un onglet origine. On ne pourrait pas faire comme sur mappy, un onglet origine avec la possibilité de cliquer sur un onglet pour ajouter des étapes ?
 
 Par ailleurs on précise qu’une fois les étapes renseignées il faut « mettre à jour les informations » mais cela ne correspond pas à la nomenclature utilisée à l’écran lorsqu’on saisit les données pour la première fois : c’est le bouton « ajouter l’aliment à la recette » qui nous est proposé : est ce qu’on ne devrait pas mettre un bouton « enregistrer les données » ou « valider les informations ». 
@@ -32,3 +38,4 @@ info j'arrive à une page blanche ...
   - j'ai créé un menu pour 100 personnes à partir de recettes saisies pour 1000. Les quantités restent pour 1000 dans le résumé, mais les calculs sont bons. 
 
   - le graphe EE d'une recette, en histogramme, n'a pas les bonnes légendes. En abscisse, ce sont les alimetns, non? et en ordonnée, l'EE foncière en m2g/kg il me semble. 
+

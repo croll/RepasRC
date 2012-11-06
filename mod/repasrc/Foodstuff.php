@@ -45,10 +45,10 @@ class Foodstuff {
 		if ($label != NULL) {
 			if ($searchSynonyms) {
 				$params[] = "%$label%";
-				$w.= " AND UPPER(ss.rrc_ss_label) ILIKE ?"; 
+				$w.= " AND UPPER(ss.rrc_ss_label_caps) ILIKE ?"; 
 			} else {
 				$params[] = "%$label%";
-				$w .= " AND UPPER(fs.rrc_fs_label) ILIKE ?";
+				$w .= " AND UPPER(fs.rrc_fs_label_caps) ILIKE ?";
 			}
 		}
 		if ($familyGroup != NULL) {

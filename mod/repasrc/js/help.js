@@ -75,9 +75,9 @@ function processHelp(c) {
 					helpDone.push(pop);
 			});
 			// show / hide popover
-			if (displayHelp == 0) {
+			if (displayHelp === 0) {
 				helpDone.each(function(pop) {
-					if (displayHelp == 0) {
+					if (displayHelp === 0) {
 						if (typeOf(pop) == 'object')
 							pop.disable();
 					}
@@ -95,7 +95,7 @@ function toggleHelp() {
 		displayHelp = 0;
 		// show / hide popover
 		helpDone.each(function(pop) {
-			if (displayHelp == 0) {
+			if (displayHelp === 0) {
 				if (typeOf(pop) == 'object')
 					pop.disable();
 			}
@@ -110,7 +110,7 @@ function toggleHelp() {
 		});
 	}
 	var jsonRequest = new Request.JSON({
-		'url': '/ajax/call/repasrc/setHelpVisibility',
+		'url': '/ajax/call/repasrc/setHelpVisibility'
 	}).post({'displayHelp': displayHelp});
 }
 
