@@ -1,6 +1,7 @@
 {extends tplextends('repasrc/repasrc')}
 
 {block name="repasrc_content"}
+<div id="homeRepasRC">
 
 <p style="margin-top:20px;text-align: center; color: #5A5A5A;font-weight: bold;font-size: 34px;line-height:40px">Bienvenue sur le calculateur d'empreinte écologique<br />
 	de la restauration collective</p>
@@ -44,12 +45,10 @@
 </div>
 
 <div style="padding: 15px 0; text-align: center; background-color: whiteSmoke; border-top: 1px solid #ddd;border-bottom: 1px solid #DDD;">
-<div id="homeRepasRC">
 <p class="rcr"><span style="font-size:24px;">Restauration collective responsable</span></p>
 <p class="repasrc">
 	<span class="big">R</span>epères pour l'<span class="big">E</span>volution des <span class="big">P</span>ratiques <span class="big">A</span>limentaires - en <span class="big">R</span>esturation <span class="big">C</span>ollective</p>
 <p class="vasd">Vers une alimentation responsable, de qualité et de proximité</p>
-</div>
 </div>
 
 <div id="greeting">
@@ -80,7 +79,7 @@
 		
 <div id="gfn">
 
-		<ul class="thumbnails span9" style="margin-left: 200px">
+		<ul class="thumbnails span9">
 			<li class="thumbnail">
 				<span class="span6">
 					À partir des données d'empreinte fournies par	
@@ -173,6 +172,7 @@ de Basse Normandie</p>
 	</div>
 
 
+</div>
 </div>
 
 {/block}

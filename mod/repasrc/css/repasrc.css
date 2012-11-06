@@ -174,10 +174,7 @@ li {
 
 #greeting {
   margin-top: 50px;
-}
-
-#greeting ul {
-  margin-left: 15px;
+  margin-left: 60px;
 }
 
 #greeting .span4 {
@@ -186,10 +183,18 @@ li {
   margin-top: 35px;
 }
 
+#gfn {
+  margin-left: 230px;
+
+}
 #gfn .span6 {
   font-size: 16px;
   color: #5A5A5A;
   margin-top: 35px;
+}
+
+#financeurs {
+  margin-left: 80px;
 }
 
 #financeurs li {
