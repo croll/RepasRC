@@ -22,8 +22,8 @@ class Main {
   public static function hook_mod_repasrc_index($hookname, $userdata) {
     $page = new \mod\webpage\Main();
 		$content = \mod\page\Main::getPageBySysname('accueil');
-		$page->smarty->assign('content', $content['content']);
-		$page->setLayout('repasrc/repasrc');
+		//$page->smarty->assign('content', $content['content']);
+		$page->setLayout('repasrc/content/home');
     $page->display();
   }
 
@@ -137,16 +137,6 @@ class Main {
 			if ($form->validate()) {
 				$fields = $form->getFieldValues();
 					\mod\repasrc\Recipe::setComments($id, $fields['comment']);
-			}
-		}
-
-		/* Recipe copy */
-		if (isset($_POST['action']) && $_POST['action'] == 'duplicate') {
-			$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/duplicate.json'));
-			if ($form->validate()) {
-				$fields = $form->getFieldValues();
-				\mod\repasrc\Recipe::duplicate($id, $fields['label']);
-				$section = 'informations';
 			}
 		}
 
@@ -608,7 +598,7 @@ class Main {
 				$gctPie->addColumn('Aliment', 'string');
 				$gctPie->addColumn('', 'number');
 				$gctCol->addColumn('Val', 'string');
-				$gctCol->addRow('');
+				$gctCol->addRow('Empreinte écologique foncière pour le menu');
 				foreach ($menuDetail['recipesList'] as $recipe) {
 					$gctPie->addRow($recipe['label']);
 					$gctPie->addRow($recipe['footprint']);

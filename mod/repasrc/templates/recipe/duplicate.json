@@ -12,8 +12,9 @@
 				"required"
 			]
 		},
-		{	"type" : "submit",
+		{	"type" : "button",
 			"name" : "submit",
+			"onclick" : "duplicateRecipe()",
 			"class" : "btn btn-primary",
 			"value" : "Dupliquer la recette"
 		},

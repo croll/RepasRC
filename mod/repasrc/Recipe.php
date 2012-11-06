@@ -280,6 +280,7 @@ class Recipe {
 				$newFoodstuffId = \core\Core::$db->exec($q, array_values($or));
 			}
 		}
+		return $newRecipeId;
 	}
 
 	public static function updateModules($recipeId, $modules) {

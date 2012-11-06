@@ -120,10 +120,8 @@ window.addEvent('domready', function() {
 			document.id('label').set('value', '');
 			document.id('fsname').set('value', '');
 			var val = this.get('value');
-			if (val != '') {
-				resetSearch();
-				loadRecipes();
-			}
+			resetSearch();
+			loadRecipes();
 		});
 
 		var timeout = undefined;

@@ -168,9 +168,6 @@
 											{/foreach}
 										{/if}
 									</div>
-									<div id="locationWarning" class="alert alert-danger" style="margin-top:10px" style="display: none">
-										Cliquez sur le bouton "Mettre à jour les informations" pour prendre en compte les changements
-									</div>
 								</div>
 							</div>
 						</fieldset>
@@ -184,7 +181,7 @@
 								<div class="controls" style="margin-left:75px">
 								<div class="input-append">
 									{$foodstuffForm.price}
-									<span class="add-on">au Kg</span>
+									<span class="add-on">€ au Kg</span>
 								</div>
 									{$foodstuffForm.vat}
 									<div class="help" code="fenetrealimentongletprix"></div>

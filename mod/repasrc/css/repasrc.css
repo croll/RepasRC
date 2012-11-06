@@ -132,3 +132,77 @@ dl {
 li {
   list-style-type: none;
 }
+
+#homeContainer {
+  margin-top: 80px;
+}
+#homeContainer li.span4 a {
+  height: 162px;
+}
+
+#homeContainer li.span4 p {
+  text-align: center;
+  padding: 10px 5px;
+  font-size: 16px;
+  color: #5A5A5A;
+}
+
+#homeRepasRC {
+  padding-top: 5px;
+  text-align: center; 
+}
+
+#homeRepasRC .rcr {
+  font-size: 14px;
+  margin-bottom:24px;
+  color: #5A5A5A;
+}
+
+#homeRepasRC .big {
+  font-size: 72px;
+  color: #000;
+}
+
+#homeRepasRC .repasrc {
+  color: #5A5A5A;
+}
+
+#homeRepasRC .vasd {
+  font-size: 24px;
+  color: #5A5A5A;
+}
+
+#greeting {
+  margin-top: 50px;
+}
+
+#greeting ul {
+  margin-left: 15px;
+}
+
+#greeting .span4 {
+  font-size: 16px;
+  color: #5A5A5A;
+  margin-top: 35px;
+}
+
+#gfn .span6 {
+  font-size: 16px;
+  color: #5A5A5A;
+  margin-top: 35px;
+}
+
+#financeurs li {
+  min-height: 220px;
+  font-size: 10px;
+}
+
+#financeurs .span4 {
+  font-size: 12px;
+}
+
+#financeurs .span2 {
+  border-left: 1px solid #ddd;
+  text-align: center;
+  height: 100%;
+}

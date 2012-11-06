@@ -110,6 +110,17 @@ class Ajax {
 		return array('content' => $page->smarty->fetch('repasrc/recipe/duplicate'));
 	}
 
+	public static function duplicateRecipe($params) {
+		\core\Core::log($params);
+		$form = new \mod\form\Form(array('mod' => 'repasrc', 'file' => 'templates/recipe/duplicate.json'));
+		if ($form->validate()) {
+			$fields = $form->getFieldValues();
+			$id = \mod\repasrc\Recipe::duplicate((int)$params['id'], $params['label']);
+			$section = 'informations';
+		}
+		return $id;
+	}
+
 	/* MENU */
 
 	public static function searchMenu($params) {

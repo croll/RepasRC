@@ -62,7 +62,7 @@
 					<div class="control-group">
 						<label class="control-label">{t d='repasrc' m="Prix de la recette par personne"}</label>
 						<div class="controls">
-							{$informations.price}
+							{$informations.price}€
 							{$informations.vat}
 						</div>
 					</div>

@@ -1,1 +1,34 @@
-Fichier excel aide: 18 / 19
+Sur le module transport, toujours la même remarque que nous avions évoquée en réunion téléphonique :cela fait bizarre de préciser l’origine dans un onglet étape plutôt que dans un onglet origine. On ne pourrait pas faire comme sur mappy, un onglet origine avec la possibilité de cliquer sur un onglet pour ajouter des étapes ?
+
+Par ailleurs on précise qu’une fois les étapes renseignées il faut « mettre à jour les informations » mais cela ne correspond pas à la nomenclature utilisée à l’écran lorsqu’on saisit les données pour la première fois : c’est le bouton « ajouter l’aliment à la recette » qui nous est proposé : est ce qu’on ne devrait pas mettre un bouton « enregistrer les données » ou « valider les informations ». 
+
+On trouve le bouton « mettre à jour les informations » uniquement dans le cas où l’on modifie les données géographiques d’un ingrédient d’une recette qui existe déjà.
+
+Quand on souhaite rentrer une origine, il manque des départements (je ne sais plus lequel j’ai testé qui ne fonctionnait pas) et il faudrait également faire un avertissement sur la nomenclature à respecter pour que le calculateur reconnaisse le nom géographique : écrire le nom de la commune, du département, de la région ou du pays avec une Majuscule en première lettre et des minuscules ensuite, si c’est un nom composé, mettre des tirets entre chaque mot. A défaut le calculateur ne reconnait pas le lieu.
+
+PB dupliquer une recette
+
+Confirmation pour la suppression recette/menu
+
+en travaillant sur les menus, petit complément concernant les bugs
+(systématiques aujourd'hui je n'ai pas réussi à réaliser un seul menu), je
+constate que je ne sélectionne pas le module prix, je remplis ensuite les
+information pour chacun des modules sélectionnés pour ma recette, et
+lorsque je veux valider ces infos, il revient à cette même page en
+ajoutant le module prix que je n'avais pas demandé. Et si je fais l'essai
+de remplir ce module prix qui s'est ajouté, une fois validé cette dernière
+info j'arrive à une page blanche ...
+
+# - qd on rentre le prix, il manque l'unité, les €
+
+- Echelle des histogrammes
+
+ - détaisl : choux est au pluriel et échalote ne prend qu'un T
+
+ - dans les résultats PRIX d'un menu, il manque le prix de chaque recette
+
+  - les champignons ont une EE=0 au lieu d'un avertissement
+
+  - j'ai créé un menu pour 100 personnes à partir de recettes saisies pour 1000. Les quantités restent pour 1000 dans le résumé, mais les calculs sont bons. 
+
+  - le graphe EE d'une recette, en histogramme, n'a pas les bonnes légendes. En abscisse, ce sont les alimetns, non? et en ordonnée, l'EE foncière en m2g/kg il me semble. 

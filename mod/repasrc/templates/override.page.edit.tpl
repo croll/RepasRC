@@ -59,32 +59,6 @@
 		</form>
 </fieldset>
 	</div>
-	{*
-	<br />
-		<div><a href="#" class="ajaxLink btn" onclick="$('eButtons').toggle();">Wysiwyg Editor Examples for developers</a></div>
-		<div id="eButtons" style='display: none'>
-			<a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.plugins.html">Full Api documlentation</a>
-			<input onclick="myeditor.insertHTML();" type="button" value="Insert HTML" />
-			<input onclick="myeditor.setContents();" type="button" value="Set Editor Contents" />
-			<input onclick="myeditor.getContents();" type="button" value="Get Editor Contents (XHTML)" />
-			<br />
-			<textarea cols="100" id="htmlArea" rows="3">&lt;h2&gt;Test&lt;/h2&gt;&lt;p&gt;This is some &lt;a href="/Test1.html"&gt;sample&lt;/a&gt; HTML code.&lt;/p&gt;</textarea>
-			<br />
-			<br />
-			<input onclick="myeditor.insertText();" type="button" value="Insert Text" />
-			<br />
-			<textarea cols="100" id="txtArea" rows="3">   First line with some leading whitespaces.
-
-Second line of text preceded by two line breaks.</textarea>
-			<br />
-			<input onclick="myeditor.executeCommand('bold');" type="button" value="Execute &quot;bold&quot; Command" />
-			<input onclick="myeditor.executeCommand('link');" type="button" value="Execute &quot;link&quot; Command" />
-			<br />
-			<br />
-			<input onclick="myeditor.checkDirty();" type="button" value="checkDirty()" />
-			<input onclick="myeditor.resetDirty();" type="button" value="resetDirty()" />
-		</div>
-	*}
 
 <script>
 	var myeditor = new CHWysiwyg({ 'contentElement' : 'editor1',});

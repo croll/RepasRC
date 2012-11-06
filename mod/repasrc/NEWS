@@ -1,3 +1,8 @@
+#2012/05/11
+
+- Ajout du symbole € lors de la saisie des informations du module prix lors de la création des recettes/menus.
+- Correction d'un bug lors de la sauvegarde des graphiques.
+
 # 2012/03/11
 
 ## Généralités
@@ -60,7 +65,6 @@ Les moteurs de recherche ont été adaptés en conséquence, on peut à présent
 - Cliquer sur le bouton "Ne rien modifier" renvoi à la page d'accueil
 
 ## Composer une recette
-- Cliquer sur le bouton "Annuler la création de la recette" ramène à a liste des recettes. 
 
 ## Composer un menu
 - Cliquer sur le bouton "Annuler la création du menu" ramène à a liste des menus. 

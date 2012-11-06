@@ -4,8 +4,9 @@
 	{css file="/mod/cssjs/css/Modal.css"}
 {/block}
 
-{block name='repasrc_content'}
-	<div style="width:900px; margin: 10px auto">
-		{$content}
-	</div>
+{block name='webpage_content'}
+  <div style="width:800px; margin: 10px auto">
+  {block name='repasrc_content'}
+  {/block}
+  </div>
 {/block}
