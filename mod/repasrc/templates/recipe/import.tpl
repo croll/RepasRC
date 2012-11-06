@@ -6,10 +6,6 @@
 {/block}
 
 {block name='main-container-content'}
-	<div class="alert alert-info">
-		<a class="close" data-dismiss="alert">×</a>
-		Pour éviter la double saisie vous avez la possbité d'importer plusieurs recettes en une fois.
-	</div> 
 	<div class="alert alert-warn">
 		<a class="close" data-dismiss="alert">×</a>
 		Vous pouvez télécharger le fichier type en <a href="#">cliquant ici</a> ainsi que la liste des aliments et leur code associé en suivant <a>ce lien</a>. <br />
