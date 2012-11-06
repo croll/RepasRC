@@ -26,7 +26,7 @@
 		</li>
 		<li class="span4">
 			{if !$smarty.session.login}
-				<a class="thumbnail" href="javascript:void(0)">
+				<a class="thumbnail" href="/login">
 					<img style="margin-top:62px" src="/mod/repasrc/img/home/connexion.png" />
 				</a>
 				<p>
