@@ -1,0 +1,40 @@
+#!/usr/bin/php -q
+<?php  //  -*- mode:php; tab-width:2; c-basic-offset:2; -*-
+
+
+$CAPTAINHOOK_PATH = getenv('CAPTAINHOOK_PATH');
+if ($CAPTAINHOOK_PATH === false) {
+  if (is_file(getcwd().'/conf/general.conf')) $CAPTAINHOOK_PATH=getcwd();
+  else $CAPTAINHOOK_PATH = "/home/web/rcresponsable/captainhook/";
+}
+
+$scriptDir = dirname(__FILE__);
+
+if (!is_dir($CAPTAINHOOK_PATH)) {
+	echo "Captainhook core not found, please edit me and set \$CAPTAINHOOK_PATH variable.\n";
+	exit;
+}
+
+if (!is_file($CAPTAINHOOK_PATH.'/conf/general.conf') || !is_readable($CAPTAINHOOK_PATH.'/conf/general.conf')) {
+	echo "Captainhook config file not found.\n";
+	exit;
+}
+
+require($CAPTAINHOOK_PATH.'/core/Core.php');
+\core\Core::init();
+
+function removeAccents($msg) {
+	if (empty($msg)) return false;
+	$search = explode(",","ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,e,i,ø,u");
+	$replace = explode(",","c,ae,oe,a,e,i,o,u,a,e,i,o,u,a,e,i,o,u,y,a,e,i,o,u,a,e,i,o,u");
+	return str_replace($search, $replace, $msg);
+}
+
+$datas = \core\Core::$db->fetchAll("SELECT rrc_ss_id AS id, rrc_ss_label AS label FROM rrc_foodstuff_synonym");
+foreach($datas as $d) {
+		$label = trim(strtoupper(removeAccents($d['label'])));
+		$ins = "UPDATE rrc_foodstuff_synonym SET rrc_ss_label_caps=? WHERE rrc_ss_id = ?";
+		\Core\core::$db->exec($ins, array($label, $d['id']));
+}
+
+exit;
