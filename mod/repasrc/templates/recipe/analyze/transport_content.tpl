@@ -118,7 +118,7 @@
 						};
 						var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 						var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-						var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
+						//var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
 						chart1.draw(dataCol1, optionsCol1);
 						chart2.draw(dataCol2, optionsCol2);
 						//chart3.draw(dataComp, optionsComp);
@@ -141,6 +141,17 @@
 				{else}
 					<div class="help" code="navigateurimpressionimpossible"></div>
 				{/if}
+
+				<!--
+				<div id="chart_div3"></div>
+				{if empty($oldbrower)}
+				<div style="width:200px;margin:0 auto 0 auto">
+					<a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte écologique des transports par aliment.')">Enregistrer le graphique</a>
+				</div>
+				{else}
+					<div class="help" code="navigateurimpressionimpossible"></div>
+				{/if}
+			-->
 
 			{/if}
 	</div>

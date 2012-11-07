@@ -5,6 +5,9 @@ alter table rrc_foodstuff_synonym add column rrc_ss_label_caps varchar(255);
 alter table rrc_foodstuff_synonym add column rrc_ss_code varchar(50)
 /!\ Changer le path vers captainhook dans le script /!\ lancer le script updateSynonymsLabelsCaps
 
+- virer l'aliment "non français"
+delete from rrc_foodstuff where rrc_fs_id=151;
+
 
 PB dupliquer une recette
 

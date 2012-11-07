@@ -202,7 +202,7 @@
 
 									var optionsFootprintCol = { 
 										'title':'Empreinte écologique foncière des aliments',
-										'colors' : {$colors},
+										'vAxis' : { format : '#.### m²g/Kg'},
 										'width':800,
 										'height':400 
 									};
@@ -216,7 +216,6 @@
 
 									var optionsTransportCol = { 
 										'title':'Empreinte écologique des transports',
-										'colors' : {$colors},
 										'width':800,
 										'height':400 
 									};

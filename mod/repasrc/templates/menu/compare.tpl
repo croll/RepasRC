@@ -189,8 +189,10 @@
 									var dataMenuFootprint = new google.visualization.DataTable({$dataMenuFootprint});
 
 									var optionsMenuFootprint = { 
-										'title':'Empreinte écologique foncière des aliments',
+										'title':'Empreinte écologique foncière des menus',
+										'vAxis' : { format : '#.### m²g/Kg'},
 										'width':800,
+										'fontSize' : 11,
 										'height':400 
 									};
 
@@ -203,6 +205,8 @@
 
 									var optionsFootprintCol = { 
 										'title':'Empreinte écologique foncière des aliments',
+										'vAxis' : { format : '#.### m²g/Kg'},
+										'fontSize' : 11,
 										'width':800,
 										'height':400 
 									};
@@ -217,6 +221,7 @@
 									var optionsTransportCol = { 
 										'title':'Empreinte écologique foncière des transports',
 										'width':800,
+										'fontSize' : 11,
 										'height':400 
 									};
 

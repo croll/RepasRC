@@ -10,6 +10,12 @@
 - Correction d'un bug qui pouvait faire planter le navigateur lors de la recherche d'une ville
 - Possibilité de chercher une ville sans distinction des accents
 - Export des recettes au format csv, un lien est présent dans la fenetre volante qui présente le resumé de la recette.
+
+# Correction de bug:
+
+- Les graphiques dans la section "Analyse -> "
+- La recherche par aliment lors de la composition d'un menu etait inopérante
+- Les graphiques de la comparaison des menus ne s affichaient pas
 # 2012/03/11
 
 ## Généralités

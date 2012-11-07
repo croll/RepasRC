@@ -69,7 +69,7 @@ window.addEvent('domready', function() {
 			}
 		});
 
-		var timeout = undefined;
+		var timeout;
 		document.id('label').addEvent('keyup', function(e) {
 			if (e.key == 'enter') {
 				e.stop();
@@ -77,7 +77,7 @@ window.addEvent('domready', function() {
 				return;
 			}
 			var text = this.value;
-			if (timeout != undefined) {
+			if (timeout !== undefined) {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
@@ -102,6 +102,7 @@ window.addEvent('domready', function() {
 			}
 		});
 
+		var timeout;
 		document.id('label').addEvent('keyup', function(e) {
 		if (e.key == 'enter') {
 				e.stop();
@@ -109,7 +110,23 @@ window.addEvent('domready', function() {
 				return;
 			}
 			var text = this.value;
-			if (timeout != undefined) {
+			if (timeout !== undefined) {
+				clearTimeout(timeout);
+			}
+			timeout = setTimeout(function() {
+				resetSearch();
+				loadRecipes();
+			}, 200);
+		});
+
+		document.id('fsname').addEvent('keyup', function(e) {
+		if (e.key == 'enter') {
+				e.stop();
+				e.stopPropagation();
+				return;
+			}
+			var text = this.value;
+			if (timeout !== undefined) {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {

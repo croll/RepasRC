@@ -535,17 +535,16 @@ class Main {
 		$gctFootprintCol->addRow('Empreinte écologique foncière des recettes');
 		$gctTransportCol->addColumn('Val', 'string');
 		$gctTransportCol->addRow('Empreinte écologique foncière des transports');
-		$gctFootprintCol->addColumn('Val', 'string');
-		$gctFootprintCol->addRow('Empreinte écologique des menus');
+		$gctMenuFootprint->addRow('Empreinte écologique des menus');
+		$gctMenuFootprint->addColumn('Val', 'string');
 		foreach($menus as $menu) {
+			$gctMenuFootprint->addColumn($menu['label'], 'number');
+			$gctMenuFootprint->addRow($menu['footprint']);
 			foreach($menu['recipesList'] as $recipe) {
-					// Foodstuff with no footprint value
 				$gctFootprintCol->addColumn($recipe['label'], 'number');
 				$gctFootprintCol->addRow($recipe['footprint']);
 				$gctTransportCol->addColumn($recipe['label'], 'number');
 				$gctTransportCol->addRow($recipe['transport']['total']['footprint']);
-				$gctTransportCol->addColumn($menu['label'], 'number');
-				$gctTransportCol->addRow($menu['footprint']);
 				if (isset($recipe['families']) && sizeof($recipe['families']) > 0) {
 					$families[] = array_shift(array_keys($recipe['families']));
 				}
@@ -556,7 +555,7 @@ class Main {
 			'noData' => $noData,
 			'dataFootprintCol' => $gctFootprintCol->getJSON(),
 			'dataTransportCol' => $gctTransportCol->getJSON(),
-			'dataMenuFootprint' => $gctTransportCol->getJSON(),
+			'dataMenuFootprint' => $gctMenuFootprint->getJSON(),
 			'menuCompareList' => $_SESSION['menu']['comp']
 		));
 		$page->setLayout('repasrc/menu/compare');

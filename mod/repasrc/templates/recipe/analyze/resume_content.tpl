@@ -164,7 +164,7 @@
 						'title':'Empreinte écologique foncière par aliment (Pour 1 personne)',
 						'colors' : {$colors},
 						'width':800,
-						'vAxis' : { format : '#.### gha'},
+						'vAxis' : { format : '#.### m²g/Kg'},
 						'height':400, 
 						'fontSize' : 11
 					};
@@ -172,7 +172,7 @@
 					var optionsCol2 = { 
 						'title':'Empreinte écologique foncière pour le service',
 						'colors' : {$colors},
-						'vAxis' : { format : '#.### gha'},
+						'vAxis' : { format : '#.### m²g/Kg'},
 						'width':800,
 						'height':400, 
 						'fontSize' : 11

@@ -88,7 +88,7 @@
 						'width':800,
 						'height':400, 
 						'fontSize' : 11,
-						'vAxis' : { format : '#.### gha'},
+						'vAxis' : { format : '#.### m²g/Kg'},
 					};
 
 					var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
