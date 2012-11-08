@@ -1,6 +1,8 @@
 /!\ alter table rrc_recipe_foodstuff add column rrc_rf_custom_label varchar(255) default NULL;
 INSERT INTO rrc_foodstuff (rrc_fs_label, rcc_fs_label_en, rrc_fs_label_caps, rrc_fs_code, rrc_fs_unit, rrc_fs_creation, rrc_fs_fake) VALUES ('Aliment inconnu', 'Unkown foodstuff', 'ALIMENT INCONNU', 'CUSTOMLABEL', 'KG', now(), 1);
 
+Effacer les hash des recettes.
+
 DONE - Ne pas oublier d'integrer le dump seasonality.sql mais avant, vider les infos de saisonnalité et les hash des recettes.
 
 DONE - maj des noms des synonymes

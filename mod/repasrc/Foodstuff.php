@@ -90,7 +90,7 @@ class Foodstuff {
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
 					// override code and add "s" prefix
-					$tmp['code'] = 's'.$row['synonym_code'];
+					$tmp['code'] = $row['synonym_code'];
 					$tmp['synonym'] = $row['synonym'];
 					$tmp['seasonality'] = self::parseSeasonality($row['synonym_seasonality']);
 				} else {
@@ -163,6 +163,8 @@ class Foodstuff {
 	public static function addToRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array(), $custom_label=null) {
 		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_label) ';
 		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?,?)';
+		if ($quantity == '') $quantity = 0;
+		$quantity = str_replace(',', '.', $quantity);
 		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production, $custom_label), 'rrc_rf_id');
 		if ($recipeFoodstuffId) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
@@ -175,6 +177,8 @@ class Foodstuff {
 	}
 
 	public static function updateForRecipe($recipeFoodstuffId, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array(), $custom_label=null) {
+		if ($quantity == '') $quantity = 0;
+		$quantity = str_replace(',', '.', $quantity);
 		$q = 'UPDATE rrc_recipe_foodstuff SET rrc_rf_quantity_value = ?, rrc_rf_price = ?, rrc_rf_vat = ?, rrc_rf_conservation = ?, rrc_rf_production = ?, rrc_rf_custom_label=? WHERE rrc_rf_id = ?';
 		if (\core\Core::$db->exec($q, array((float)$quantity, (float)$price, (int)$vat, $conservation, $production, $custom_label, (int)$recipeFoodstuffId))) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);

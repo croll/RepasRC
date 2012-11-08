@@ -7,12 +7,7 @@
 	[
 		{	"type" : "text",
 			"name" : "quantity",
-			"style" : "width: 40px",
-			"validators" : 
-			[ 
-				"required",
-				"validate-numeric"
-			]
+			"style" : "width: 40px"
 		},
 		{	"type" : "text",
 			"name" : "custom_label",

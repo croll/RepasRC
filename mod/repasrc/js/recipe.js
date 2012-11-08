@@ -1,6 +1,6 @@
 /* ------------------------------------------------------
- * Action triggered on page load 
- * Things done are differents between 
+ * Action triggered on page load
+ * Things done are differents between
  * pages identified by an existing *_container element
  * --------------------------------------------------- */
 
@@ -9,12 +9,12 @@ var currentPage = 0;
 var listLimit = 10;
 
 function resetSearch() {
-	listOffset = 0;	
-	currentPage = 0;	
+	listOffset = 0;
+	currentPage = 0;
 	listLimit = 10;
 }
 
-window.addEvent('domready', function() { 
+window.addEvent('domready', function() {
 	
 	// Informations
 	if (typeOf(document.id('informations_container')) == 'element') {
@@ -25,7 +25,7 @@ window.addEvent('domready', function() {
 		});
 	}
 
-	// Modules 
+	// Modules
 	if (typeOf(document.id('modules_container')) == 'element') {
 
 		document.id('cancel').addEvent('click', function() {
@@ -67,7 +67,7 @@ window.addEvent('domready', function() {
 		document.id('family').addEvent('change', function() {
 			document.id('fsname').set('value', '');
 			var val = this.get('value');
-			if (val != '') {
+			if (val !== '') {
 				document.id('subfamily').empty().adopt(new Element('option').set('value', '').set('html', 'Sous famille de produit'));
 				resetSearch();
 				loadFoodstuff();
@@ -90,7 +90,7 @@ window.addEvent('domready', function() {
 				return;
 			}
 			var text = this.value;
-			if (timeout != undefined) {
+			if (timeout !== undefined) {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
@@ -110,7 +110,7 @@ window.addEvent('domready', function() {
 			document.id('label').set('value', '');
 			document.id('fsname').set('value', '');
 			var val = this.get('value');
-			if (val != '') {
+			if (val !== '') {
 				resetSearch();
 				loadRecipes();
 			}
@@ -124,7 +124,7 @@ window.addEvent('domready', function() {
 			loadRecipes();
 		});
 
-		var timeout = undefined;
+		var timeout;
 		document.id('label').addEvent('keyup', function(e) {
 			if (e.key == 'enter') {
 				e.stop();
@@ -132,7 +132,7 @@ window.addEvent('domready', function() {
 				return;
 			}
 			var text = this.value;
-			if (timeout != undefined) {
+			if (timeout !== undefined) {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
@@ -148,7 +148,7 @@ window.addEvent('domready', function() {
 				return;
 			}
 			var text = this.value;
-			if (timeout != undefined) {
+			if (timeout !== undefined) {
 				clearTimeout(timeout);
 			}
 			timeout = setTimeout(function() {
@@ -191,7 +191,7 @@ function loadFamilies() {
  * @num : Parent family id
  * ------------------------------------ */
 function loadSubFamilies(num) {
-	if (num == undefined) num = null;
+	if (num === undefined) num = null;
 	var userList = new Request.JSON({
 			'url': '/ajax/call/repasrc/getSubFamilies',
 			onRequest: function() {
@@ -207,13 +207,13 @@ function loadSubFamilies(num) {
 }
 
 /* ----------------------------------------------
- * Retrieve a list of foodstuff 
+ * Retrieve a list of foodstuff
  * @reset: Reset families and sub families selects
  * ---------------------------------------------- */
 function loadFoodstuff(reset) {
 	var familyId = null;
 	var subFamilyId = null;
-	if (reset != true) {
+	if (reset !== true) {
 		var familySelected = document.id('family').getElement('option:selected');
 		if (typeOf(familySelected) == 'element') {
 			familyId = familySelected.get('value');
@@ -334,12 +334,13 @@ function buildFoodstuffThumb(fs) {
 }
 
 /* ----------------------------------------------
- * Remotely get list of recipes 
+ * Remotely get list of recipes
  * @reset: reset filter search select
  * ---------------------------------------------- */
 function loadRecipes(reset) {
-	var typeId = componentId = null;
-	if (reset != true) {
+	var typeId = null;
+	var componentId = null;
+	if (reset !== true) {
 		var typeSelected = document.id('type').getElement('option:selected');
 		if (typeOf(typeSelected) == 'element') {
 			typeId = typeSelected.get('value');
@@ -360,7 +361,7 @@ function loadRecipes(reset) {
 				container.set('html', '');
 				var html = '';
 				var rowscount = 0;
-				// for each recipe 
+				// for each recipe
 				if (typeOf(res['recipeList']) == 'array' && res['recipeList'].length > 0) {
 					Object.each(res['recipeList'], function(re) {
 						html += buildRecipeThumb(re);
@@ -385,9 +386,9 @@ function loadRecipes(reset) {
 }
 
 /* -------------------------------------------------
- * Build recipe tiny block with image, name, etc  
+ * Build recipe tiny block with image, name, etc
  * multiple occurences build the recipe list
- * @re: recipe object 
+ * @re: recipe object
  * ---------------------------------------------- */
 function buildRecipeThumb(re) {
 	html = '<li class="span9" onclick="showRecipeDetail('+re.id+')" class="span5 result" style="cursor:pointer"><div class="thumbnail">';
@@ -421,8 +422,8 @@ function buildRecipeThumb(re) {
 }
 
 /* -------------------------------------------------
- * Open a modal window and disply recipe infos  
- * @id: Recipe id 
+ * Open a modal window and disply recipe infos
+ * @id: Recipe id
  * ---------------------------------------------- */
 function showRecipeDetail(id, c) {
 	var comp = c || false;
@@ -450,9 +451,9 @@ function showRecipeDetail(id, c) {
 }
 
 /* -------------------------------------------------
- * Open a modal window and disply foodstuff infos  
- * @id: Foodstuff id 
- * @sid: Synonym id 
+ * Open a modal window and disply foodstuff infos
+ * @id: Foodstuff id
+ * @sid: Synonym id
  * @recipeFoodstuffId: foodstuff id for this recipe
  * ---------------------------------------------- */
 function showFoodstuffDetail(id, sid, recipeFoodstuffId) {

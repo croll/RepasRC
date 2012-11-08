@@ -1,10 +1,22 @@
 #2012/08/11
 
 - Ajout de l' "aliment inconnu".
-Lors de l'ajout d'un aliment à une recette on dispose à présent d'un "Aliment inconnu". Si on l'ajoute à notre recette, on a la possibilité de lui attribuer un nom spécifique pour la recette. On peut donc ajouter des aliments non répertoriés dans la base uniquement pour une recette afin qu'ils apparaissent dans la liste des aliments et dans les fichiers d'export au format excel.
-Ces aliments n'ont bien sûr aucune valeur d'empreinte, toutefois on peut leur attribuer les informations de mode de production, conservation, transport, etc.
+
+Je m'étais promis de me concentrer sur les bugs et ne plus ajouter de nouvelle fonctionnalité pour cette phase de développement mais que voulez vous, je n'ai pas pu m'en empêcher. Je me suis dit que ce serait vraiment utile lors de vos formations et c'était une demande forte lors des comités de pilotage.
+
+Aliment inconnu, c'est quoi donc ? 
+
+Le but est de pouvoir saisir des aliments non répertoriés dans la base, afin que les fiches techniques soient complètes, même si on ne connait pas l'empreinte de ces aliments.
+
+Lors de l'ajout des aliments à une recette on dispose à présent d'un "Aliment inconnu" qui est proposé dans la liste des aliments. Si on l'ajoute à notre recette, on a la possibilité de lui attribuer un nom spécifique pour la recette. On peut en ajouter autant qu'on le souhaite.
+Ces aliments n'ont bien sûr aucune valeur d'empreinte, toutefois on peut leur attribuer les informations de mode de production, conservation, transoport, etc.
+Lors de l'analyse de la recette, la génération des graphiques, la génération des fichiers d'export en format excel, ou l'utilisation de la recette dans un menu, le nom d'emprunt de l'aliment sera affiché en lieu et place du libellé "Aliment inconnu".
 
 - Lors de l'ajout d'un aliment à une recette, modifiction du nom de l'onglet "Quantité" en "Informations" étant donné que dans cet onglet on ne renseigne plus uniquement la quantite d'aliment mais aussi le nom qu'on donne à notre "aliment inconnu".
+
+- Lors de la saisie de la quantité, on peut utilise un point ou une virgule pour les décimales.
+
+- Si on ne saisie pas de quantite, la valeur 0 sera attriubée par défaut. Auparant ça n'ajoutait pas l'aliment et pouvait induire en erreur.
 
 #2012/05/11
 
