@@ -96,7 +96,7 @@
 			{assign var='defaultValues' value=\mod\repasrc\Foodstuff::getFromRecipe($recipeFoodstuffId)}
 			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=$defaultValues}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
-				<li><a href="#quantity" data-toggle="tab">Quantité</a></li>
+				<li><a href="#quantity" data-toggle="tab">Informations</a></li>
 				{if (isset($modulesList) && $modulesList.production == 1)}
 					<li><a href="#production" data-toggle="tab">Production / Conservation</a></li>
 				{/if}
@@ -123,7 +123,7 @@
 						{if $foodstuff.code == 'CUSTOMLABEL'}
 						<div class="control-group">
 							<div class="controls" style="margin-left:25px">
-								<label class="control-label" style="width: 155px;padding-right:10px">{t d='repasrc' m="Nom  de l'aliment pour la recette"}</label>
+								<label class="control-label" style="width: 155px;padding-right:10px">{t d='repasrc' m="Nom qui sera affiché"}</label>
 								{$foodstuffForm.custom_label}
 							</div>
 						</div>

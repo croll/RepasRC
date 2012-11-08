@@ -68,7 +68,7 @@ class Analyze {
 			$precise = false;
 			// For each, store informations and calculate distance
 			if (isset($foodstuff['origin']['nodata']) && ($foodstuff['origin']['nodata']) === true) {
-				$nodata[] = $foodstuff['foodstuff']['label'];
+				$nodata[] = \mod\repasrc\Recipe::getFoodstuffLabel($foodstuff);
 				continue;
 			}
 			for($i=0; $i<sizeof($foodstuff['origin']);$i++) {
@@ -116,8 +116,8 @@ class Analyze {
 			}
 			if (isset($lines[$id]) && sizeof($lines[$id]))
 				$lines[$id][] = $rcGeo['zonelabel'];
-
-			$datas[$foodstuff['foodstuff']['label']] = $foodstuff;
+			$label = \mod\repasrc\Recipe::getFoodstuffLabel($foodstuff);
+			$datas[$label] = $foodstuff;
 		}
 		return array('datas' => $datas, 'markers' => $markers, 'lines' => array_values($lines), 'total' => $total, 'nodata' => $nodata);
 	}
