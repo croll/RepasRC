@@ -17,7 +17,7 @@ class Analyze {
 			}
 		}
 		foreach($recipeDetail['foodstuffList'] as $foodstuff) {
-			$label = (isset($foodstuff['foodstuff']['synonym'])) ? $foodstuff['foodstuff']['synonym'] : $foodstuff['foodstuff']['label'];
+			$label = \mod\repasrc\Recipe::getFoodstuffLabel($foodstuff);
 			if (($foodstuff['conservation'] == 'G1' || $foodstuff['conservation'] == '') && (in_array('Légumes', $foodstuff['families']) || in_array('Fruits', $foodstuff['families']))) {
 				if (empty($foodstuff['foodstuff']['seasonality'])) {
 					$seasonality['noinfo'][] = $label;

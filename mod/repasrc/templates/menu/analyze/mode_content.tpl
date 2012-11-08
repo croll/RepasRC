@@ -31,25 +31,21 @@
 					{assign var="done"  value=array()}
 					{foreach $menu.recipesList as $recipe}
 						{foreach $recipe.foodstuffList as $fs}
-						{if (isset($fs.foodstuff.synonym))}
-							{assign var='label' value=$fs.foodstuff.synonym}
-						{else}
-							{assign var='label' value=$fs.foodstuff.label}
-						{/if}
-						{if !in_array($label, $done)}
-							<tr>
-								<td>
-									{$label}
-								</td>
-								<td>
-									{$fs.conservation_label}
-								</td>
-								<td>
-									{$fs.production_label}
-								</td>
-							</tr>
-							{append var="done" value="label"}
-						{/if}
+							{assign var='label' value=\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
+							{if !in_array($label, $done)}
+								<tr>
+									<td>
+										{$label}
+									</td>
+									<td>
+										{$fs.conservation_label}
+									</td>
+									<td>
+										{$fs.production_label}
+									</td>
+								</tr>
+								{append var="done" value="label"}
+							{/if}
 						{/foreach}
 					{/foreach}
 				</tbody>

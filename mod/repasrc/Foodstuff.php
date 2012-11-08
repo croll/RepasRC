@@ -4,7 +4,9 @@ namespace mod\repasrc;
 
 class Foodstuff {
 
-	public static $conservation = array('G1' => 'Frais','G2' => 'Conserve','G3' => 'Surgelé','G4' => '4e gamme','G5' => '%e gamme','G6' => 'Déshydraté','G7' => 'G7','G8' => 'Pasteurisé','G9' => 'UHT','G10' => 'Epicerie sèche','G11' => 'Réfrigéré');
+
+	public static $component = array('STARTER' => 'Entrée', 'MEAL' => 'Plat', 'CHEESE/DESSERT' => 'Fromage ou dessert', 'BREAD' => 'Pain');
+	public static $conservation = array('G1' => 'Frais','G2' => 'Conserve','G3' => 'Surgelé','G4' => '4e gamme','G5' => '5e gamme','G6' => 'Déshydraté','G7' => 'G7','G8' => 'Pasteurisé','G9' => 'UHT','G10' => 'Epicerie sèche','G11' => 'Réfrigéré');
 	public static $production = array('Conv' => 'Agriculture conventionnelle', 'AB' => 'Agriculture Bio', 'Dur' => 'Agriculture durable', 'Lab' => 'Label Rouge', 'AOC' => 'AOC', 'IGP' => 'IGP', 'BBC' => 'Bleu blanc coeur', 'COHERENCE' => 'Cohérence', 'COMMERCEEQUITABLE' => 'Commerce équitable');
 	public static $familyColors = array(1 => 'ffb1fa', 2 => '813a28',  3 => '00a650', 4 => '00a650', 5 => '00adef', 6 => 'ed1c24', 7 => 'fcc707', 8 => 'd11fec', 9 => '777');
 	public static $origin = array('LETMECHOOSE' => 'Précise', 'LOCAL' => 'Locale', 'REGIONAL' => 'Régionale', 'FRANCE' => 'France', 'WORLD' => 'Internationale');
@@ -87,7 +89,8 @@ class Foodstuff {
 				$tmp['comment'] = $row['fscomment'];
 				if (isset($row['synonym_id']) && !is_null($row['synonym_id'])) {
 					$tmp['synonym_id'] = $row['synonym_id'];
-					$tmp['synonym_code'] = $row['synonym_code'];
+					// override code and add "s" prefix
+					$tmp['code'] = 's'.$row['synonym_code'];
 					$tmp['synonym'] = $row['synonym'];
 					$tmp['seasonality'] = self::parseSeasonality($row['synonym_seasonality']);
 				} else {
@@ -157,10 +160,10 @@ class Foodstuff {
 	}
 
 
-	public static function addToRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array()) {
-		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production) ';
-		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?)';
-		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production), 'rrc_rf_id');
+	public static function addToRecipe($recipeId, $foodstuffId, $synonymId=null, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array(), $custom_label=null) {
+		$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_recipe_id, rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_label) ';
+		$q .= 'VALUES (?,?,?,\'KG\',?,?,?,?,?,?)';
+		$recipeFoodstuffId = \core\Core::$db->exec_returning($q, array($recipeId, $foodstuffId, $synonymId, (float)$quantity, (float)$price, (int)$vat, $conservation, $production, $custom_label), 'rrc_rf_id');
 		if ($recipeFoodstuffId) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
 		}
@@ -171,9 +174,9 @@ class Foodstuff {
 		return \core\Core::$db->fetchOne('SELECT rrc_rf_id FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ? AND rrc_rf_rrc_foodstuff_id = ? AND rrc_rf_rrc_foodstuff_synonym_id = ?', array($recipeId, $foodstuffId, (($synonymId) ? $synonymId : 0)));
 	}
 
-	public static function updateForRecipe($recipeFoodstuffId, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array()) {
-		$q = 'UPDATE rrc_recipe_foodstuff SET rrc_rf_quantity_value = ?, rrc_rf_price = ?, rrc_rf_vat = ?, rrc_rf_conservation = ?, rrc_rf_production = ? WHERE rrc_rf_id = ?';
-		if (\core\Core::$db->exec($q, array((float)$quantity, (float)$price, (int)$vat, $conservation, $production, (int)$recipeFoodstuffId))) {
+	public static function updateForRecipe($recipeFoodstuffId, $quantity, $conservation=null, $production=null, $price=null, $vat=0, $location=null, $zoneIds=array(), $custom_label=null) {
+		$q = 'UPDATE rrc_recipe_foodstuff SET rrc_rf_quantity_value = ?, rrc_rf_price = ?, rrc_rf_vat = ?, rrc_rf_conservation = ?, rrc_rf_production = ?, rrc_rf_custom_label=? WHERE rrc_rf_id = ?';
+		if (\core\Core::$db->exec($q, array((float)$quantity, (float)$price, (int)$vat, $conservation, $production, $custom_label, (int)$recipeFoodstuffId))) {
 			self::setOriginForRecipe($recipeFoodstuffId, $location, $zoneIds);
 		}
 		\mod\repasrc\Recipe::updateRecipeHash(self::getRecipeId($recipeFoodstuffId));
@@ -186,7 +189,7 @@ class Foodstuff {
 
 	public static function getFromRecipe($recipeFoodstuffId) {
 		$params = array((int)$recipeFoodstuffId);
-		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production FROM rrc_recipe_foodstuff rf ';
+		$q = 'SELECT rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation AS conservation, rrc_rf_production AS production, rrc_rf_custom_label AS custom_label FROM rrc_recipe_foodstuff rf ';
 		$q .= 'WHERE rf.rrc_rf_id=?';
 		$foodstuff = \core\Core::$db->fetchRow($q, $params);
 		$origin = self::getOriginFromRecipe($recipeFoodstuffId);
@@ -257,23 +260,6 @@ class Foodstuff {
 		if (!isset(self::$origin[$id]))
 			return $id;
 		return self::$origin[$id];
-	}
-
-	public static function getComponent($component) {
-		switch($component) {
-			case 'STARTER':
-				return 'Entrée';
-			break;	
-			case 'MEAL':
-				return 'Plat';
-		break;	
-			case 'CHEESE/DESSERT':
-				return 'Fromage ou dessert';
-			break;	
-			case 'BREAD':
-				return 'Pain';
-			break;	
-		}
 	}
 
 }

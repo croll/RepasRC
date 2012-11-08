@@ -1,3 +1,9 @@
+#2012/08/11
+
+- Ajout de "l'aliment inconnu".
+Lors de l'ajout d'un aliment à une recette on dispose à présent d'un "Aliment inconnu". Si on l'ajoute à notre recette, on a la possibilité de lui donner un nom spécifique pour la recette. On peut donc ajouter des aliments inconnus dans la base uniquement pour une recette afin qu'ils apparaissent dans la liste des aliments et dans les fichiers d'export d'une recette.
+- Lors de l'ajout d'un aliment à une recette, modifiction du nom de l'onglet "Quantité" en "informations" étant donné que dans cet onglet on ne renseigne plus uniquement la quantite d'aliment mais aussi le nom qu'on donne à notre "aliment inconnu"
+
 #2012/05/11
 
 - Ajout du symbole € lors de la saisie des informations du module prix lors de la création des recettes/menus.

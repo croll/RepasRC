@@ -23,7 +23,8 @@ class Graph {
     $recipeQtyfor1Person = $recipeDetail['totalWeight']/$recipeDetail['persons'];
     foreach($recipeDetail['foodstuffList'] as $fs) {
         // Foodstuff with no footprint value
-      $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+      $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
+
       if ($fs['foodstuff']['fake'] || empty($fs['foodstuff']['footprint'])) {
         $noData[] = $label;
       } else {
@@ -70,7 +71,7 @@ class Graph {
     $gctComp->addColumn('Empreinte écologique foncière', 'number');
     $gctComp->addColumn('Distance', 'number');
     foreach($recipeDetail['transport']['datas'] as $fs) {
-      $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+      $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
       $gctCol1->addColumn($label, 'number');
       $gctCol1->addRow($fs['transport']['distance']);
       $gctCol2->addColumn($label, 'number');
@@ -104,7 +105,7 @@ class Graph {
     $gctComp->addColumn('Distance', 'number');
     foreach($menuDetail['recipesList'] as $recipeDetail) {
       foreach($recipeDetail['transport']['datas'] as $fs) {
-        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
         $gctCol1->addColumn($label, 'number');
         $gctCol1->addRow($fs['transport']['distance']);
         $gctCol2->addColumn($label, 'number');
@@ -135,7 +136,7 @@ class Graph {
     $gctPie2->addColumn('Mode de production', 'string');
     $gctPie2->addColumn('Mode de production', 'number');
     foreach($recipeDetail['foodstuffList'] as $fs) {
-      $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+      $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
           // Conservation
       if (empty($fs['conservation'])) {
         $conservation['Non renseigné'] = $label;
@@ -174,7 +175,7 @@ class Graph {
     $gctPie2->addColumn('Mode de production', 'number');
     foreach($menuDetail['recipesList'] as $recipeDetail) {
       foreach($recipeDetail['foodstuffList'] as $fs) {
-        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
           // Conservation
         if (empty($fs['production'])) {
           $conservation['Non renseigné'] = $label;
@@ -215,7 +216,7 @@ class Graph {
       $gctCol1->addColumn('Val', 'string');
       $gctCol1->addRow('Prix des aliments HT');
       foreach($recipeDetail['foodstuffList'] as $fs) {
-        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
         if ($fs['vat'] == 0 && !empty($fs['price'])) {
           $gctCol1->addColumn($label, 'number');
           $gctCol1->addRow($fs['price']);
@@ -233,7 +234,7 @@ class Graph {
       $gctCol2->addColumn('Val', 'string');
       $gctCol2->addRow('Prix des aliments TTC');
       foreach($recipeDetail['foodstuffList'] as $fs) {
-        $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+        $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
         if ($fs['vat'] == 1 && !empty($fs['price'])) {
           $gctCol2->addColumn($label, 'number');
           $gctCol2->addRow($fs['price']);
@@ -262,7 +263,7 @@ class Graph {
       if (!empty($recipeDetail['totalPrice']['vatout'])) {
         $families = array();
         foreach($recipeDetail['foodstuffList'] as $fs) {
-          $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+          $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
           if ($fs['vat'] == 0 && !empty($fs['price'])) {
             $gctCol1->addColumn($label, 'number');
             $gctCol1->addRow($fs['price']);
@@ -277,7 +278,7 @@ class Graph {
       if (!empty($recipeDetail['totalPrice']['vatin'])) {
         $families = array();
         foreach($recipeDetail['foodstuffList'] as $fs) {
-          $label = (isset($fs['foodstuff']['synonym'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
+          $label = \mod\repasrc\Recipe::getFoodstuffLabel($fs);
           if ($fs['vat'] == 1 && !empty($fs['price'])) {
             $gctCol2->addColumn($label, 'number');
             $gctCol2->addRow($fs['price']);

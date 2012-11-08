@@ -102,7 +102,7 @@ class Recipe {
 
 	public static function getFoodstuffList($id) {
 		$params = array($id);
-		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id ";
+		$q = "SELECT rrc_rf_id AS foodstuff_recipe_id, rrc_rf_quantity_unit AS unit, rrc_rf_quantity_value AS quantity, rrc_rf_price AS price, rrc_rf_vat AS vat, rrc_rf_conservation as conservation, rrc_rf_production AS production, rrc_rf_custom_label AS custom_label, rrc_rf_rrc_foodstuff_synonym_id AS synonym_id, rrc_rf_rrc_foodstuff_id AS foodstuff_id ";
 		$q.= "FROM rrc_recipe_foodstuff AS rf ";
 		$q.= "WHERE rrc_rf_rrc_recipe_id=? ORDER BY rrc_rf_id";
 		$fs = array();
@@ -113,6 +113,7 @@ class Recipe {
 			} else {
 				$infos = \mod\repasrc\Foodstuff::search(NULL, NULL, NULL, array(array('id' => $row['foodstuff_id'])), false);
 			}
+			$tmp['custom_label'] = $row['custom_label'];
 			$tmp['recipeFoodstuffId'] = $row['foodstuff_recipe_id'];
 			$tmp['unit'] = $row['unit'];
 			$tmp['quantity'] = $row['quantity'];
@@ -172,7 +173,7 @@ class Recipe {
 
 		$recipe['families'] = array();
 
-		$recipe['component'] = \mod\repasrc\Foodstuff::getComponent($recipe['component']);
+		$recipe['component'] = \mod\repasrc\Foodstuff::$component[$recipe['component']];
 
 		$recipe['shared'] = (!empty($recipe['shared'])) ? 'Partagée' : 'Privée';
 
@@ -265,10 +266,10 @@ class Recipe {
 			throw new \Exception('Unable to duplicate recipe: recipe infos insertion failed '.$recipeId);
 		}
 		// Duplicate foodstuff
-		$q = 'SELECT rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ?';
+		$q = 'SELECT rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_code FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ?';
 		foreach(\core\Core::$db->fetchAssoc($q, array($recipeId)) as $fs) {
 			// Get foodstuff info
-			$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_rrc_recipe_id) VALUES (?,?,?,?,?,?,?,?,?)';
+			$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_code, rrc_rf_rrc_recipe_id) VALUES (?,?,?,?,?,?,?,?,?,?)';
 			// Create new one
 			//$args = array($fs['rrc_rf_rrc_foodstuff_id,'], $fs['rrc_rf_rrc_foodstuff_synonym_id,'], $fs['rrc_rf_quantity_unit,'], $fs['rrc_rf_quantity_value,'], $fs['rrc_rf_price,'], $fs['rrc_rf_vat,'], $fs['rrc_rf_conservation,'], $fs['rrc_rf_production']);
 			$fs['rrc_rf_rrc_recipe_id'] = $newRecipeId;
@@ -371,11 +372,9 @@ class Recipe {
 		foreach($infos['foodstuffList'] as $fs) {
 			$origin_type = '';
 			$origin = '';
-			$label = (isset($fs['foodstuff']['synonym_id']) && !empty($fs['foodstuff']['synonym_id'])) ? $fs['foodstuff']['synonym'] : $fs['foodstuff']['label'];
-			$code = (isset($fs['foodstuff']['synonym_code']) && !empty($fs['foodstuff']['synonym_code'])) ? $fs['foodstuff']['synonym_code'] : $fs['foodstuff']['code'];
+			$label = self::getFoodstuffLabel($fs);
 			$fsPriceHT = (isset($fs['vat']) && $fs['vat'] === 0) ? $fs['price'] : '';
 			$fsPriceTTC = (isset($fs['vat']) && $fs['vat'] === 1) ? $fs['price'] : '';
-			\core\Core::log($fs['vat']);
 			if ($fsPriceHT == 0) $fsPriceHT = '';
 			if ($fsPriceTTC == 0) $fsPriceTTC = '';
 			if (is_array($fs['origin']) && sizeof($fs['origin']) > 0) {
@@ -385,11 +384,18 @@ class Recipe {
 				}
 				$origin = substr($origin, 0, -1);
 			}
-			$outp.= ';'.$code.';'.$label.';'.$fs['quantity'].$fs['unit'].';'.$fs['production_label'].';'.$fs['conservation_label'].';'.$origin_type.';'.$origin.';'.$fsPriceHT.';'.$fsPriceTTC."\n";
+			$outp.= ';'.$fs['code'].';'.$label.';'.$fs['quantity'].$fs['unit'].';'.$fs['production_label'].';'.$fs['conservation_label'].';'.$origin_type.';'.$origin.';'.$fsPriceHT.';'.$fsPriceTTC."\n";
 		}
 		$filename = '/tmp/recipe_'.$id.'csv';
 		file_put_contents($filename, $outp);
 		return $filename;
+	}
+
+	public static function getFoodstuffLabel($fs) {
+		if (($fs['foodstuff']['code'] == 'CUSTOMLABEL') && !empty($fs['custom_label'])) {
+			return ucfirst($fs['custom_label']);
+		}
+		return (substr($fs['foodstuff']['code'],0, 1) == 's') ? ucfirst($fs['foodstuff']['synonym']) : ucfirst($fs['foodstuff']['label']);
 	}
 
 }

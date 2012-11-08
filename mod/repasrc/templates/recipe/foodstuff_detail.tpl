@@ -24,7 +24,7 @@
 			{/if} 
 		</div>
 		<div style="float:left;padding-top:10px">
-			<div>Identifiant: <strong>{$foodstuff.id}</strong></div>
+			{* <div>Identifiant: <strong{$foodstuff.id}</strong></div> *}
 				{if !empty($foodstuff.footprint)}
 					<div>Empreinte écologique foncière: <strong>{$foodstuff.footprint|round:3}</strong> m²g/Kg</div>
 				{/if}
@@ -111,8 +111,8 @@
 				<div class="tab-pane" id="quantity">
 					<fieldset>
 						<div class="control-group">
-							<label class="control-label" for="prependInput" style="width: 60px">{t d='repasrc' m="Quantité"}</label>
-							<div class="controls" style="margin-left:75px">
+							<label class="control-label" for="prependInput" style="width: {if $foodstuff.code == 'CUSTOMLABEL'}180px{else}70px{/if};text-align:right;padding-right:10px">{t d='repasrc' m="Quantité"}</label>
+							<div class="controls" style="margin-left:{if $foodstuff.code == 'CUSTOMLABEL'}155px{else}75px{/if}">
 								<div class="input-append">
 									{$foodstuffForm.quantity}
 									<span class="add-on">Kg</span>
@@ -120,6 +120,14 @@
 								</div>
 							</div>
 						</div>
+						{if $foodstuff.code == 'CUSTOMLABEL'}
+						<div class="control-group">
+							<div class="controls" style="margin-left:25px">
+								<label class="control-label" style="width: 155px;padding-right:10px">{t d='repasrc' m="Nom  de l'aliment pour la recette"}</label>
+								{$foodstuffForm.custom_label}
+							</div>
+						</div>
+						{/if}
 					</fieldset>
 				</div>
 				{if (isset($modulesList) && $modulesList.production == 1)}
@@ -134,7 +142,7 @@
 							</div>
 							<div class="control-group">
 								<label class="control-label" style="width: 150px">{t d='repasrc' m="Mode de conservation"}</label>
-								<div class="controls" style="margin-left: 160px">
+								<div class="controls" style="margin-left: 180px">
 									{$foodstuffForm.conservation}
 									<div class="help" code="fenetrealimentongletproductionconservationmodedeconservation"></div>
 								</div>
@@ -146,18 +154,18 @@
 					<div class="tab-pane" rel="les informations de production/conservation" id="transport">
 						<fieldset>
 							<div class="control-group">
-								<label class="control-label" style="width: 100px">{t d='repasrc' m="Provenance approximative"}</label>
+								<label class="control-label" style="width: 140px;padding-right:10px">{t d='repasrc' m="Provenance approximative"}</label>
 								<div class="controls" style="margin-left:75px">
 									{$foodstuffForm.location}
 									<div class="help" code="fenetrealimentonglettransportprovenance"></div>
 								</div>
 							</div>
 							<div class="control-group" id="location_steps"{if !isset($defaultValues.location) || $defaultValues.location != 'LETMECHOOSE'} style="display:none"{/if}>
-								<label class="control-label" style="width: 50px">{t d='repasrc' m="Itinéraire"}</label>
+								<label class="control-label" style="width: 140px;padding-right:10px">{t d='repasrc' m="Origine / Itinéraire"}</label>
 								<div class="controls" style="margin-left:75px">
 									<input type="text" id="steps_input" />
 									<div class="help" code="fenetrealimentonglettransportitineraire"></div>
-									<div id="steps" style="margin-top:10px">
+									<div id="steps" style="margin-top:17px;margin-left:85px">
 										{assign var="steps" value=""}
 										{if isset($defaultValues.origin) && isset($defaultValues.location) && $defaultValues.location == 'LETMECHOOSE' && is_array($defaultValues.origin) && sizeof($defaultValues.origin) > 0}
 											{foreach $defaultValues.origin as $step}

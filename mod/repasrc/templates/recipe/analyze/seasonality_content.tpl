@@ -71,15 +71,10 @@
 				{foreach $fs.foodstuff.infos as $info}{/foreach}
 					{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
 						{if $fs@index == 0}
-							<h3 style="margin:50px 0 -10px 0">Saisonalité des aliments répertoriés</h3>
-						{/if}
-						{if (isset($fs.foodstuff.synonym))}
-							{assign var='label' value=$fs.foodstuff.synonym}
-						{else}
-							{assign var='label' value=$fs.foodstuff.label}
+						<h3 style="margin:50px 0 -10px 0">Saisonalité des aliments répertoriés</h3>
 						{/if}
 						<h4 style="margin: 25px 0 3px 0">
-							{$label}
+							{\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 						</h4>
 						<div class="btn-group">
 						{foreach $fs.foodstuff.seasonality as $month=>$s}

@@ -11,11 +11,7 @@
 	<div style="font-size: 18px">
 		{$fs.quantity} {$fs.unit}
 		<strong>
-			{if (isset($fs.foodstuff.synonym))}
-				{$fs.foodstuff.synonym}
-			{else}
-				{$fs.foodstuff.label}
-			{/if}
+			{\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 		</strong>
 	</div>
 	<div>

@@ -7,13 +7,16 @@
 	[
 		{	"type" : "text",
 			"name" : "quantity",
-			"class" : "span2",
-			"style" : "width:60px",
+			"style" : "width: 40px",
 			"validators" : 
 			[ 
 				"required",
 				"validate-numeric"
 			]
+		},
+		{	"type" : "text",
+			"name" : "custom_label",
+			"style" : "width: 200px"
 		},
 		{	"type" : "select",
 			"name" : "conservation",

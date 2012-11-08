@@ -35,11 +35,7 @@
 				<div>
 					{foreach $recipe.foodstuffList as $fs}
 					<div>
-						{if (isset($fs.foodstuff.synonym))}
-						{assign var='label' value=$fs.foodstuff.synonym}
-						{else}
-						{assign var='label' value=$fs.foodstuff.label}
-						{/if}
+						{assign var='label' value=\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 						<div style="font-size: 12px">
 							- {$fs.quantity} {$fs.unit}
 							<strong>

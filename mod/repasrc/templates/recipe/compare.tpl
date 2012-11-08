@@ -122,11 +122,7 @@
 								</td>
 								{/if}
 								<td>{$fs.quantity} Kg 
-									{if (isset($fs.foodstuff.synonym))}
-										{$fs.foodstuff.synonym}
-									{else}
-										{$fs.foodstuff.label}
-									{/if}
+									{assign var='label' value=\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 								</td>
 								<td>
 									{if !empty($fs.foodstuff.footprint)}

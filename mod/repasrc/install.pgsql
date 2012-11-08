@@ -110,7 +110,9 @@ ALTER SEQUENCE rrc_foodstuff_family_rrc_ff_id_seq RESTART WITH 1000;
 
 CREATE TABLE "rrc_foodstuff_synonym" (
   "rrc_ss_id" SERIAL PRIMARY KEY,
+  "rrc_ss_code" VARCHAR(50),
   "rrc_ss_label" varchar(255) NOT NULL DEFAULT 'NULL',
+  "rrc_ss_label_caps" VARCHAR(255) DEFAULT NULL,
   "rrc_ss_seasonality" VARCHAR(12) DEFAULT NULL,
   "rrc_ss_rrc_foodstuff_id" INTEGER DEFAULT NULL
 );
@@ -268,6 +270,7 @@ CREATE TABLE "rrc_recipe_foodstuff" (
   "rrc_rf_rrc_recipe_id" INTEGER DEFAULT NULL,
   "rrc_rf_rrc_foodstuff_id" INTEGER DEFAULT NULL,
   "rrc_rf_rrc_foodstuff_synonym_id" INTEGER DEFAULT NULL,
+  "rrc_rf_custom_label" VARCHAR(255) DEFAULT NULL,
   "rrc_rf_quantity_unit" rrc_rf_quantity_unit_type NOT NULL DEFAULT 'KG',
   "rrc_rf_quantity_value" FLOAT DEFAULT NULL,
   "rrc_rf_price" FLOAT DEFAULT NULL,

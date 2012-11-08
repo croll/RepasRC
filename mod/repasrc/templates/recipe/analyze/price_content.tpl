@@ -45,14 +45,9 @@
 			</thead>
 			<tbody>
 			{foreach $recipe.foodstuffList as $fs}
-				{if (isset($fs.foodstuff.synonym))}
-					{assign var='label' value=$fs.foodstuff.synonym}
-				{else}
-					{assign var='label' value=$fs.foodstuff.label}
-				{/if}
 				<tr>
 					<td>
-						{$label}
+						{\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 					</td>
 					<td>
 						{if empty($fs.price)}

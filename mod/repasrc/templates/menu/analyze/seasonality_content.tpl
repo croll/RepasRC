@@ -67,11 +67,7 @@
 			{foreach $recipe.foodstuffList as $fs}
 					{foreach $fs.foodstuff.infos as $info}{/foreach}
 						{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $fs.foodstuff.seasonality}
-							{if (isset($fs.foodstuff.synonym))}
-								{assign var='label' value=$fs.foodstuff.synonym}
-							{else}
-								{assign var='label' value=$fs.foodstuff.label}
-							{/if}
+							{assign var='label' value=\mod\repasrc\Recipe::getFoodstuffLabel($fs)}
 							{if !in_array($label, $done)}
 							{if !empty($menu.consumptionmonth)}
 								{assign var="month" value=$menu.consumptionmonth}
