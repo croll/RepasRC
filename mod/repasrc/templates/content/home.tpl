@@ -74,7 +74,7 @@
 					et développée par
 				</span>
 				<span class="span2" style="height: 90px">
-					<img style="margin-top: 30px" src="/mod/repasrc/img/home/logos/croll.png" />
+					<img style="margin-top: 20px;margin-right:10px" src="/mod/repasrc/img/home/logos/croll.png" />
 				</span>
 			</li>
 		</ul>
