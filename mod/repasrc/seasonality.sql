@@ -1,3 +1,4 @@
+UPDATE rrc_foodstuff SET rrc_fs_seasonality=NULL;
 -- Ail
 UPDATE rrc_foodstuff SET rrc_fs_seasonality='221100011111' WHERE rrc_fs_id=55;
 -- Artichaut
