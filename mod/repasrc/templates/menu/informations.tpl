@@ -38,17 +38,17 @@
 						<div class="help" code="creertypedemenu"></div>
 					</div>
 				</div>
-				{if $modulesList.seasonality}
+				{if isset($modulesList.seasonality) && $modulesList.seasonality}
 					<h3 style="margin-bottom: 10px">Informations liées au module <i>saisonnalité</i></h3>
 					<div class="control-group">
 						<label class="control-label">{t d='repasrc' m="Date prévisionnelle de consommation"}</label>
 						<div class="controls">
 							{$informations.consumptiondate}
+							<div class="help" code="creerdateprevisionnelledeconsommationmenu"></div>
 						</div>
-						<div class="help" code="creerdateprevisionnelledeconsommationmenu"></div>
 					</div>
 				{/if}
-				{if $modulesList.price}
+				{if isset($modulesList.price) && $modulesList.price}
 					<h3 style="margin-bottom: 10px">Informations liées au module <i>prix</i></h3>
 					<div class="control-group">
 						<label class="control-label">{t d='repasrc' m="Prix du menu par personne"}</label>

@@ -40,14 +40,14 @@
 	<div>
 		<div>
 		{foreach $foodstuff.infos as $info}
-			<span class="badge fam{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
+			<span class="badge fam{$info.family_group_id} help" code="famille{$info.family_group_id}" style="margin: 0px 5px 0 0">{$info.family_group}</span>
 		{/foreach}
 		</div>
 		<div style="font-size: 14px">
-			{if (!empty($foodstuff.conservation))}
+			{if isset($foodstuff.consservation) && !empty($foodstuff.conservation)}
 				<div>Mode de conservation: <strong>{$foodstuff.conservation_label}</strong></div>
 			{/if}
-			{if (!empty($foodstuff.production))}
+			{if isset($foodstuff.production) && !empty($foodstuff.production)}
 				<div>Mode de production: <strong>{$foodstuff.production_label}</strong></div>
 			{/if}
 			{if ($info.family_group == 'Fruits' || $info.family_group == 'Légumes') && $foodstuff.seasonality}
@@ -97,13 +97,13 @@
 			{form mod="repasrc" file="templates/recipe/foodstuff.json" defaultValues=$defaultValues}
 			<ul class="nav nav-tabs" style="margin-bottom: 0px">
 				<li><a href="#quantity" data-toggle="tab">Informations</a></li>
-				{if (isset($modulesList) && $modulesList.production == 1)}
+				{if (isset($modulesList.production) && $modulesList.production == 1)}
 					<li><a href="#production" data-toggle="tab">Production / Conservation</a></li>
 				{/if}
-				{if (isset($modulesList) && $modulesList.transport == 1)}
+				{if (isset($modulesList.transport) && $modulesList.transport == 1)}
 					<li><a href="#transport" data-toggle="tab">Transport</a></li>
 				{/if}
-				{if (isset($modulesList) && $modulesList.price == 1)}
+				{if (isset($modulesList.price) && $modulesList.price == 1)}
 					<li><a href="#price" data-toggle="tab">Prix</a></li>
 				{/if}
 			</ul>
@@ -130,7 +130,7 @@
 						{/if}
 					</fieldset>
 				</div>
-				{if (isset($modulesList) && $modulesList.production == 1)}
+				{if (isset($modulesList.production) && $modulesList.production == 1)}
 					<div class="tab-pane" rel="les informations de production" id="production">
 						<fieldset>
 							<div class="control-group">
@@ -150,7 +150,7 @@
 						</fieldset>
 					</div>
 				{/if}
-				{if (isset($modulesList) && $modulesList.transport == 1)}
+				{if (isset($modulesList.transport) && $modulesList.transport == 1)}
 					<div class="tab-pane" rel="les informations de production/conservation" id="transport">
 						<fieldset>
 							<div class="control-group">
@@ -181,7 +181,7 @@
 						</fieldset>
 					</div>
 				{/if}
-				{if (isset($modulesList) && $modulesList.price == 1)}
+				{if (isset($modulesList.price) && $modulesList.price == 1)}
 					<div class="tab-pane" rel="les informations de prix" id="price">
 						<fieldset>
 							<div class="control-group">

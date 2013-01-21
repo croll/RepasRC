@@ -17,8 +17,9 @@ function processHelp(c) {
 			var pop;
 			container.getElements('.help').each(function(el) {
 				code = el.get('code');
-					loc = el.get('location') || 'right';
-					message = helpMessages[code];
+				loc = el.get('location') || 'right';
+				message = helpMessages[code];
+				if (message) {
 					if (message.type == '?' || message.type == '!') {
 						if (message.type == '?')	{
 							icon = 'icon-question-sign';
@@ -39,6 +40,17 @@ function processHelp(c) {
 							},
 							offset: 0
 						});
+					} else if (message.type.indexOf('amille') != -1) {
+						var parent = el.getParent();
+						var div = el.getParent().getElement('div');
+						if (typeOf(div) != 'element') {
+							div = new Element('div');
+							parent.adopt(div);
+						}
+						var elt = new Element('i').addClass('icon-question-sign icon-white');
+						elt.setStyles({'cursor': 'pointer', 'margin': '-1px -5px 0px 5px'});
+						elt.addEvent('mouseover', showFamilyMsg.pass([message, div]));
+						el.adopt(elt);
 					} else if (message.type.indexOf('adre') != -1) {
 						switch(message.type.split(' ')[1]) {
 							case 'jaune':
@@ -73,6 +85,7 @@ function processHelp(c) {
 						}
 					}
 					helpDone.push(pop);
+				}
 			});
 			// show / hide popover
 			if (displayHelp === 0) {
@@ -112,6 +125,13 @@ function toggleHelp() {
 	var jsonRequest = new Request.JSON({
 		'url': '/ajax/call/repasrc/setHelpVisibility'
 	}).post({'displayHelp': displayHelp});
+}
+
+function showFamilyMsg(msg, div) {
+	div.empty().setStyle('margin-top', '10px');
+	var helpMsg = new Element('div').addClass('alert alert-warning').adopt(new Element('a').addClass('close').set('data-dismiss', 'alert').set('html', 'x').addEvent('click', function(e) {div.empty(); div.setStyle('margin-top','0px');}));
+	helpMsg.adopt(new Element('div').set('html', msg.message));
+	div.adopt(helpMsg);
 }
 
 var helpMessages;

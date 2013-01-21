@@ -99,7 +99,7 @@ class Tools {
 		$num = 0;
 		$val = array('seasonality' => 1, 'production' => 2, 'transport' => 4, 'price' => 8);
 		foreach($val as $k=>$v) {
-			if ($modules[$k] == 1)
+			if (isset($modules[$k]) && $modules[$k] == 1)
 				$num+=$v;
 		}
 		return $num;

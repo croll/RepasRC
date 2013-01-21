@@ -10,7 +10,7 @@
 
 <div class="row-fluid" id="homeContainer">
 	<ul class="thumbnails">
-		{if !$smarty.session.login}
+		{if !isset($smarty.session.login)}
 		<li class="span4">
 			<a class="thumbnail" href="http://demo.rcresponsable.org" target="_blank">
 				<img src="/mod/repasrc/img/home/calculateur.png">
@@ -35,7 +35,7 @@
 					Regardez la <a href="javascript:void(0)" onclick="showVideo()">video</a> de présentation
 			</p>
 		</li>
-		{if !$smarty.session.login}
+		{if !isset($smarty.session.login)}
 		<li class="span4">
 			<a class="thumbnail" href="/login">
 				<img style="margin-top:62px" src="/mod/repasrc/img/home/connexion.png" />

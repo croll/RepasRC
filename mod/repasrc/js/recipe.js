@@ -308,7 +308,7 @@ function buildFoodstuffThumb(fs) {
 		if (typeOf(fs.infos) == 'array') {
 			html += '<div>';
 			fs.infos.each(function(info) {
-				html += '<span class="badge fam'+info.family_group_id+'" style="margin: 0px 5px 0 0">'+info.family_group+'</span>';
+				html += '<span class="badge fam'+info.family_group_id+'" code="famille'+info.family_group_id+'" style="margin: 0px 5px 0 0">'+info.family_group+'</span>';
 			});
 			html += '</div>';
 		}
@@ -330,6 +330,7 @@ function buildFoodstuffThumb(fs) {
 	html+= '</li>';
 	html+= '<div class="clearfix"></div>';
 	html += '</ul></div></li>';
+	processHelp();
 	return html;
 }
 
