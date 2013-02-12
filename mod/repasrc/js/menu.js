@@ -419,7 +419,7 @@ function showUpdateMenuRecipeModal(menuId, recipeId, menuRecipeId) {
 		},
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
-			modalWin.setTitle('AJouter la recette au menu').setBody(res.content).setFooter('');
+			modalWin.setTitle('Ajouter la recette au menu').setBody(res.content).setFooter('');
 			var modw = $(document.body).getElement('div.modal-content');
 			modw.setStyles({'min-height' : '20px', 'height': '140px'});
 
@@ -455,7 +455,15 @@ function updateMenuRecipe(menuId, recipeId, menuRecipeId, portions) {
 		},
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
-			top.document.location.href=top.document.location.href;
+			var testurl = top.document.location.href.split('/');
+			var tmpid = testurl.pop();
+			if (tmpid != menuId) {
+			console.log('ici');
+			console.log(top.document.location.href+'/'+menuId);
+				top.document.location.href=top.document.location.href+'/'+menuId;
+			} else {
+				top.document.location.href=top.document.location.href;
+			}
 		},
 		onFailure: function() {
 			hideSpinner();

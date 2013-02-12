@@ -1,7 +1,7 @@
 {
 	"method" : "post",
 	"id" : "informations",
-	"action" : "/menu/edition/informations",
+	"action" : "/menu/edition/recettes",
 	"class" : "form-horizontal",
 	"elements" : 
 	[
