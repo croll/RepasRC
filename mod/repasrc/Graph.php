@@ -65,7 +65,10 @@ class Graph {
     $gctCol1->addRow('Empreinte écologique du transport');
     $gctCol2 = new \mod\googlecharttools\Main();
     $gctCol2->addColumn('Val', 'string');
-    $gctCol2->addRow('Empreinte écologique du transport');
+    $gctCol2->addRow('Empreinte écologique du transport pour une portion');
+    $gctCol3 = new \mod\googlecharttools\Main();
+    $gctCol3->addColumn('Val', 'string');
+    $gctCol3->addRow('Empreinte écologique du transport pour la recette');
     $gctComp = new \mod\googlecharttools\Main();
     $gctComp->addColumn('Aliment', 'string');
     $gctComp->addColumn('Empreinte écologique foncière', 'number');
@@ -76,6 +79,8 @@ class Graph {
       $gctCol1->addRow($fs['transport']['distance']);
       $gctCol2->addColumn($label, 'number');
       $gctCol2->addRow($fs['transport']['footprint']);
+      $gctCol3->addColumn($label, 'number');
+      $gctCol3->addRow($fs['transport']['footprint']/$recipeDetail['persons']);
       $gctComp->addRow($label);
       $gctComp->addRow(round($fs['transport']['distance'],3));
       $gctComp->addRow(round($fs['transport']['footprint'],3));
@@ -86,6 +91,7 @@ class Graph {
     return array(
       'col1' => $gctCol1, 
       'col2' => $gctCol2, 
+      'col3' => $gctCol3, 
       'comp' => $gctComp, 
       'colors' => json_encode(\mod\repasrc\Tools::getColorsArray($families))
       );

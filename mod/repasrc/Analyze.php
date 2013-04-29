@@ -93,7 +93,7 @@ class Analyze {
 				}
 				$foodstuff['origin'][$i]['location_label'] = \mod\repasrc\Foodstuff::getOrigin($foodstuff['origin'][$i]['location']);
 				if (!isset($foodstuff['origin'][$i]['location'])) continue;
-				$foodstuff['origin'][$i]['footprint'] = self::getC($foodstuff['origin'][$i]['location'], ($foodstuff['quantity']/$recipeDetail['persons']), ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
+				$foodstuff['origin'][$i]['footprint'] = self::getC($foodstuff['origin'][$i]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$i]['distance']) ? $foodstuff['origin'][$i]['distance'] : null)));
 			} 
 			// Add RC as last step
 			$num = sizeof($foodstuff['origin']);
@@ -106,7 +106,7 @@ class Analyze {
 				$foodstuff['origin'][$num]['distance'] = round($foodstuff['origin'][$num-1]['distance']+\mod\repasrc\Tools::getDistanceAlternate($foodstuff['origin'][$num-1]['x'], $foodstuff['origin'][$num-1]['y'], $rcGeo['x'], $rcGeo['y']));
 				$foodstuff['transport']['distance'] += $foodstuff['origin'][$num]['distance'];
 				$total['distance'] += $foodstuff['origin'][$num]['distance'];
-				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], ($foodstuff['quantity']/$recipeDetail['persons']), ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
+				$foodstuff['origin'][$num]['footprint'] = self::getC($foodstuff['origin'][$num]['location'], $foodstuff['quantity'], ((isset($foodstuff['origin'][$num]['distance']) ? $foodstuff['origin'][$num]['distance'] : null)));
 				$foodstuff['transport']['footprint'] +=  $foodstuff['origin'][$num]['footprint'];
 				$total['footprint'] += $foodstuff['origin'][$num]['footprint'];
 				$markers[$rcGeo['zonelabel']][] = $foodstuff['foodstuff'];
@@ -163,13 +163,14 @@ class Analyze {
 				}
 			break;
 		}
-		return round($quantity*0.001*$distance*0.001*$emi*0.964*10000,6);
+		$val = $quantity*0.001*$distance*$emi*0.001*0.964*10000;
+		return $val;
 	}
 
 	public static function getDistanceFromOrigin($origin) {
 		switch($origin) {
 		case 'LOCAL':
-			return 50;
+			return 30;
 			break;
 		case 'REGIONAL':
 			return 150;

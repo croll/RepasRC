@@ -236,7 +236,8 @@ class Main {
 					'colors' => $graph['colors'],
 					'dataFootprintCol1' => $graph['col1']->getJSON(),
 					'dataFootprintCol2' => $graph['col2']->getJSON(),
-					'dataFootprintPie' => $graph['comp']->getJSON()
+					'dataFootprintCol3' => $graph['col3']->getJSON(),
+					'dataFootprintComp' => $graph['comp']->getJSON()
 				));
 			break;
 

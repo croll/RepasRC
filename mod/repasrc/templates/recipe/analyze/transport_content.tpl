@@ -20,7 +20,7 @@
 	<div class="tab-pane active" id="numbers">
 				{if isset($recipe.transport.total.distance) && ($recipe.transport.total.distance > 0)}
 					<h5 style="margin:5px 0 5px 0">Distance totale parcourue par les aliments: {$recipe.transport.total.distance} Km</h5>
-					<h5>Empreinte écologique du transport pour la recette: {$recipe.transport.total.footprint} m²g</h5>
+					<h5>Empreinte écologique du transport pour la recette pour le service: {$recipe.transport.total.footprint|round:3} m²g</h5>
 				{/if}
 				{if sizeof($recipe.transport.datas) > 0}
 				<h3 style="margin:20px 0 10px 0">Provenance des aliments</h3>
@@ -53,7 +53,7 @@
 										</td>
 										<td>
 											{if !empty($tr.footprint)}
-												{$tr.footprint} m²g
+												{$tr.footprint|round:3} m²g
 											{/if}
 										</td>
 										{if ($tr.location == 'LETMECHOOSE' && empty($tr@index)) || ($tr.location != 'LETMECHOOSE')}
@@ -93,7 +93,8 @@
 				function drawChart() {
 						var dataCol1 = new google.visualization.DataTable({$dataFootprintCol1});
 						var dataCol2 = new google.visualization.DataTable({$dataFootprintCol2});
-						var dataComp = new google.visualization.DataTable({$dataFootprintComp});
+						var dataCol3 = new google.visualization.DataTable({$dataFootprintCol3});
+						//var dataComp = new google.visualization.DataTable({$dataFootprintComp});
 						var optionsCol1 = { 
 							'title':'Distance parcourue par les aliments en Km',
 							{if isset($colors)}
@@ -103,25 +104,37 @@
 							'height':400 
 						};
 						var optionsCol2 = { 
-							'title':'Empreinte écologique des transports par aliment',
+							'title':'Empreinte écologique des transports par aliment pour une portion',
 							{if isset($colors)}
 								'colors' : {$colors},
 							{/if}
 							'width':800,
 							'height':400 
 						};
+						var optionsCol3 = { 
+							'title':'Empreinte écologique des transports par aliment pour le service',
+							{if isset($colors)}
+								'colors' : {$colors},
+							{/if}
+							'width':800,
+							'height':400 
+						};
+						/*
 						var optionsComp = { 
 							'title':'Relation entre la distance parcourue et l\'empreinte écologique des transports',
 							'width':800,
 							'height':400,
 							'isStacked':false
 						};
+						*/
 						var chart1 = new google.visualization.ColumnChart(document.getElementById('chart_div'));
 						var chart2 = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-						//var chart3 = new google.visualization.SteppedAreaChart(document.getElementById('chart_div3'));
+						var chart3 = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+						//var chart4 = new google.visualization.ColumnChart(document.getElementById('chart_div4'));
 						chart1.draw(dataCol1, optionsCol1);
 						chart2.draw(dataCol2, optionsCol2);
-						//chart3.draw(dataComp, optionsComp);
+						chart3.draw(dataCol3, optionsCol3);
+						//chart4.draw(dataComp, optionsComp);
 				}
 				</script>
 				<div id="chart_div"></div>
@@ -136,22 +149,29 @@
 				<div id="chart_div2"></div>
 				{if empty($oldbrower)}
 				<div style="width:200px;margin:0 auto 0 auto">
-					<a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte écologique des transports par aliment.')">Enregistrer le graphique</a>
+					<a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte écologique des transports par aliment pour une portion.')">Enregistrer le graphique</a>
 				</div>
 				{else}
 					<div class="help" code="navigateurimpressionimpossible"></div>
 				{/if}
-
-				<!--
 				<div id="chart_div3"></div>
 				{if empty($oldbrower)}
 				<div style="width:200px;margin:0 auto 0 auto">
-					<a href="javascript:void(0)" onclick="saveAsImg('chart_div2', '{$recipe.label} - Empreinte écologique des transports par aliment.')">Enregistrer le graphique</a>
+					<a href="javascript:void(0)" onclick="saveAsImg('chart_div3', '{$recipe.label} - Empreinte écologique des transports par aliment pour le service.')">Enregistrer le graphique</a>
 				</div>
 				{else}
 					<div class="help" code="navigateurimpressionimpossible"></div>
 				{/if}
-			-->
+				<!--
+				<div id="chart_div4"></div>
+				{if empty($oldbrower)}
+				<div style="width:200px;margin:0 auto 0 auto">
+					<a href="javascript:void(0)" onclick="saveAsImg('chart_div4', '{$recipe.label} - .')">Enregistrer le graphique</a>
+				</div>
+				{else}
+					<div class="help" code="navigateurimpressionimpossible"></div>
+				{/if}
+				-->
 
 			{/if}
 	</div>
