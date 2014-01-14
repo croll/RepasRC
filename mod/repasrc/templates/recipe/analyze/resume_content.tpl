@@ -83,7 +83,7 @@
 							{if empty($fs.foodstuff.comment)}
 								Attention, nous ne connaissons pas aujourd'hui l'empreinte écologique de cet aliment. Nous vous indiquerons la proportion d'aliments de votre recette dont nous ne connaissons pas l'empreinte.
 							{else}
-								{$fs.foodstuff.comment}
+								{$fs.foodstuff.comment|nl2br}
 							{/if}
 						</div>
 					{/if}
@@ -95,7 +95,7 @@
 		{if !empty($recipe.comment)}
 			<h2>Remarques</h2>
 			<div style="margin-top:10px">
-				{$recipe.comment}
+				{$recipe.comment|nl2br}
 			</div>
 		{/if}
 		<h4>

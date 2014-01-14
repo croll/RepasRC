@@ -51,7 +51,7 @@
 		{if !empty($menu.comment)}
 			<h2>Remarques</h2>
 			<div style="margin-top:10px">
-				{$menu.comment}
+				{$menu.comment|nl2br}
 			</div>
 		{/if}
 		<h4>
