@@ -259,17 +259,17 @@ class Recipe {
 			throw new \Exception('Unable to duplicate recipe '.$recipeId);
 		}
 		// Create new recipe
-		$q = 'INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_public, rrc_re_label, rrc_re_component, rrc_re_persons, rrc_re_byadmin, rrc_re_modules, rrc_re_comment, rrc_re_hash, rrc_re_type, rrc_re_vat, rrc_re_price, rrc_re_consumptiondate, rrc_re_creation) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
-		$params = array($_SESSION['rc'], $infos['rrc_re_public'], $newName, $infos['rrc_re_component'], $infos['rrc_re_persons'],  $infos['rrc_re_byadmin'], $infos['rrc_re_modules'], $infos['rrc_re_comment'], $infos['rrc_re_hash'], $infos['rrc_re_type'], $infos['rrc_re_vat'], $infos['rrc_re_price'], $infos['rrc_re_consumptiondate'], 'now()');
+		$q = 'INSERT INTO rrc_recipe (rrc_re_rrc_rc_id, rrc_re_public, rrc_re_label, rrc_re_component, rrc_re_persons, rrc_re_byadmin, rrc_re_modules, rrc_re_comment, rrc_re_type, rrc_re_vat, rrc_re_price, rrc_re_consumptiondate, rrc_re_creation) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+		$params = array($_SESSION['rc'], $infos['rrc_re_public'], $newName, $infos['rrc_re_component'], $infos['rrc_re_persons'],  $infos['rrc_re_byadmin'], $infos['rrc_re_modules'], $infos['rrc_re_comment'], $infos['rrc_re_type'], $infos['rrc_re_vat'], $infos['rrc_re_price'], $infos['rrc_re_consumptiondate'], 'now()');
 		$newRecipeId = \core\Core::$db->exec_returning($q, $params, 'rrc_re_id');
 		if (empty($newRecipeId)) {
 			throw new \Exception('Unable to duplicate recipe: recipe infos insertion failed '.$recipeId);
 		}
 		// Duplicate foodstuff
-		$q = 'SELECT rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_code FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ?';
+		$q = 'SELECT rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production FROM rrc_recipe_foodstuff WHERE rrc_rf_rrc_recipe_id = ?';
 		foreach(\core\Core::$db->fetchAssoc($q, array($recipeId)) as $fs) {
 			// Get foodstuff info
-			$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_custom_code, rrc_rf_rrc_recipe_id) VALUES (?,?,?,?,?,?,?,?,?,?)';
+			$q = 'INSERT INTO rrc_recipe_foodstuff (rrc_rf_rrc_foodstuff_id, rrc_rf_rrc_foodstuff_synonym_id, rrc_rf_quantity_unit, rrc_rf_quantity_value, rrc_rf_price, rrc_rf_vat, rrc_rf_conservation, rrc_rf_production, rrc_rf_rrc_recipe_id) VALUES (?,?,?,?,?,?,?,?,?)';
 			// Create new one
 			//$args = array($fs['rrc_rf_rrc_foodstuff_id,'], $fs['rrc_rf_rrc_foodstuff_synonym_id,'], $fs['rrc_rf_quantity_unit,'], $fs['rrc_rf_quantity_value,'], $fs['rrc_rf_price,'], $fs['rrc_rf_vat,'], $fs['rrc_rf_conservation,'], $fs['rrc_rf_production']);
 			$fs['rrc_rf_rrc_recipe_id'] = $newRecipeId;

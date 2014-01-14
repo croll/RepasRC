@@ -600,7 +600,9 @@ function duplicateRecipeModal(id) {
  * Send ajax request to duplicate recipe
  * @recipeId: id of the recipe
  * ---------------------------------------------- */
-function duplicateRecipe(id) {
+function duplicateRecipe() {
+	var id = $('recipeDuplicationID').get('value');
+	var label = $('recipeDuplicationLabel').get('value');
 	new Request.JSON({
 		'url': '/ajax/call/repasrc/duplicateRecipe',
 		onRequest: function() {
@@ -608,13 +610,13 @@ function duplicateRecipe(id) {
 		},
 		onSuccess: function(res,a,b,c) {
 			hideSpinner();
-			top.document.location.href='/recette/edition/informations/'+id;
+			top.document.location.href='/recette/edition/informations/'+res;
 		},
 		onFailure: function() {
 			hideSpinner();
 			modalWin.setTitle("Erreur").setBody("Aucun contenu, réessayez plus tard.").show();
 		}
-	}).post({id: id});
+	}).post({id: id, label: label});
 }
 
 function submitFoodstuffForm() {

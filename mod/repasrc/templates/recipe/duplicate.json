@@ -7,6 +7,7 @@
 	[
 		{	"type" : "text",
 			"name" : "label",
+		  "id"   : "recipeDuplicationLabel",
 			"validators" : 
 			[ 
 				"required"
