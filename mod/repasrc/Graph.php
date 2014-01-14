@@ -62,13 +62,13 @@ class Graph {
     $families = array();
     $gctCol1 = new \mod\googlecharttools\Main();
     $gctCol1->addColumn('Val', 'string');
-    $gctCol1->addRow('Empreinte écologique du transport');
+    $gctCol1->addRow('Kilomètres parcourus');
     $gctCol2 = new \mod\googlecharttools\Main();
     $gctCol2->addColumn('Val', 'string');
     $gctCol2->addRow('Empreinte écologique du transport pour une portion');
     $gctCol3 = new \mod\googlecharttools\Main();
     $gctCol3->addColumn('Val', 'string');
-    $gctCol3->addRow('Empreinte écologique du transport pour la recette');
+    $gctCol3->addRow('Empreinte écologique du transport pour le service');
     $gctComp = new \mod\googlecharttools\Main();
     $gctComp->addColumn('Aliment', 'string');
     $gctComp->addColumn('Empreinte écologique foncière', 'number');
@@ -101,7 +101,7 @@ class Graph {
     $families = array();
     $gctCol1 = new \mod\googlecharttools\Main();
     $gctCol1->addColumn('Val', 'string');
-    $gctCol1->addRow('Empreinte écologique du transport');
+    $gctCol1->addRow('Kilomètres parcourus');
     $gctCol2 = new \mod\googlecharttools\Main();
     $gctCol2->addColumn('Val', 'string');
     $gctCol2->addRow('Empreinte écologique du transport');

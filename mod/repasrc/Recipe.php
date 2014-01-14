@@ -222,9 +222,9 @@ class Recipe {
 
 			// Price
 			if (!empty($fs['price']) && $fs['vat']) {
-				$recipe['totalPrice']['vatin'] += $fs['price'];
+				$recipe['totalPrice']['vatin'] += $fs['price']/$recipe['persons'];
 			} else {
-				$recipe['totalPrice']['vatout'] += $fs['price'];
+				$recipe['totalPrice']['vatout'] += $fs['price']/$recipe['persons'];
 			}
 
 		}
